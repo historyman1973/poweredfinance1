@@ -1,9 +1,10 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/Header';
+
 function App() {
   return (
-    <div className="App">
-      <h1>Powered Finance</h1>
-    </div>
-  );
+    <Header title="Powered Finance"/>
+  )
 }
 
 export default App;
