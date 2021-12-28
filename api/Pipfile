@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 flask = "==1.1.2"
+flask-sqlalchemy = "*"
+flask-marshmallow = "*"
+flask-migrate = "*"
 
 [dev-packages]
 
