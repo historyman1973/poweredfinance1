@@ -1,13 +1,14 @@
 from flask import Flask, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 from database import db, ma
 from routes import api_blueprint
 import os
 
 app = Flask(__name__)
 app.register_blueprint(api_blueprint)
-
+CORS(app)
 
 app.config["SECRET_KEY"] = "mysecretkey"
 basedir = os.path.abspath(os.path.dirname(__file__))
