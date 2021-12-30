@@ -8,6 +8,8 @@ flask = "==1.1.2"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 flask-migrate = "*"
+flask-cors = "*"
+marshmallow-sqlalchemy = "*"
 
 [dev-packages]
 
