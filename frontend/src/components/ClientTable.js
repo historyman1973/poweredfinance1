@@ -12,7 +12,7 @@ const ClientTable = ({ clients }) => {
       </thead>
       <tbody>
         {clients.map((client, i) => (
-        <tr key={client.id}>
+        <tr key={i}>
           <td>{client.id}</td>
           <td>{client.name}</td>
         </tr>

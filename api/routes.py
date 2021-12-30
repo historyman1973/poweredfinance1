@@ -23,7 +23,7 @@ def get_clients():
 def add_client():
     name = request.json['name']
 
-    new_client = Client(name)
+    new_client = Client(name=name)
 
     db.session.add(new_client)
     db.session.commit()
