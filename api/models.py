@@ -10,7 +10,7 @@ class Client(db.Model):
     preferred_name = db.Column(db.String)
     middle_names = db.Column(db.String)
     surname = db.Column(db.String)
-    dob = db.Column(db.Date)
+    gender = db.Column(db.String)
 
     def __init__(self, **kwargs):
         super(Client, self).__init__(**kwargs)
@@ -18,7 +18,7 @@ class Client(db.Model):
 class ClientSchema(ma.Schema):
     class Meta:
         model = Client
-        fields = ('id', 'forename') 
+        fields = ('id', 'forename', 'middle_names', 'surname', 'gender') 
 
 client_schema = ClientSchema()
 clients_schema = ClientSchema(many=True)

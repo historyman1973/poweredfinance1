@@ -7,7 +7,10 @@ const ClientTable = ({ clients }) => {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Name</th>
+          <th>Forename</th>
+          <th>Middle names</th>
+          <th>Surname</th>
+          <th>Gender</th>
         </tr>
       </thead>
       <tbody>
@@ -15,6 +18,9 @@ const ClientTable = ({ clients }) => {
         <tr key={i}>
           <td>{client.id}</td>
           <td>{client.forename}</td>
+          <td>{client.middle_names}</td>
+          <td>{client.surname}</td>
+          <td>{client.gender}</td>
         </tr>
         ))}
       </tbody>

@@ -22,8 +22,17 @@ def get_clients():
 @api_blueprint.route("/add-client", methods=['POST'])
 def add_client():
     forename = request.json['forename']
+    preferred_name = request.json['preferred_name']
+    middle_names = request.json['middle_names']
+    surname = request.json['surname']
+    gender = request.json['gender']
 
-    new_client = Client(forename=forename)
+    new_client = Client(
+        forename=forename,
+        preferred_name=preferred_name,
+        middle_names=middle_names,
+        surname=surname,
+        gender=gender)
 
     db.session.add(new_client)
     db.session.commit()
