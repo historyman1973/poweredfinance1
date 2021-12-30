@@ -1,14 +1,14 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Container, Row, Col } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Header';
-import ClientCard from './components/ClientCard';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Container, Row, Col } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Header from "./components/Header";
+import ClientTable from "./components/ClientTable";
 
 function App() {
-  const [clientList, setClientList] = useState([])
+  const [clientList, setClientList] = useState([]);
   // const [loading, setLoading] = useState(true)
 
   const getClientList = async () => {
@@ -18,27 +18,19 @@ function App() {
       // setLoading(false);
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
-  useEffect(() => getClientList(), [])
-
+  useEffect(() => getClientList(), []);
 
   return (
-    <div><Header title="Powered Finance"/>
-    <Container className="mt-4">
-    <Row xs={1} md={2} lg={3}>
-              {clientList.map((client, i) => (
-                <Col key={i} className="pb-3">
-                  <ClientCard
-                    client={client}
-                  />
-                </Col>
-              ))}
-            </Row>
-    </Container>
-    <ToastContainer position="bottom-right" />
+    <div>
+      <Header title="Powered Finance" />
+      <Container className="mt-4">
+        <ClientTable clients={clientList} />
+      </Container>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
