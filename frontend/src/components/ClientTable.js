@@ -14,7 +14,7 @@ const ClientTable = ({ clients }) => {
         {clients.map((client, i) => (
         <tr key={i}>
           <td>{client.id}</td>
-          <td>{client.name}</td>
+          <td>{client.forename}</td>
         </tr>
         ))}
       </tbody>

@@ -18,7 +18,7 @@ class Client(db.Model):
 class ClientSchema(ma.Schema):
     class Meta:
         model = Client
-        fields = ('id', 'name') 
+        fields = ('id', 'forename') 
 
 client_schema = ClientSchema()
 clients_schema = ClientSchema(many=True)
