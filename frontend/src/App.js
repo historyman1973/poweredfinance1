@@ -27,7 +27,7 @@ function App() {
 
   return (
     <div><Header title="Powered Finance"/>
-    <Container>
+    <Container className="mt-4">
     <Row xs={1} md={2} lg={3}>
               {clientList.map((client, i) => (
                 <Col key={i} className="pb-3">
