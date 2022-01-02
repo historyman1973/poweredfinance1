@@ -1,11 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Container } from "react-bootstrap";
+//import { Container } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Header from "./components/Header";
-import ClientTable from "./components/ClientTable";
+//import ClientTable from "./components/ClientTable";
+import React from "react";
+import Layout from "./components/Layout";
+//import Container from '@mui/material/Container';
+
 
 function App() {
   const [clientList, setClientList] = useState([]);
@@ -26,10 +29,9 @@ function App() {
 
   return (
     <div>
-      <Header title="Powered Finance" />
-      <Container className="mt-4">
-        <ClientTable clients={clientList} />
-      </Container>
+      <div className="App">
+        <Layout />
+      </div>
       <ToastContainer position="bottom-right" />
     </div>
   );

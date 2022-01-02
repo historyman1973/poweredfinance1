@@ -1,36 +1,80 @@
 import React from "react";
-import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
-import { ReactComponent as Logo } from "../images/logo.svg";
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+
+function makeNavBar(title) {
+  if ('dashboard' === title) {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+        <Button variant="outlined" href="/">Dashboard</Button>
+        <Button variant="text" href="/assets">Assets</Button>
+        <Button variant="text" href="/liabilities">Liabilities</Button>
+        <Button variant="text" href="/settings">Settings</Button>
+        <Button variant="text" href="/support">Support</Button>
+      </Stack>
+    </div>
+    )
+  } else if ('assets' === title) {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+        <Button variant="text" href="/">Dashboard</Button>
+        <Button variant="outlined" href="/assets">Assets</Button>
+        <Button variant="text" href="/liabilities">Liabilities</Button>
+        <Button variant="text" href="/settings">Settings</Button>
+        <Button variant="text" href="/support">Support</Button>
+      </Stack>
+    </div>
+    )
+  } else if ('liabilities' === title) {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+        <Button variant="text" href="/">Dashboard</Button>
+        <Button variant="text" href="/assets">Assets</Button>
+        <Button variant="outlined" href="/liabilities">Liabilities</Button>
+        <Button variant="text" href="/settings">Settings</Button>
+        <Button variant="text" href="/support">Support</Button>
+      </Stack>
+    </div>
+    )
+  } else if ('settings' === title) {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+        <Button variant="text" href="/">Dashboard</Button>
+        <Button variant="text" href="/assets">Assets</Button>
+        <Button variant="text" href="/liabilities">Liabilities</Button>
+        <Button variant="outlined" href="/settings">Settings</Button>
+        <Button variant="text" href="/support">Support</Button>
+      </Stack>
+    </div>
+    )
+  } else if ('support' === title) {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+        <Button variant="text" href="/">Dashboard</Button>
+        <Button variant="text" href="/assets">Assets</Button>
+        <Button variant="text" href="/liabilities">Liabilities</Button>
+        <Button variant="text" href="/settings">Settings</Button>
+        <Button variant="outlined" href="/support">Support</Button>
+      </Stack>
+    </div>
+    )
+  }
+};
 
 const Header = ({ title }) => {
   return (
-    <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Container>
-            <Logo
-              alt={title}
-              style={{ maxWidth: "12rem", maxHeight: "2rem" }}
-            />
-          </Container>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#assets">Assets</Nav.Link>
-              <Nav.Link href="#liabilities">Liabilities</Nav.Link>
-              <Nav.Link href="#support">Support</Nav.Link>
-              {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown> */}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
+      <div>
+        <div class="topnav">
+          <img src="https://i.imgur.com/fYKNAxY.png" height="90" width="160" />
+          {makeNavBar(title)}
+        </div>
+      </div>
   );
 };
 

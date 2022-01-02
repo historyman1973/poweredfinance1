@@ -1,8 +1,86 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  font-family: 'Roboto Mono', monospace;
 }
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  padding: 20px 20px 60px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+h1 {
+  font-family: 'Roboto Mono', monospace;
+  margin: 0 auto;
+}
+
+.columnChart {
+  float: left;
+  width: 80%;
+}
+
+.columnSummary {
+  text-align: right;
+  float: left;
+  width: 20%;
+  padding-top: 50px;
+}
+
+.summaryCardOuter {
+  padding: 30px;
+  background-color: #E6E6E6;
+  border-radius: 20px;
+  width: fit-content;
+  float:  right;
+}
+
+.summaryCardInner {
+  padding: 15px;
+  width: fit-content;
+  float: right;
+  background-color: #CDCDCD;
+  border-radius: 20px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.main-container {
+  background-color: #F4F4F4;
+  border-radius: 50px;
+  padding: 50px;
+}
+
+.topnav {
+  overflow: hidden;
+}
+
+.menu-items {
+  float: right;
+  padding: 15px;
+}
+
+.topnav img {
+  float: left;
+}
+
+.topnav a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  color: purple;
+} 
+
