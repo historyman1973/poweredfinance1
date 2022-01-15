@@ -96,7 +96,7 @@ class Assets extends Component {
   render() {
     return (
       <div>
-        <Header title={'assets'}/>
+        <Header title={'assets'} viewingId={window.location.pathname.split('/')[2]} />
           <br />
           <br />
             <div class="main-container">

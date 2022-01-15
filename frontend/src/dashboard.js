@@ -46,7 +46,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
-        <Header title={'dashboard'}/>
+        <Header title={'dashboard'} viewingId={window.location.pathname.split('/')[2]} />
           <br />
           <br />
             <div class="main-container">

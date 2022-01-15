@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 
-function makeNavBar(title) {
+function makeNavBar(title, viewingId) {
   if ('clients' === title) {
     return (
       <div class="client-header">
@@ -15,11 +15,11 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="outlined" href="/">Dashboard</Button>
-        <Button variant="text" href="/assets">Assets</Button>
-        <Button variant="text" href="/liabilities">Liabilities</Button>
-        <Button variant="text" href="/settings">Settings</Button>
-        <Button variant="text" href="/support">Support</Button>
+        <Button variant="outlined" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="text" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="text" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="text" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="text" href={"/support/" + viewingId}>Support</Button>
       </Stack>
     </div>
     )
@@ -27,11 +27,11 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="text" href="/">Dashboard</Button>
-        <Button variant="outlined" href="/assets">Assets</Button>
-        <Button variant="text" href="/liabilities">Liabilities</Button>
-        <Button variant="text" href="/settings">Settings</Button>
-        <Button variant="text" href="/support">Support</Button>
+      <Button variant="text" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="outlined" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="text" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="text" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="text" href={"/support/" + viewingId}>Support</Button>
       </Stack>
     </div>
     )
@@ -39,11 +39,11 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="text" href="/">Dashboard</Button>
-        <Button variant="text" href="/assets">Assets</Button>
-        <Button variant="outlined" href="/liabilities">Liabilities</Button>
-        <Button variant="text" href="/settings">Settings</Button>
-        <Button variant="text" href="/support">Support</Button>
+      <Button variant="text" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="text" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="outlined" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="text" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="text" href={"/support/" + viewingId}>Support</Button>
       </Stack>
     </div>
     )
@@ -51,11 +51,11 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="text" href="/">Dashboard</Button>
-        <Button variant="text" href="/assets">Assets</Button>
-        <Button variant="text" href="/liabilities">Liabilities</Button>
-        <Button variant="outlined" href="/settings">Settings</Button>
-        <Button variant="text" href="/support">Support</Button>
+        <Button variant="text" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="text" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="text" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="outlined" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="text" href={"/support/" + viewingId}>Support</Button>
       </Stack>
     </div>
     )
@@ -63,23 +63,23 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="text" href="/dashboard">Dashboard</Button>
-        <Button variant="text" href="/assets">Assets</Button>
-        <Button variant="text" href="/liabilities">Liabilities</Button>
-        <Button variant="text" href="/settings">Settings</Button>
-        <Button variant="outlined" href="/support">Support</Button>
+      <Button variant="text" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="text" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="text" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="text" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="outlined" href={"/support/" + viewingId}>Support</Button>
       </Stack>
     </div>
     )
   }
 };
 
-const Header = ({ title }) => {
+const Header = ({ title, viewingId }) => {
   return (
       <div>
         <div class="topnav">
           <img src="https://i.imgur.com/fYKNAxY.png" height="90" width="160" />
-          {makeNavBar(title)}
+          {makeNavBar(title, viewingId)}
         </div>
       </div>
   );

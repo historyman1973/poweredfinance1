@@ -21,6 +21,7 @@ const ClientTable = ({ clients }) => {
           <td>{client.middle_names}</td>
           <td>{client.surname}</td>
           <td>{client.gender}</td>
+          <a href={'/dashboard/' + client.id}>View</a>
         </tr>
         ))}
       </tbody>

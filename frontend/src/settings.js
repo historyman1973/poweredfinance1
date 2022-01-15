@@ -7,7 +7,7 @@ class Settings extends Component {
   render() {
     return (
       <div>
-        <Header title={'settings'} />
+        <Header title={'settings'} viewingId={window.location.pathname.split('/')[2]} />
         <br />
         <br />
           <Container maxWidth="lg">

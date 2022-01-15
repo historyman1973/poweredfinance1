@@ -94,7 +94,7 @@ class Liabilities extends Component {
   render() {
     return (
       <div>
-        <Header title={'liabilities'}/>
+        <Header title={'liabilities'} viewingId={window.location.pathname.split('/')[2]} />
           <br />
           <br />
             <div class="main-container">
