@@ -1,0 +1,4 @@
+# Powered Finance
+Powered Finance is a comprehensive tool to track and measure your net worth over time and highlights areas of primary strengths or weaknesses to aid decision making and future planning.
+
+It's based on React (frontend) and Python Flask (backend). 
