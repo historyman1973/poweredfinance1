@@ -4,7 +4,14 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 
 function makeNavBar(title) {
-  if ('dashboard' === title) {
+  if ('clients' === title) {
+    return (
+      <div class="client-header">
+      <h2>Client list</h2>
+      Select a client to navigate to their dashboard.
+    </div>
+    )
+  } else if ('dashboard' === title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
@@ -56,7 +63,7 @@ function makeNavBar(title) {
     return (
       <div class="menu-items">
       <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
-        <Button variant="text" href="/">Dashboard</Button>
+        <Button variant="text" href="/dashboard">Dashboard</Button>
         <Button variant="text" href="/assets">Assets</Button>
         <Button variant="text" href="/liabilities">Liabilities</Button>
         <Button variant="text" href="/settings">Settings</Button>

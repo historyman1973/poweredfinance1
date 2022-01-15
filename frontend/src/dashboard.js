@@ -53,7 +53,7 @@ class Dashboard extends Component {
               <div class="row">
                 <div class="columnChart">
                   <div style={{ width: '100%', height: 500 }}>
-                    <ResponsiveContainer>
+                    <ResponsiveContainer width="80%">
                       <AreaChart
                         width={500}
                         height={400}
