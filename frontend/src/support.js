@@ -7,7 +7,7 @@ class Support extends Component {
   render() {
     return (
       <div>
-        <Header title={'support'} />
+        <Header title={'support'} viewingId={window.location.pathname.split('/')[2]} />
         <br />
         <br />
           <Container maxWidth="lg">
