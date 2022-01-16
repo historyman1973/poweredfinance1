@@ -4,11 +4,10 @@ import axios from "axios";
 //import { Container } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//import ClientTable from "./components/ClientTable";
 import React from "react";
 import Layout from "./components/Layout";
 //import Container from '@mui/material/Container';
-
+import ClientTable from "./components/ClientTable";
 
 function App() {
   const [clientList, setClientList] = useState([]);
@@ -31,6 +30,7 @@ function App() {
     <div>
       <div className="App">
         <Layout />
+        <ClientTable clients={clientList} />
       </div>
       <ToastContainer position="bottom-right" />
     </div>
