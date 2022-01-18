@@ -1,10 +1,10 @@
-from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
+from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema
 
 @api_blueprint.route("/")
 def index():
