@@ -11,33 +11,6 @@ def index():
     return "Server is operational"
 
 
-@api_blueprint.route("/client-list", methods=["GET"])
-def get_clients():
-    all_clients = Client.query.all()
-    result = clients_schema.dump(all_clients)
-    return jsonify(result)
-
-
-@api_blueprint.route("/get-client/<client_id>", methods=["GET"])
-def get_client(client_id):
-    client = Client.query.get(client_id)
-    result = client_schema.dump(client)
-    return jsonify(result)
-
-
-@api_blueprint.route("/get-investments/<client_id>", methods=["GET"])
-def get_investments(client_id):
-    client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        investments = db.session.query(
-            Investment).filter_by(owner1_id=client_id)
-    else:
-        investments = db.session.query(
-            Investment).filter_by(owner2_id=client_id)
-
-    return investments_schema.jsonify(investments)
-
-
 @api_blueprint.route("/add-client", methods=['POST'])
 def add_client():
     forename = request.json['forename']
@@ -60,6 +33,20 @@ def add_client():
     db.session.commit()
 
     return client_schema.jsonify(new_client)
+
+
+@api_blueprint.route("/get-client/<client_id>", methods=["GET"])
+def get_client(client_id):
+    client = Client.query.get(client_id)
+    result = client_schema.dump(client)
+    return jsonify(result)
+
+
+@api_blueprint.route("/client-list", methods=["GET"])
+def get_clients():
+    all_clients = Client.query.all()
+    result = clients_schema.dump(all_clients)
+    return jsonify(result)
 
 
 @api_blueprint.route("/add-investment", methods=["POST"])
@@ -87,3 +74,25 @@ def add_investment():
     db.session.commit()
 
     return investment_schema.jsonify(new_investment)
+
+
+@api_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
+def get_investment(investment_id):
+    investment = Investment.query.get(investment_id)
+    result = investment_schema.dump(investment)
+    return jsonify(result)
+
+
+@api_blueprint.route("/get-investments/<client_id>", methods=["GET"])
+def get_investments(client_id):
+    client = Client.query.get(client_id)
+    if client.isPrimary == True:
+        investments = db.session.query(
+            Investment).filter_by(owner1_id=client_id)
+    else:
+        investments = db.session.query(
+            Investment).filter_by(owner2_id=client_id)
+
+    return investments_schema.jsonify(investments)
+
+
