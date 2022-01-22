@@ -1,41 +1,15 @@
+import json
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
-from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema
+from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema
 
 @api_blueprint.route("/")
 def index():
     return "Server is operational"
-
-
-@api_blueprint.route("/client-list", methods=["GET"])
-def get_clients():
-    all_clients = Client.query.all()
-    result = clients_schema.dump(all_clients)
-    return jsonify(result)
-
-
-@api_blueprint.route("/get-client/<client_id>", methods=["GET"])
-def get_client(client_id):
-    client = Client.query.get(client_id)
-    result = client_schema.dump(client)
-    return jsonify(result)
-
-
-@api_blueprint.route("/get-investments/<client_id>", methods=["GET"])
-def get_investments(client_id):
-    client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        investments = db.session.query(
-            Investment).filter_by(owner1_id=client_id)
-    else:
-        investments = db.session.query(
-            Investment).filter_by(owner2_id=client_id)
-
-    return investments_schema.jsonify(investments)
 
 
 @api_blueprint.route("/add-client", methods=['POST'])
@@ -62,6 +36,40 @@ def add_client():
     return client_schema.jsonify(new_client)
 
 
+@api_blueprint.route("/get-client/<client_id>", methods=["GET"])
+def get_client(client_id):
+    client = Client.query.get(client_id)
+    result = client_schema.dump(client)
+    return jsonify(result)
+
+
+@api_blueprint.route("/client-list", methods=["GET"])
+def get_clients():
+    all_clients = Client.query.all()
+    result = clients_schema.dump(all_clients)
+    return jsonify(result)
+
+
+@api_blueprint.route("/add-instrument", methods=["POST"])
+def add_instrument():
+    symbol = request.json['symbol']
+    exchange = request.json['exchange']
+    units = request.json['units']
+    price = request.json['price']
+    
+    new_instrument = Instrument(
+        symbol=symbol,
+        exchange=exchange,
+        units=units,
+        price=price
+    )
+
+    db.session.add(new_instrument)
+    db.session.commit()
+
+    return instrument_schema.jsonify(new_instrument)
+
+
 @api_blueprint.route("/add-investment", methods=["POST"])
 def add_investment():
     investment_type = request.json['investment_type']
@@ -83,7 +91,38 @@ def add_investment():
     )
 
     db.session.add(new_investment)
-    db.session
     db.session.commit()
 
     return investment_schema.jsonify(new_investment)
+
+
+@api_blueprint.route("/instrument-to-investment/<instrument_id>/<investment_id>", methods=["POST"])
+def link_instrument_to_investment(instrument_id, investment_id):
+    investment = Investment.query.get(investment_id)
+    instrument = Instrument.query.get(instrument_id)
+    investment.instruments.append(instrument)
+    db.session.commit()
+
+    return "Linked " + instrument.symbol + " to " + investment.investment_type
+
+
+@api_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
+def get_investment(investment_id):
+    investment = Investment.query.get(investment_id)
+    result = investment_schema.dump(investment)
+    return jsonify(result)
+
+
+@api_blueprint.route("/get-investments/<client_id>", methods=["GET"])
+def get_investments(client_id):
+    client = Client.query.get(client_id)
+    if client.isPrimary == True:
+        investments = db.session.query(
+            Investment).filter_by(owner1_id=client_id)
+    else:
+        investments = db.session.query(
+            Investment).filter_by(owner2_id=client_id)
+
+    return investments_schema.jsonify(investments)
+
+
