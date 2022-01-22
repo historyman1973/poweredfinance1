@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-globally';
 import Layout from './components/Layout';
 import { ToastContainer } from 'react-bootstrap';
-
-const initialState = {
-  counter: "hello"
-}
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
   render() {
@@ -25,9 +21,7 @@ class App extends Component {
 
 ReactDOM.render((
     <BrowserRouter>
-      <Provider globalState={"hello"}>
         <App />
-      </Provider>
     </BrowserRouter>
   ), document.getElementById('root')
 );

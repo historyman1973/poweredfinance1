@@ -78,7 +78,9 @@ const Header = ({ title, viewingId }) => {
   return (
       <div>
         <div class="topnav">
-          <img src="https://i.imgur.com/fYKNAxY.png" height="90" width="160" />
+          <a href="\">
+            <img src="https://i.imgur.com/fYKNAxY.png" height="90" width="160"/>
+          </a>
           {makeNavBar(title, viewingId)}
         </div>
       </div>
