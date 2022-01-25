@@ -50,24 +50,30 @@ def get_clients():
     return jsonify(result)
 
 
-@api_blueprint.route("/add-instrument", methods=["POST"])
-def add_instrument():
-    symbol = request.json['symbol']
-    exchange = request.json['exchange']
-    units = request.json['units']
-    price = request.json['price']
-    
-    new_instrument = Instrument(
-        symbol=symbol,
-        exchange=exchange,
-        units=units,
-        price=price
-    )
+@api_blueprint.route("/add-instruments", methods=["POST"])
+def add_instruments():
+    req = request.get_json()
+    instruments_added = []
+    for i in range(0,len(req)):
+        if Instrument.query.filter(Instrument.symbol == request.json[i]['symbol'], Instrument.exchange == request.json[i]['exchange']).scalar() is None:
+            symbol = request.json[i]['symbol']
+            exchange = request.json[i]['exchange']
+            units = request.json[i]['units']
+            cost = request.json[i]['cost']
+        
+            new_instrument = Instrument(
+                symbol=symbol,
+                exchange=exchange,
+                units=units,
+                cost=cost
+            )
 
-    db.session.add(new_instrument)
-    db.session.commit()
+            instruments_added.append(symbol)
 
-    return instrument_schema.jsonify(new_instrument)
+            db.session.add(new_instrument)
+            db.session.commit()
+
+    return {"added": instruments_added}
 
 
 @api_blueprint.route("/add-investment", methods=["POST"])
