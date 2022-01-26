@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FormControl, FormControlLabel, FormLabel, Grid, Radio, TextField } from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, Grid, Radio, Select, TextField } from '@mui/material';
 import { useForm, Form } from './useForm';
 import Controls from './controls/Controls';
 
@@ -65,8 +65,11 @@ export default function AddClientForm() {
              value={values.gender}
              onChange = {handleInputChange}
              items={ genderItems } />
-            
-
+             <div>
+               <Controls.Button
+               text="Submit"
+               type="submit" />
+             </div>
           </Grid>
         </Grid>
     </Form>
