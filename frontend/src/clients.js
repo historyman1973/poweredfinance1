@@ -23,17 +23,6 @@ function Clients() {
     }
   };
 
-  const addClient = async () => {
-    try {
-      const res = await axios.get(`http://127.0.0.1:5000/add-client`);
-      setClientList(res.data || []);
-      // setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
-
   useEffect(() => getClientList(), []);
 
   return (

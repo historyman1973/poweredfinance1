@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FormControl, FormControlLabel, FormLabel, Grid, Radio, Select, TextField } from '@mui/material';
 import { useForm, Form } from './useForm';
 import Controls from './controls/Controls';
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const genderItems = [
   { id: 'male', title: 'Male' },
@@ -11,7 +13,6 @@ const genderItems = [
 
 
 const initialFValues = {
-  id: 0,
   forename: '',
   preferred_name: '',
   middle_names: '',
@@ -20,23 +21,53 @@ const initialFValues = {
   isPrimary: true
 }
 
+const addClient = async (values) => {
+  try {
+    const res = await axios.post(`http://127.0.0.1:5000/add-client`, values);
+    // setLoading(false);
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+  }
+};
+
 export default function AddClientForm() {
+
+  const validate = () => {
+    let temp = {}
+    temp.forename = values.forename?"":"Forename must be provided."
+    temp.surname = values.surname?"":"Surname must be provided."
+    temp.isPrimary = values.isPrimary?"":"Must be true or false."
+    setErrors({
+      ...temp
+    })
+    return Object.values(temp).every(x => x == "")
+  }
 
   const {
     values,
     setValues,
-    handleInputChange
+    handleInputChange,
+    errors,
+    setErrors
   } = useForm(initialFValues);
 
+  const handleSubmit = e => {
+    e.preventDefault()
+    if (validate())
+      addClient(values)
+  }
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid item xs={6}>
             <Controls.Input
             name="forename"
             label="Forename"
             value={values.forename}
-            onChange={handleInputChange} />
+            onChange={handleInputChange}
+            error={errors.forename} />
             <Controls.Input
             label="Preferred name"
             name="preferred_name"
@@ -51,7 +82,8 @@ export default function AddClientForm() {
             label="Surname"
             name="surname"
             value={values.surname}
-            onChange = {handleInputChange} />
+            onChange = {handleInputChange}
+            error={errors.surname} />
             <Controls.Input
             label="isPrimary"
             name="isPrimary"
