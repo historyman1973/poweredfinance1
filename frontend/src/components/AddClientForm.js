@@ -52,9 +52,13 @@ export default function AddClientForm() {
   } = useForm(initialFValues);
 
   const handleSubmit = e => {
-    //e.preventDefault()
-    if (validate())
+
+    if (!validate())
+      e.preventDefault()
+    else {
       addClient(values)
+    }
+
   }
 
   return (
