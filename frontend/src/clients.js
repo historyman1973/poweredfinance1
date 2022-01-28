@@ -33,12 +33,21 @@ const Backdrop = styled('div')`
 `;
 
 const style = {
-  width: 800,
-  bgcolor: '#e3f2fd',
-  border: '2px solid #000',
+
   p: 2,
   px: 4,
-  pb: 3
+  pb: 3,
+  borderRadius: 5,
+  position: 'fixed',
+  overflowY: 'auto',
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: "auto",
+  bgcolor: '#ffffff',
+  boxShadow: 24,
+  p: 4,
 };
 
 function Clients() {

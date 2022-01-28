@@ -11,7 +11,6 @@ const genderItems = [
   { id: 'other', title: 'Other' }
 ]
 
-
 const initialFValues = {
   forename: '',
   preferred_name: '',
@@ -53,7 +52,7 @@ export default function AddClientForm() {
   } = useForm(initialFValues);
 
   const handleSubmit = e => {
-    e.preventDefault()
+    //e.preventDefault()
     if (validate())
       addClient(values)
   }
