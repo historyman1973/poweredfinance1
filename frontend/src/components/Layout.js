@@ -7,6 +7,7 @@ import Assets from '../assets';
 import Liabilities from '../liabilities';
 import Settings from '../settings';
 import Support from '../support';
+import SecurityDrilldown from '../securityDrilldown';
 
 const Layout = () => {
   return (
@@ -17,6 +18,7 @@ const Layout = () => {
       <Route path='/liabilities/*' element={<Liabilities />}></Route>
       <Route path='/settings/*' element={<Settings />}></Route>
       <Route path='/support/*' element={<Support />}></Route>
+      <Route path='/security/*' element={<SecurityDrilldown />}></Route>
     </Routes>
   );
 }
