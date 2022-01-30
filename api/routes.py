@@ -2,10 +2,18 @@ import json
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
+import requests
+from dotenv import load_dotenv
+import os
+
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
 from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema
+
+load_dotenv(dotenv_path="./.env.local")
+
+MY_ACCESS_KEY = os.environ.get("MY_ACCESS_KEY", "")
 
 @api_blueprint.route("/")
 def index():
@@ -132,3 +140,53 @@ def get_investments(client_id):
     return investments_schema.jsonify(investments)
 
 
+@api_blueprint.route("/get-eod-timeseries/<symbol>", methods=["GET"])
+def get_eod_timeseries(symbol):
+    params = {
+        'access_key': MY_ACCESS_KEY,
+        'symbols': symbol
+    }
+    result = requests.get('http://api.marketstack.com/v1/eod', params)
+
+    data = result.json()
+
+    return data
+
+
+@api_blueprint.route("/get-latest-data/<symbol>", methods=["GET"])
+def get_latest_data(symbol):
+    params = {
+        'access_key': MY_ACCESS_KEY,
+        'symbols': symbol
+    }
+    result = requests.get('http://api.marketstack.com/v1/eod/latest', params)
+
+    data = result.json()
+
+    return data
+
+
+@api_blueprint.route("/get-ticker/<symbol>", methods=["GET"])
+def get_ticker(symbol):
+    params = {
+        'access_key': MY_ACCESS_KEY,
+        'symbols': symbol
+    }
+    result = requests.get('http://api.marketstack.com/v1/tickers', params)
+
+    data = result.json()
+
+    return data
+
+
+@api_blueprint.route("/search-ticker/<search_term>", methods=["GET"])
+def search_ticker(search_term):
+    params = {
+        'access_key': MY_ACCESS_KEY,
+        'search': search_term
+    }
+    result = requests.get('http://api.marketstack.com/v1/tickers', params)
+
+    data = result.json()
+
+    return data
