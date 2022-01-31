@@ -10,10 +10,10 @@ import os
 api_blueprint = Blueprint('api_blueprint', __name__)
 
 from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema
-
 load_dotenv(dotenv_path="./.env.local")
 
 MY_ACCESS_KEY = os.environ.get("MY_ACCESS_KEY", "")
+
 
 @api_blueprint.route("/")
 def index():
@@ -62,13 +62,13 @@ def get_clients():
 def add_instruments():
     req = request.get_json()
     instruments_added = []
-    for i in range(0,len(req)):
+    for i in range(0, len(req)):
         if Instrument.query.filter(Instrument.symbol == request.json[i]['symbol'], Instrument.exchange == request.json[i]['exchange']).scalar() is None:
             symbol = request.json[i]['symbol']
             exchange = request.json[i]['exchange']
             units = request.json[i]['units']
             cost = request.json[i]['cost']
-        
+
             new_instrument = Instrument(
                 symbol=symbol,
                 exchange=exchange,

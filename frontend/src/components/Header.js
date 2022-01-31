@@ -71,6 +71,18 @@ function makeNavBar(title, viewingId) {
       </Stack>
     </div>
     )
+  } else {
+    return (
+      <div class="menu-items">
+      <Stack spacing={2} direction="row" divider={<Divider orientation="vertical" flexItem alignItems="right"/>}>
+      <Button variant="text" href={"/dashboard/" + viewingId}>Dashboard</Button>
+        <Button variant="text" href={"/assets/" + viewingId}>Assets</Button>
+        <Button variant="text" href={"/liabilities/" + viewingId}>Liabilities</Button>
+        <Button variant="text" href={"/settings/" + viewingId}>Settings</Button>
+        <Button variant="text" href={"/support/" + viewingId}>Support</Button>
+      </Stack>
+    </div>
+    )
   }
 };
 

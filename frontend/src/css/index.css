@@ -91,3 +91,11 @@ h1 {
   padding-top: 20px;
   padding-bottom: 40px;
 }
+
+.changeBox {
+  padding: 8px;
+  background-color: #e6e6e6;
+  border-radius: 10px;
+  float: right;
+  margin-top: -90px;
+}
