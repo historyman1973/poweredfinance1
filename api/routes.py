@@ -150,7 +150,7 @@ def get_eod_timeseries(symbol):
 
     data = result.json()
 
-    return data
+    return jsonify(data["data"])
 
 
 @api_blueprint.route("/get-latest-data/<symbol>", methods=["GET"])
@@ -176,7 +176,7 @@ def get_ticker(symbol):
 
     data = result.json()
 
-    return data
+    return jsonify(data["data"])
 
 
 @api_blueprint.route("/search-ticker/<search_term>", methods=["GET"])
@@ -189,4 +189,4 @@ def search_ticker(search_term):
 
     data = result.json()
 
-    return data
+    return jsonify(data["data"])
