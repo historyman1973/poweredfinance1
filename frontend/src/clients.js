@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from './components/Header'
-import { Button, Modal, TextField } from "@mui/material";
+import { Button, Modal, Paper, TextField } from "@mui/material";
 import AddClientForm from "./components/AddClientForm";
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
@@ -33,7 +33,6 @@ const Backdrop = styled('div')`
 `;
 
 const style = {
-
   p: 2,
   px: 4,
   pb: 3,
@@ -84,9 +83,9 @@ function Clients() {
         onClose={handleAddClientModalClose}
         BackdropComponent={Backdrop}
       >
-        <Box sx={style}>
+        <Paper sx={style}>
           <AddClientForm />
-        </Box>
+        </Paper>
       </StyledModal>
       <ClientTable class="padding-left-right" clients={clientList}/>
     </div>

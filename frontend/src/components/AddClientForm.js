@@ -64,7 +64,7 @@ export default function AddClientForm() {
   return (
     <Form onSubmit={handleSubmit}>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <Controls.Input
             name="forename"
             label="Forename"
@@ -93,7 +93,7 @@ export default function AddClientForm() {
             value={values.isPrimary}
             onChange = {handleInputChange} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Controls.RadioGroup
              name="gender"
              label="Gender"
@@ -101,7 +101,7 @@ export default function AddClientForm() {
              onChange = {handleInputChange}
              items={ genderItems } />
              <div>
-               <Controls.Button
+               <Controls.Button style={{ float: 'right', marginRight: '2%', marginTop: '3%' }}
                text="Submit"
                type="submit" />
              </div>
