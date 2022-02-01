@@ -162,8 +162,8 @@ def get_latest_data(symbol):
     result = requests.get('http://api.marketstack.com/v1/eod/latest', params)
 
     data = result.json()
-
-    return data
+    
+    return data["data"]
 
 
 @api_blueprint.route("/get-ticker/<symbol>", methods=["GET"])
