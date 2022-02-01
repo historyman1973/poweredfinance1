@@ -10,13 +10,17 @@ import SecuritySummary from "./components/SecuritySummary";
 
 function SecurityDrilldown() {
 
-  const [security, setSecurity] = useState([]);
+  const [latestData, setLatestData] = useState([]);
+  const [eodTS, setEodTS] = useState([]);
   // const [loading, setLoading] = useState(true)
 
   const getSecurityInfo = async () => {
     try {
-      const res = await axios.get(`http://127.0.0.1:5000/get-latest-data/` + window.location.pathname.split('/')[2]);
-      setSecurity(res.data || []);
+      const latestData = await axios.get(`http://127.0.0.1:5000/get-latest-data/` + window.location.pathname.split('/')[2]);
+      setLatestData(latestData.data[0] || []);
+      const eodTS = await axios.get(`http://127.0.0.1:5000/get-eod-timeseries/` + window.location.pathname.split('/')[2]);
+      setEodTS(eodTS.data[0] || []);
+      console.log(eodTS);
       // setLoading(false);
     } catch (error) {
       console.log(error);
@@ -24,13 +28,13 @@ function SecurityDrilldown() {
     }
   };
 
-  //useEffect(() => getSecurityInfo(), []);  UNCOMMENT THIS TO CALL API
+  useEffect(() => getSecurityInfo(), []);
 
     return (
       <div>
         <Header />
         <div class="main-container" style={{ width: '80%', margin: 'auto', marginTop: 25 }}>
-          <SecuritySummary info={security.length} />
+          <SecuritySummary {...{...latestData,...eodTS}} />
         </div>
       </div>
     );
