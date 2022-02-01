@@ -163,7 +163,7 @@ def get_latest_data(symbol):
 
     data = result.json()
     
-    return data["data"]
+    return jsonify(data["data"])
 
 
 @api_blueprint.route("/get-ticker/<symbol>", methods=["GET"])
