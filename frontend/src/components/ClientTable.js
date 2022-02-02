@@ -1,31 +1,36 @@
+import { Link } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import React, { Component } from "react";
 import { Button, Table } from "react-bootstrap";
 
-const ClientTable = ({ clients }) => {
+
+
+function ClientTable ({clients}) {
+
+  const rows = Array()
+
+  {clients.map((client) => (
+    rows.push({ id: client.id, forename: client.forename, middlename: client.middle_names, surname: client.surname, gender: client.gender, view: client.id })
+    ))}
+
+    const columns = [
+      { field: 'id', headerName: 'ID', width: 70 },
+      { field: 'forename', headerName: 'Forename', flex: 1, minWidth: 150 },
+      { field: 'middlename', headerName: 'Middle names', flex: 1, minWidth: 150 },
+      { field: 'surname', headerName: 'Surname', flex: 1, minWidth: 150 },
+      { field: 'gender', headerName: 'Gender', width: 150 },
+      { field: 'view', headerName: 'View', width: 150, renderCell: (params) => (
+        <Link href={`dashboard/${params.value}`}>View</Link>
+      ) }
+    ];
+
   return (
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Forename</th>
-          <th>Middle names</th>
-          <th>Surname</th>
-          <th>Gender</th>
-        </tr>
-      </thead>
-      <tbody>
-        {clients.map((client, i) => (
-        <tr key={i}>
-          <td>{client.id}</td>
-          <td>{client.forename}</td>
-          <td>{client.middle_names}</td>
-          <td>{client.surname}</td>
-          <td>{client.gender}</td>
-          <a href={'/dashboard/' + client.id}>View</a>
-        </tr>
-        ))}
-      </tbody>
-    </Table>
+    <div style={{ height: '600px', margin: '50px' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+      />
+    </div>
   );
 };
 
