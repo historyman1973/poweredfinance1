@@ -65,6 +65,8 @@ h1 {
 
 .topnav img {
   float: left;
+  margin-top: 15px;
+  margin-left: 15px;
 }
 
 .topnav a {
@@ -89,7 +91,7 @@ h1 {
   float: left;
   padding-left: 3%;
   padding-top: 20px;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
 }
 
 .changeBox {
@@ -98,4 +100,10 @@ h1 {
   border-radius: 10px;
   float: right;
   margin-top: -90px;
+}
+
+.add-client-btn {
+  float: right;
+  margin-right: 50px;
+  margin-top: 20px;
 }

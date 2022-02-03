@@ -74,7 +74,9 @@ function Clients() {
   return (
     <div>
       <Header title={'clients'}/>
-      <Button onClick={handleAddClientModalOpen}>Add client</Button>
+      <div class="add-client-btn">
+        <Button onClick={handleAddClientModalOpen} variant="outlined" size="large">Add client</Button>
+      </div>
       <br />
       <br />
       <StyledModal
