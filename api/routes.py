@@ -5,11 +5,13 @@ from flask.json import jsonify
 import requests
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
-from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema
+from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema, Holding, holding_schema, holdings_schema, Transaction, transaction_schema, transactions_schema
+
 load_dotenv(dotenv_path="./.env.local")
 
 MY_ACCESS_KEY = os.environ.get("MY_ACCESS_KEY", "")
@@ -92,6 +94,7 @@ def add_investment():
     value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
+    owner_type = request.json['owner_type']
 
     # owners = create_owners(owner1_id=owner1_id, owner2_id=owner2_id)
 
@@ -101,13 +104,59 @@ def add_investment():
         investment_ref=investment_ref,
         value=value,
         owner1_id=owner1_id,
-        owner2_id=owner2_id
+        owner2_id=owner2_id,
+        owner_type=owner_type
     )
 
     db.session.add(new_investment)
     db.session.commit()
 
     return investment_schema.jsonify(new_investment)
+
+
+# TODO Finish this off
+@api_blueprint.route("/add-transaction", methods=["POST"])
+def add_transaction():
+    investment_id = request.json['investment_id']
+    instrument_id = request.json['instrument_id']
+    ttype = request.json['ttype']
+    tdate = request.json['tdate']
+    units = request.json['units']
+    price = request.json['price']
+    owner1_id = request.json['owner1_id']
+    owner2_id = request.json['owner2_id']
+
+    holding = Holding.query.filter(
+            Holding.investment_id == investment_id,
+            Holding.instrument_id == instrument_id).scalar()
+
+    if holding:
+        # If there's already a holding, add the units to it
+        holding.units = holding.units + units
+    else:
+        # Create the holding and link it to the investment
+        holding = Holding(investment_id = investment_id, instrument_id = instrument_id, units = units)
+        db.session.add(holding)
+        db.session.commit()
+        db.session.flush()
+        investment=Investment.query.get(investment_id)
+        investment.holdings.append(holding)
+        db.session.commit()
+
+    new_transaction = Transaction(ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
+
+    new_transaction.holding_id = holding.id
+
+    db.session.add(new_transaction)
+    db.session.commit()
+    db.session.flush()
+
+    holding.transactions.append(new_transaction)
+    db.session.commit()
+
+    transaction_result = transaction_schema.dump(new_transaction)
+
+    return jsonify(transaction_result)
 
 
 @api_blueprint.route("/instrument-to-investment/<instrument_id>/<investment_id>", methods=["POST"])
@@ -162,7 +211,7 @@ def get_latest_data(symbol):
     result = requests.get('http://api.marketstack.com/v1/eod/latest', params)
 
     data = result.json()
-    
+
     return jsonify(data["data"])
 
 
