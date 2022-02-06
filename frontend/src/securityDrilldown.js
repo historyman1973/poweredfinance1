@@ -12,6 +12,7 @@ function SecurityDrilldown() {
 
   const [latestData, setLatestData] = useState([]);
   const [eodTS, setEodTS] = useState([]);
+  const [securityInfo, setSecurityInfo] = useState([]);
   // const [loading, setLoading] = useState(true)
 
   const getSecurityInfo = async () => {
@@ -20,7 +21,8 @@ function SecurityDrilldown() {
       setLatestData(latestDataCall.data[0] || []);
       const eodTSCall = await axios.get(`http://127.0.0.1:5000/get-eod-timeseries/` + window.location.pathname.split('/')[2]);
       setEodTS(eodTSCall.data || []);
-      console.log(eodTS)
+      const securityInfoCall = await axios.get(`http://127.0.0.1:5000/get-ticker/` + window.location.pathname.split('/')[2]);
+      setSecurityInfo(securityInfoCall.data[0] || [])
       // setLoading(false);
     } catch (error) {
       console.log(error);
@@ -52,37 +54,42 @@ function SecurityDrilldown() {
       <div>
         <Header />
         <div class="main-container" style={{ width: '80%', margin: 'auto', marginTop: 25 }}>
-        <div style={{ height: 'auto', marginLeft: '10%', marginRight: '10%', marginTop: 20, padding: 5 }}>
-            <div>
-                <h1>{latestData.symbol}</h1>
-                <h2><CurrencyFormat value={latestData.close} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/></h2>
-            </div>
-            <div class="changeBox">
-              <CurrencyFormat value={latestData.high} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  high</b>
-              <br />
-              <CurrencyFormat value={latestData.low} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  low</b>
-              <br />
-              <CurrencyFormat value={latestData.open} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  open</b>
-            </div>
-            <hr />
-            <div style={{ width: '100%', height: 500, marginTop: 50, marginBottom: 30 }}>
-              <ResponsiveContainer width="100%">
-                <LineChart
-                width={600}
-                height={300}
-                data={makeTSData(eodTS)}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <XAxis dataKey="date" />
-                  <YAxis tickFormatter={formatCurrency} domain={[Math.min(eodTS.adj_close), Math.max(eodTS.adj_close)]}/>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="price" stroke="#4527a0" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <hr />
-            general other info
-        </div>
+          <div style={{ height: 'auto', marginLeft: '10%', marginRight: '10%', marginTop: 20, padding: 5 }}>
+            <h1>{securityInfo.name}</h1>
+          </div>
+          <div style={{ height: 'auto', marginLeft: '10%', marginRight: '10%', padding: 5 }}>
+              <div>
+                {console.log(securityInfo)}
+                  <h2><CurrencyFormat value={latestData.close} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/></h2>
+                  <h5>{latestData.symbol}</h5>
+              </div>
+              <div class="changeBox">
+                <CurrencyFormat value={latestData.high} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  24H high</b>
+                <br />
+                <CurrencyFormat value={latestData.low} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  24H low</b>
+                <br />
+                <CurrencyFormat value={latestData.open} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalScale="2" fixedDecimalScale="true"/><b>  open</b>
+              </div>
+              <hr />
+              <div style={{ width: '100%', height: 500, marginTop: 50, marginBottom: 30 }}>
+                <ResponsiveContainer width="100%">
+                  <LineChart
+                  width={600}
+                  height={300}
+                  data={makeTSData(eodTS)}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <XAxis dataKey="date" />
+                    <YAxis tickFormatter={formatCurrency} domain={[Math.min(eodTS.adj_close), Math.max(eodTS.adj_close)]}/>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="price" stroke="#4527a0" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <hr />
+              Volume: {latestData.volume}
+              {/* stock exchange info, split history, dividend history, currency info */}
+          </div>
         </div>
       </div>
     );
