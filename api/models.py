@@ -109,8 +109,7 @@ class Holding(db.Model):
     instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
     units = db.Column(db.Float)
 
-    transactions = db.relationship(
-        'Transaction', secondary=holdings_transactions, backref='holdings')
+    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding')
 
     def __init__(self, **kwargs):
         super(Holding, self).__init__(**kwargs)
@@ -129,9 +128,13 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     ttype = db.Column(db.String)
-    tdate = db.Column(db.Date)
+    tdate = db.Column(db.String)
     units = db.Column(db.Float)
     price = db.Column(db.DECIMAL(asdecimal=False))
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
 
     def __init__(self, **kwargs):
         super(Transaction, self).__init__(**kwargs)
@@ -140,7 +143,7 @@ class Transaction(db.Model):
 class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
-        fields = ('id', 'ttype', 'tdate', 'units', 'price')
+        fields = ('id', 'ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id')
 
 transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
