@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import Header from './components/Header'
+import Header from './components/Header';
 
 const data = [
   {
@@ -53,7 +53,7 @@ class Dashboard extends Component {
               <div class="row">
                 <div class="columnChart">
                   <div style={{ width: '100%', height: 500 }}>
-                    <ResponsiveContainer width="80%">
+                    <ResponsiveContainer width="100%">
                       <AreaChart
                         width={500}
                         height={400}

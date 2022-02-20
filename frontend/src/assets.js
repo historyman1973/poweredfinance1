@@ -2,6 +2,51 @@ import React, { Component } from "react";
 import Header from "./components/Header";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DataGrid } from '@mui/x-data-grid';
+import { Button, Paper } from "@mui/material";
+import { styled, Box } from '@mui/system';
+import ModalUnstyled from '@mui/base/ModalUnstyled';
+import AddAssetForm from "./components/AddAssetForm";
+
+const StyledModal = styled(ModalUnstyled)`
+  position: fixed;
+  z-index: 1300;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Backdrop = styled('div')`
+  z-index: -1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent;
+`;
+
+const style = {
+  p: 2,
+  px: 4,
+  pb: 3,
+  borderRadius: 5,
+  position: 'fixed',
+  overflowY: 'auto',
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  maxWidth: "40%",
+  minWidth: 400,
+  bgcolor: '#ffffff',
+  boxShadow: 24,
+  p: 4,
+};
 
 const chartData = [
   {
@@ -91,9 +136,14 @@ const assetListRows = [
   { id: 6, assetName: 'Work Pension', value: 8774, currency: 'GBP', allocation: '0.7%', lastUpdated: '12/10/2021' }
 ];
 
-class Assets extends Component {
 
-  render() {
+
+function Assets() {
+
+  const handleAddAssetOpen = () => setOpen(true);
+  const handleAddAssetClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false);
+
     return (
       <div>
         <Header title={'assets'} viewingId={window.location.pathname.split('/')[2]} />
@@ -137,6 +187,18 @@ class Assets extends Component {
                 </div>
               </div>
               <div style={{ height: '350px', margin: '50px' }}>
+                <Button onClick={handleAddAssetOpen} variant="outlined" style={{ margin: 10, marginBottom: 20 }} >Add Asset</Button>
+                <StyledModal
+                  aria-labelledby="unstyled-modal-title"
+                  aria-describedby="unstyled-modal-description"
+                  open={open}
+                  onClose={handleAddAssetClose}
+                  BackdropComponent={Backdrop}
+                >
+                  <Paper sx={style}>
+                      <AddAssetForm />
+                  </Paper>
+                </StyledModal>
                 <DataGrid
                   rows={assetListRows}
                   columns={assetListColumns}
@@ -145,7 +207,6 @@ class Assets extends Component {
             </div>
       </div>
     );
-  }
 }
 
 export default Assets;

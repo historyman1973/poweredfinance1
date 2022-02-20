@@ -1,9 +1,7 @@
 import { Link } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Button, Table } from "react-bootstrap";
-
-
 
 function ClientTable ({clients}) {
 
@@ -21,7 +19,7 @@ function ClientTable ({clients}) {
       { field: 'gender', headerName: 'Gender', width: 150 },
       { field: 'view', headerName: 'View', width: 150, renderCell: (params) => (
         <Link href={`dashboard/${params.value}`}>View</Link>
-      ) }
+      ) } 
     ];
 
   return (

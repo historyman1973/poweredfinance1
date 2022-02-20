@@ -87,15 +87,10 @@ function SecurityDrilldown() {
                 </ResponsiveContainer>
               </div>
               <hr />
-              Volume: {latestData.volume}
-              {/* stock exchange info, split history, dividend history, currency info */}
           </div>
         </div>
       </div>
     );
-
-
-  
 }
 
 export default SecurityDrilldown;
