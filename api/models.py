@@ -109,7 +109,7 @@ class Holding(db.Model):
     instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
     units = db.Column(db.Float)
 
-    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding')
+    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Holding, self).__init__(**kwargs)
@@ -122,6 +122,30 @@ class HoldingSchema(ma.Schema):
 holding_schema = HoldingSchema()
 holdings_schema = HoldingSchema(many=True)
 
+
+class HoldingHistory(db.Model):
+    __tablename__ = "holdinghistory"
+
+    id = db.Column(db.Integer, primary_key=True)
+    holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
+    units = db.Column(db.Float)
+    updated_date = db.Column(db.String)
+
+    def __init__(self, **kwargs):
+        super(HoldingHistory, self).__init__(**kwargs)
+
+class HoldingHistorySchema(ma.Schema):
+    class Meta:
+        model = HoldingHistory
+        fields = (
+            'id',
+            'holding_id',
+            'units',
+            'updated_date'
+        )
+
+holdinghistory_schema = HoldingHistorySchema()
+holdinghistories_schema = HoldingHistorySchema(many=True)
 
 class Transaction(db.Model):
     __tablename__ = "transaction"
