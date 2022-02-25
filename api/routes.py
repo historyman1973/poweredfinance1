@@ -1,4 +1,5 @@
 import json
+from sqlalchemy import desc
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -10,7 +11,9 @@ from datetime import datetime
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
-from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, Instrument, instrument_schema, instruments_schema, Holding, holding_schema, holdings_schema, Transaction, transaction_schema, transactions_schema
+from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, \
+    Instrument, instrument_schema, instruments_schema, Holding, holding_schema, holdings_schema, Transaction, \
+        transaction_schema, transactions_schema, HoldingHistory, holdinghistory_schema, holdinghistories_schema
 
 load_dotenv(dotenv_path="./.env.local")
 
@@ -114,7 +117,6 @@ def add_investment():
     return investment_schema.jsonify(new_investment)
 
 
-# TODO Finish this off
 @api_blueprint.route("/add-transaction", methods=["POST"])
 def add_transaction():
     investment_id = request.json['investment_id']
@@ -139,12 +141,14 @@ def add_transaction():
         db.session.add(holding)
         db.session.commit()
         db.session.flush()
-        investment=Investment.query.get(investment_id)
+        investment = Investment.query.get(investment_id)
         investment.holdings.append(holding)
         db.session.commit()
 
+    # Add the new transaction
     new_transaction = Transaction(ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
 
+    # Link the transaction to its holding
     new_transaction.holding_id = holding.id
 
     db.session.add(new_transaction)
@@ -153,6 +157,12 @@ def add_transaction():
 
     holding.transactions.append(new_transaction)
     db.session.commit()
+
+    # Update the holding history table
+    history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate)
+    db.session.add(history_update)
+    db.session.commit()
+    db.session.flush()    
 
     transaction_result = transaction_schema.dump(new_transaction)
 
@@ -239,3 +249,33 @@ def search_ticker(search_term):
     data = result.json()
 
     return jsonify(data["data"])
+
+
+@api_blueprint.route("/get-value-as-at-date", methods=["GET"])
+def get_value_as_at_date():
+    investment_id = request.json['investment_id']
+    as_at_date = request.json['as_at_date']
+
+    # Get all of the holding links from the investment
+    holdings = Investment.query.get(investment_id).holdings
+    # Prepare an empty list, ready to hold the holdings ID linked to the investment of interest.
+    target_holdings = []
+    # For each holding, add it's ID to a list, ready to be iterated through in the function below.
+    for holding in holdings:
+        target_holdings.append(holding.id)
+    # Create an empty list to hold the results you'll return in the API response
+    units_as_at_date = []
+    
+
+    for item in target_holdings:
+        # Try and detect how many units each holding had on the as_at_date, but don't error if the holding didn't exist on that date
+        try:
+            last_updated_date = HoldingHistory.query.filter(HoldingHistory.holding_id == int(item), HoldingHistory.updated_date <= as_at_date).order_by(desc(HoldingHistory.updated_date)).first()
+        except:
+            pass
+        # If the holding was in place on the as_at_date, then create a dictionary of the holding's id and the number of units, adding it to the results list
+        if last_updated_date:
+            data = {int(item): last_updated_date.units}
+            units_as_at_date.append(data)
+
+    return json.dumps(units_as_at_date)
