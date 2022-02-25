@@ -12,6 +12,7 @@ flask-cors = "*"
 marshmallow-sqlalchemy = "*"
 requests = "*"
 python-dotenv = "*"
+migrate = "*"
 
 [dev-packages]
 
