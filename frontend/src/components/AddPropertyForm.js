@@ -13,9 +13,16 @@ import {
 } from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const initialFValues = {
-  type: "",
+  property_type: "",
+  address: "",
+  cost: "",
+  value: "",
+  owner1_id: window.location.pathname.split("/")[2],
+  owner2_id: "",
 };
 
 export default function AddPropertyForm() {
@@ -24,9 +31,9 @@ export default function AddPropertyForm() {
     temp.address = values.address
       ? ""
       : "Required field. Alternatively a name can be provided here.";
-    temp.postcode = values.postcode
+    temp.value = values.value
       ? ""
-      : "Please add postcode for valuation purposes.";
+      : "Please enter an approximate value of the property.";
     temp.cost = values.cost
       ? ""
       : "Please add the purchase cost of the property, net of fees if these are included in the fees field.";
@@ -43,8 +50,27 @@ export default function AddPropertyForm() {
   const handleSubmit = (e) => {
     if (!validate()) e.preventDefault();
     else {
-      console.log("Submitted Property");
-      //addClient(values)
+      e.preventDefault();
+      addProperty(values);
+    }
+  };
+
+  const addProperty = async (values) => {
+    try {
+      const res = await axios.post(
+        `http://127.0.0.1:5000/add-property`,
+        values
+      );
+      console.log(
+        await axios.get(
+          `http://127.0.0.1:5000/get-properties/` +
+            window.location.pathname.split("/")[2]
+        )
+      );
+      // setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -64,25 +90,18 @@ export default function AddPropertyForm() {
               error={errors.address}
             />
             <Controls.Input
-              label="Postcode"
-              name="postcode"
-              value={values.postcode}
+              label="Value"
+              name="value"
+              value={values.value}
               onChange={handleInputChange}
-              error={errors.postcode}
+              error={errors.value}
             />
             <Controls.Input
-              label="Cost (minus fees)"
+              label="Cost (inc fees)"
               name="cost"
               value={values.cost}
               onChange={handleInputChange}
               error={errors.cost}
-            />
-            <Controls.Input
-              label="Purchase Fees"
-              name="fees"
-              value={values.fees}
-              onChange={handleInputChange}
-              error={errors.fees}
             />
             <FormControl>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
@@ -95,7 +114,7 @@ export default function AddPropertyForm() {
                 <MenuItem value={"buy-to-let"}>Buy to let</MenuItem>
                 <MenuItem value={"main-residence"}>Main residence</MenuItem>
                 <MenuItem value={"holiday-home"}>Holiday home</MenuItem>
-                <MenuItem value={"commercial-land"}>Commercial land</MenuItem>
+                <MenuItem value={"commercial"}>Commercial</MenuItem>
                 <MenuItem value={"second-residence"}>Second residence</MenuItem>
               </Select>
             </FormControl>
