@@ -1,4 +1,5 @@
 import json
+import simplejson as json
 from sqlalchemy import desc
 from database import db
 from flask import Blueprint, request
@@ -13,7 +14,9 @@ api_blueprint = Blueprint('api_blueprint', __name__)
 
 from models import Client, clients_schema, client_schema, Investment, investment_schema, investments_schema, \
     Instrument, instrument_schema, instruments_schema, Holding, holding_schema, holdings_schema, Transaction, \
-        transaction_schema, transactions_schema, HoldingHistory, holdinghistory_schema, holdinghistories_schema
+        transaction_schema, transactions_schema, HoldingHistory, holdinghistory_schema, holdinghistories_schema, \
+            LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, \
+                properties_schema, Liability, liability_schema, liabilities_schema
 
 load_dotenv(dotenv_path="./.env.local")
 
@@ -97,7 +100,6 @@ def add_investment():
     value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
-    owner_type = request.json['owner_type']
 
     # owners = create_owners(owner1_id=owner1_id, owner2_id=owner2_id)
 
@@ -107,14 +109,158 @@ def add_investment():
         investment_ref=investment_ref,
         value=value,
         owner1_id=owner1_id,
-        owner2_id=owner2_id,
-        owner_type=owner_type
+        owner2_id=owner2_id
     )
 
     db.session.add(new_investment)
     db.session.commit()
 
     return investment_schema.jsonify(new_investment)
+
+
+@api_blueprint.route("/add-liability", methods=["POST"])
+def add_liability():
+    category = request.json['category']
+    liability_type = request.json['liability_type']
+    amount_borrowed = request.json['amount_borrowed']
+    amount_outstanding = request.json['amount_outstanding']
+    owner1_id = request.json['owner1_id']
+    owner2_id = request.json['owner2_id']
+
+
+    new_liability = Liability(
+        category=category,
+        liability_type=liability_type,
+        amount_borrowed=amount_borrowed,
+        amount_outstanding=amount_outstanding,
+        owner1_id=owner1_id,
+        owner2_id=owner2_id
+    )
+
+    db.session.add(new_liability)
+    db.session.commit()
+
+    return liability_schema.jsonify(new_liability)
+
+
+@api_blueprint.route("/get-liability/<liability_id>", methods=["GET"])
+def get_liability(liability_id):
+    liability = Liability.query.get(liability_id)
+    result = liability_schema.dump(liability)
+    return jsonify(result)
+
+
+@api_blueprint.route("/get-liabilities/<client_id>", methods=["GET"])
+def get_liabilities(client_id):
+    client = Client.query.get(client_id)
+    if client.isPrimary == True:
+        liabilities = db.session.query(
+            Liability).filter_by(owner1_id=client_id)
+    else:
+        liabilities = db.session.query(
+            Liability).filter_by(owner2_id=client_id)
+
+    return liabilities_schema.jsonify(liabilities)
+
+
+@api_blueprint.route("/mortgage-to-property", methods=["POST"])
+def link_mortgage_to_property():
+    liability_id = request.json['liability_id']
+    property_id = request.json['property_id']
+    liability = Liability.query.get(liability_id)
+    property = Property.query.get(property_id)
+    liability.property_id = property.id
+    db.session.commit()
+
+    return "200 - linked mortgage to property", 200
+
+
+@api_blueprint.route("/add-lifestyleasset", methods=["POST"])
+def add_lifestyleasset():
+    asset_type = request.json['asset_type']
+    description = request.json['description']
+    value = request.json['value']
+    owner1_id = request.json['owner1_id']
+    owner2_id = request.json['owner2_id']
+
+
+    new_lifestyleasset = LifestyleAsset(
+        asset_type=asset_type,
+        description=description,
+        value=value,
+        owner1_id=owner1_id,
+        owner2_id=owner2_id
+    )
+
+    db.session.add(new_lifestyleasset)
+    db.session.commit()
+
+    return lifestyleasset_schema.jsonify(new_lifestyleasset)
+
+
+@api_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
+def get_lifestyle_asset(lifestyle_asset_id):
+    lifestyleasset = LifestyleAsset.query.get(lifestyle_asset_id)
+    result = lifestyleasset_schema.dump(lifestyleasset)
+    return jsonify(result)
+
+
+@api_blueprint.route("/get-lifestyle-assets/<client_id>", methods=["GET"])
+def get_lifestyleassets(client_id):
+    client = Client.query.get(client_id)
+    if client.isPrimary == True:
+        lifestyleassets = db.session.query(
+            LifestyleAsset).filter_by(owner1_id=client_id)
+    else:
+        lifestyleassets = db.session.query(
+            LifestyleAsset).filter_by(owner2_id=client_id)
+
+    return lifestyleassets_schema.jsonify(lifestyleassets)
+
+
+@api_blueprint.route("/add-property", methods=["POST"])
+def add_property():
+    property_type = request.json['property_type']
+    address = request.json['address']
+    cost = request.json['cost']
+    value = request.json['value']
+    owner1_id = request.json['owner1_id']
+    owner2_id = request.json['owner2_id']
+
+
+    new_property = Property(
+        property_type=property_type,
+        address=address,
+        cost=cost,
+        value=value,
+        owner1_id=owner1_id,
+        owner2_id=owner2_id
+    )
+
+    db.session.add(new_property)
+    db.session.commit()
+
+    return property_schema.jsonify(new_property)
+
+
+@api_blueprint.route("/get-property/<property_id>", methods=["GET"])
+def get_property(property_id):
+    property = Property.query.get(property_id)
+    result = property_schema.dump(property)
+    return jsonify(result)
+
+
+@api_blueprint.route("/get-properties/<client_id>", methods=["GET"])
+def get_properties(client_id):
+    client = Client.query.get(client_id)
+    if client.isPrimary == True:
+        properties = db.session.query(
+            Property).filter_by(owner1_id=client_id)
+    else:
+        properties = db.session.query(
+            Property).filter_by(owner2_id=client_id)
+
+    return properties_schema.jsonify(properties)
 
 
 @api_blueprint.route("/add-transaction", methods=["POST"])
@@ -176,7 +322,7 @@ def link_instrument_to_investment(instrument_id, investment_id):
     investment.instruments.append(instrument)
     db.session.commit()
 
-    return "Linked " + instrument.symbol + " to " + investment.investment_type
+    return "Linked " + instrument.symbol + " to " + investment.investment_type, 200
 
 
 @api_blueprint.route("/get-investment/<investment_id>", methods=["GET"])

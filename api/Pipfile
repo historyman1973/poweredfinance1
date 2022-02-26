@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "==1.1.2"
+flask = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 flask-migrate = "*"
@@ -12,6 +12,8 @@ flask-cors = "*"
 marshmallow-sqlalchemy = "*"
 requests = "*"
 python-dotenv = "*"
+simplejson = "*"
+itsdangerous = "==2.0.1"
 
 [dev-packages]
 

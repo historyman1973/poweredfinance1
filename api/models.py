@@ -147,6 +147,107 @@ class HoldingHistorySchema(ma.Schema):
 holdinghistory_schema = HoldingHistorySchema()
 holdinghistories_schema = HoldingHistorySchema(many=True)
 
+
+class Liability(db.Model):
+    __tablename__ = "liability"
+
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String)
+    liability_type = db.Column(db.String)
+    amount_borrowed = db.Column(db.Numeric)
+    amount_outstanding = db.Column(db.Numeric)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    property_id = db.Column(db.Integer, db.ForeignKey('property.id'))
+
+    def __init__(self, **kwargs):
+        super(Liability, self).__init__(**kwargs)
+
+
+class LiabilitySchema(ma.Schema):
+    class Meta:
+        model = Liability
+        fields = (
+            'id',
+            'category',
+            'liability_type',
+            'amount_borrowed',
+            'amount_outstanding',
+            'owner1_id',
+            'owner2_id'
+        )
+
+
+liability_schema = LiabilitySchema()
+liabilities_schema = LiabilitySchema(many=True)
+
+
+class LifestyleAsset(db.Model):
+    __tablename__ = "lifestyle_asset"
+
+    id = db.Column(db.Integer, primary_key=True)
+    asset_type = db.Column(db.String)
+    description = db.Column(db.String)
+    value = db.Column(db.Numeric)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    def __init__(self, **kwargs):
+        super(LifestyleAsset, self).__init__(**kwargs)
+
+
+class LifestyleAssetSchema(ma.Schema):
+    class Meta:
+        model = LifestyleAsset
+        fields = (
+            'id',
+            'asset_type',
+            'description',
+            'value',
+            'owner1_id',
+            'owner2_id'
+        )
+
+
+lifestyleasset_schema = LifestyleAssetSchema()
+lifestyleassets_schema = LifestyleAssetSchema(many=True)
+
+
+class Property(db.Model):
+    __tablename__ = "property"
+
+    id = db.Column(db.Integer, primary_key=True)
+    property_type = db.Column(db.String)
+    address = db.Column(db.String)
+    cost = db.Column(db.Numeric)
+    value = db.Column(db.Numeric)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    mortgage = db.relationship('Liability', backref='property', uselist=False)
+
+    def __init__(self, **kwargs):
+        super(Property, self).__init__(**kwargs)
+
+
+class PropertySchema(ma.Schema):
+    class Meta:
+        model = Property
+        fields = (
+            'id',
+            'property_type',
+            'address',
+            'cost',
+            'value',
+            'owner1_id',
+            'owner2_id'
+        )
+
+
+property_schema = PropertySchema()
+properties_schema = PropertySchema(many=True)
+
 class Transaction(db.Model):
     __tablename__ = "transaction"
 
