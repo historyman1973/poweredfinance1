@@ -3,11 +3,11 @@ import ClientTable from "./components/ClientTable";
 import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Header from './components/Header'
+import Header from "./components/Header";
 import { Button, Modal, Paper, TextField } from "@mui/material";
 import AddClientForm from "./components/AddClientForm";
-import { styled, Box } from '@mui/system';
-import ModalUnstyled from '@mui/base/ModalUnstyled';
+import { styled, Box } from "@mui/system";
+import ModalUnstyled from "@mui/base/ModalUnstyled";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -21,7 +21,7 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const Backdrop = styled('div')`
+const Backdrop = styled("div")`
   z-index: -1;
   position: fixed;
   right: 0;
@@ -37,21 +37,20 @@ const style = {
   px: 4,
   pb: 3,
   borderRadius: 5,
-  position: 'fixed',
-  overflowY: 'auto',
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "fixed",
+  overflowY: "auto",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   maxWidth: "40%",
   minWidth: 400,
-  bgcolor: '#ffffff',
+  bgcolor: "#ffffff",
   boxShadow: 24,
   p: 4,
 };
 
 function Clients() {
-
   const handleAddClientModalOpen = () => setOpen(true);
   const handleAddClientModalClose = () => setOpen(false);
   const [clientList, setClientList] = useState([]);
@@ -73,9 +72,15 @@ function Clients() {
 
   return (
     <div>
-      <Header title={'clients'}/>
+      <Header title={"clients"} />
       <div class="add-client-btn">
-        <Button onClick={handleAddClientModalOpen} variant="outlined" size="large">Add client</Button>
+        <Button
+          onClick={handleAddClientModalOpen}
+          variant="outlined"
+          size="large"
+        >
+          Add client
+        </Button>
       </div>
       <br />
       <br />
@@ -90,10 +95,9 @@ function Clients() {
           <AddClientForm />
         </Paper>
       </StyledModal>
-      <ClientTable class="padding-left-right" clients={clientList}/>
+      <ClientTable class="padding-left-right" clients={clientList} />
     </div>
   );
-
 }
 
 export default Clients;
