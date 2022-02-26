@@ -21,6 +21,7 @@ from models import Client, clients_schema, client_schema, Investment, investment
 load_dotenv(dotenv_path="./.env.local")
 
 MY_ACCESS_KEY = os.environ.get("MY_ACCESS_KEY", "")
+ADDRESSIO_KEY = os.environ.get("ADDRESSIO_KEY", "")
 
 
 @api_blueprint.route("/")
@@ -50,6 +51,18 @@ def add_client():
     db.session.commit()
 
     return client_schema.jsonify(new_client)
+
+
+@api_blueprint.route("/address-autocomplete/<term>", methods=["GET"])
+def address_autocomplete(term):
+    params = {
+        'api-key': ADDRESSIO_KEY
+    }
+    result = requests.get("https://api.getAddress.io/autocomplete/" + term, params)
+
+    data = result.json()
+
+    return jsonify(data["suggestions"])
 
 
 @api_blueprint.route("/get-client/<client_id>", methods=["GET"])
