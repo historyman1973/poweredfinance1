@@ -55,7 +55,7 @@ export default function AddPropertyForm() {
       </div>
       <Form onSubmit={handleSubmit}>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid container xs={12} alignItems="center" justifyContent="center">
             <Controls.Input
               label="Address"
               name="address"
@@ -103,10 +103,9 @@ export default function AddPropertyForm() {
           <Grid item xs={12}>
             <div>
               <Controls.Button
-                style={{ float: "right", marginTop: "6%", display: "grid" }}
+                style={{ float: "right", display: "grid" }}
                 text="Submit"
                 type="submit"
-                variant="outlined"
               />
             </div>
           </Grid>

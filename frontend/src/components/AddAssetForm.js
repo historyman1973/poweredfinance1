@@ -49,7 +49,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   maxWidth: "40%",
-  minWidth: 400,
+  minWidth: 100,
   bgcolor: "#ffffff",
   boxShadow: 24,
   p: 4,
