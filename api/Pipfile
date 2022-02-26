@@ -14,6 +14,7 @@ requests = "*"
 python-dotenv = "*"
 simplejson = "*"
 itsdangerous = "==2.0.1"
+migrate = "*"
 
 [dev-packages]
 

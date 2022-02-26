@@ -250,6 +250,13 @@
             "index": "pypi",
             "version": "==0.27.0"
         },
+        "migrate": {
+            "hashes": [
+                "sha256:7da0cf95097f73a398377201f197c0ff7f0156744ffffc01fc45edf432c772b6"
+            ],
+            "index": "pypi",
+            "version": "==0.3.7"
+        },
         "python-dotenv": {
             "hashes": [
                 "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3",
