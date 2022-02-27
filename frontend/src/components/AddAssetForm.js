@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
+import AddInvestmentForm from "./AddInvestmentForm";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
@@ -60,6 +61,10 @@ export default function AddAssetForm() {
   const handleAddPropertyClose = () => setOpenProperty(false);
   const [openProperty, setOpenProperty] = React.useState(false);
 
+  const handleAddInvestmentOpen = () => setOpenInvestment(true);
+  const handleAddInvestmentClose = () => setOpenInvestment(false);
+  const [openInvestment, setOpenInvestment] = React.useState(false);
+
   return (
     <div style={{ height: "250px", margin: "10px", display: "grid" }}>
       <div style={{ margin: "auto" }}>
@@ -72,13 +77,16 @@ export default function AddAssetForm() {
       >
         Property
       </Button>
-      <Button variant="outlined" style={{ margin: 10, marginBottom: 10 }}>
+      <Button
+        onClick={handleAddInvestmentOpen}
+        variant="outlined"
+        style={{ margin: 10, marginBottom: 10 }}
+      >
         Investment account
       </Button>
       <Button variant="outlined" style={{ margin: 10, marginBottom: 10 }}>
         Other Asset
       </Button>
-
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -88,6 +96,17 @@ export default function AddAssetForm() {
       >
         <Paper sx={style}>
           <AddPropertyForm />
+        </Paper>
+      </StyledModal>
+      <StyledModal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={openInvestment}
+        onClose={handleAddInvestmentClose}
+        BackdropComponent={Backdrop}
+      >
+        <Paper sx={style}>
+          <AddInvestmentForm />
         </Paper>
       </StyledModal>
     </div>

@@ -17,27 +17,21 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const initialFValues = {
-  property_type: "",
-  address: "",
-  cost: "",
-  value: "",
+  investment_type: "",
+  provider: "",
+  investment_ref: "",
+  value: 0,
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
 };
 
-export default function AddPropertyForm() {
+export default function AddInvestmentForm() {
   const validate = () => {
     let temp = {};
-    temp.address = values.address
+    temp.provider = values.provider
       ? ""
-      : "Required field. Alternatively a name can be provided here.";
-    temp.value = values.value
-      ? ""
-      : "Please enter an approximate value of the property.";
-    temp.cost = values.cost
-      ? ""
-      : "Please add the purchase cost of the property, net of fees if these are included in the fees field.";
-    temp.type = values.type ? "" : "Required field.";
+      : "Please enter the investment account's provider.";
+    temp.investment_type = values.investment_type ? "" : "Required field.";
     setErrors({
       ...temp,
     });
@@ -58,12 +52,12 @@ export default function AddPropertyForm() {
   const addProperty = async (values) => {
     try {
       const res = await axios.post(
-        `http://127.0.0.1:5000/add-property`,
+        `http://127.0.0.1:5000/add-investment`,
         values
       );
       console.log(
         await axios.get(
-          `http://127.0.0.1:5000/get-properties/` +
+          `http://127.0.0.1:5000/get-investments/` +
             window.location.pathname.split("/")[2]
         )
       );
@@ -77,45 +71,35 @@ export default function AddPropertyForm() {
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
       <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Property</h3>
+        <h3>Add Investment Account</h3>
       </div>
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
             <Controls.Input
-              label="Address"
-              name="address"
-              value={values.address}
+              label="Provider"
+              name="provider"
+              value={values.provider}
               onChange={handleInputChange}
-              error={errors.address}
+              error={errors.provider}
             />
             <Controls.Input
-              label="Value"
-              name="value"
-              value={values.value}
+              label="Reference"
+              name="investment_ref"
+              value={values.investment_ref}
               onChange={handleInputChange}
-              error={errors.value}
-            />
-            <Controls.Input
-              label="Cost (inc fees)"
-              name="cost"
-              value={values.cost}
-              onChange={handleInputChange}
-              error={errors.cost}
+              error={errors.investment_ref}
             />
             <FormControl>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
-                name="type"
+                name="investment_type"
                 label="Type"
-                value={values.type}
+                value={values.investment_type}
                 onChange={handleInputChange}
               >
-                <MenuItem value={"buy-to-let"}>Buy to let</MenuItem>
-                <MenuItem value={"main-residence"}>Main residence</MenuItem>
-                <MenuItem value={"holiday-home"}>Holiday home</MenuItem>
-                <MenuItem value={"commercial"}>Commercial</MenuItem>
-                <MenuItem value={"second-residence"}>Second residence</MenuItem>
+                <MenuItem value={"retirement"}>Retirement</MenuItem>
+                <MenuItem value={"non-retirement"}>Non retirement</MenuItem>
               </Select>
             </FormControl>
           </Grid>
