@@ -1,5 +1,4 @@
-from app import db, ma
-from flask_sqlalchemy import SQLAlchemy
+from database import db, ma
 
 investment_holdings = db.Table('investment_holdings', db.Column('investment_id', db.Integer, db.ForeignKey('investment.id')),
                                db.Column('holding_id', db.Integer, db.ForeignKey('holding.id')))
