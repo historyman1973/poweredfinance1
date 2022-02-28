@@ -6,7 +6,7 @@ from flask.json import jsonify
 investments_blueprint = Blueprint('investments_blueprint', __name__, static_url_path='routes')
 
 from models import Client, Investment, investment_schema, investments_schema, \
-    Instrument, Holding, Transaction, transaction_schema, HoldingHistory
+    Instrument, Holding, Transaction, transaction_schema, transactions_schema, HoldingHistory
 
 
 @investments_blueprint.route("/add-investment", methods=["POST"])
@@ -114,3 +114,39 @@ def add_transaction():
     transaction_result = transaction_schema.dump(new_transaction)
 
     return jsonify(transaction_result)
+
+
+@investments_blueprint.route("/get-transaction/<transaction_id>", methods=["GET"])
+def get_transaction(transaction_id):
+    transaction = Transaction.query.get(transaction_id)
+    result = transaction_schema.dump(transaction)
+    return jsonify(result)
+
+
+@investments_blueprint.route("/get-transactions/<grouping>/<group_id>", methods=["GET"])
+def get_transactions(grouping, group_id):
+    if grouping == "account":
+        holdings = Investment.query.get(group_id).holdings
+        target_holdings = []
+        # For each holding, add it's ID to a list, ready to be iterated through in the function below.
+        for holding in holdings:
+            target_holdings.append(holding.id)
+
+        transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).all()
+        
+        result = transactions_schema.dump(transactions)
+        return jsonify(result)
+    elif grouping == "holding":
+        transactions = Transaction.query.filter(Transaction.holding_id == group_id).all()
+
+        result = transactions_schema.dump(transactions)
+        return jsonify(result)
+    elif grouping == "client":
+        client = Client.query.get(group_id)
+        if client.isPrimary == True:
+            transactions = Transaction.query.filter(Transaction.owner1_id == group_id).all()
+        elif client.isPrimary == False:
+            transactions = Transaction.query.filter(Transaction.owner2_id == group_id).all()
+        
+        result = transactions_schema.dump(transactions)
+        return jsonify(result)
