@@ -1,5 +1,4 @@
-from app import db, ma
-from flask_sqlalchemy import SQLAlchemy
+from database import db, ma
 
 investment_holdings = db.Table('investment_holdings', db.Column('investment_id', db.Integer, db.ForeignKey('investment.id')),
                                db.Column('holding_id', db.Integer, db.ForeignKey('holding.id')))
@@ -268,7 +267,7 @@ class Transaction(db.Model):
 class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
-        fields = ('id', 'ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id')
+        fields = ('id', 'ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id', 'holding_id')
 
 transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
