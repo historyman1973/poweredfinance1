@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
 import AddInvestmentForm from "./AddInvestmentForm";
+import AddLifestyleAssetForm from "./AddLifestyleAssetForm";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
@@ -65,6 +66,10 @@ export default function AddAssetForm() {
   const handleAddInvestmentClose = () => setOpenInvestment(false);
   const [openInvestment, setOpenInvestment] = React.useState(false);
 
+  const handleAddLifestyleAssetOpen = () => setOpenLifestyleAsset(true);
+  const handleAddLifestyleAssetClose = () => setOpenLifestyleAsset(false);
+  const [openLifestyleAsset, setOpenLifestyleAsset] = React.useState(false);
+
   return (
     <div style={{ height: "250px", margin: "10px", display: "grid" }}>
       <div style={{ margin: "auto" }}>
@@ -84,8 +89,12 @@ export default function AddAssetForm() {
       >
         Investment account
       </Button>
-      <Button variant="outlined" style={{ margin: 10, marginBottom: 10 }}>
-        Other Asset
+      <Button
+        onClick={handleAddLifestyleAssetOpen}
+        variant="outlined"
+        style={{ margin: 10, marginBottom: 10 }}
+      >
+        Lifestyle Asset
       </Button>
       <StyledModal
         aria-labelledby="unstyled-modal-title"
@@ -107,6 +116,17 @@ export default function AddAssetForm() {
       >
         <Paper sx={style}>
           <AddInvestmentForm />
+        </Paper>
+      </StyledModal>
+      <StyledModal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={openLifestyleAsset}
+        onClose={handleAddLifestyleAssetClose}
+        BackdropComponent={Backdrop}
+      >
+        <Paper sx={style}>
+          <AddLifestyleAssetForm />
         </Paper>
       </StyledModal>
     </div>
