@@ -10,6 +10,7 @@ import Support from "../support";
 import SecurityDrilldown from "../securityDrilldown";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewLifestyle from "../assetOverviewLifestyle";
+import AssetOverviewInvestment from "../assetOverviewInvestment";
 
 const Layout = () => {
   return (
@@ -23,6 +24,10 @@ const Layout = () => {
       <Route
         path="/assets/:id/lifestyleasset/:lifestyleassetid"
         element={<AssetOverviewLifestyle />}
+      ></Route>
+      <Route
+        path="/assets/:id/investment/:lifestyleassetid"
+        element={<AssetOverviewInvestment />}
       ></Route>
       <Route path="/assets/:id" element={<Assets />}></Route>
       <Route path="/liabilities/*" element={<Liabilities />}></Route>
