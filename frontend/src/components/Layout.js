@@ -26,14 +26,14 @@ const Layout = () => {
         element={<AssetOverviewLifestyle />}
       ></Route>
       <Route
-        path="/assets/:id/investment/:lifestyleassetid"
+        path="/assets/:id/investment/:investmentid"
         element={<AssetOverviewInvestment />}
       ></Route>
       <Route path="/assets/:id" element={<Assets />}></Route>
-      <Route path="/liabilities/*" element={<Liabilities />}></Route>
-      <Route path="/settings/*" element={<Settings />}></Route>
-      <Route path="/support/*" element={<Support />}></Route>
-      <Route path="/security/*" element={<SecurityDrilldown />}></Route>
+      <Route path="/liabilities/:id" element={<Liabilities />}></Route>
+      <Route path="/settings/:id" element={<Settings />}></Route>
+      <Route path="/support/:id" element={<Support />}></Route>
+      <Route path="/security/:ticker" element={<SecurityDrilldown />}></Route>
     </Routes>
   );
 };
