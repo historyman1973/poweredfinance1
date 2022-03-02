@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from flask.json import jsonify
 
 
-investments_blueprint = Blueprint('investments_blueprint', __name__, static_url_path='routes')
+investments_blueprint = Blueprint('investments_blueprint', __name__)
 
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, Transaction, transaction_schema, transactions_schema, HoldingHistory
@@ -132,21 +132,23 @@ def get_transactions(grouping, group_id):
         for holding in holdings:
             target_holdings.append(holding.id)
 
-        transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).all()
+        transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).order_by(Transaction.tdate).all()
         
         result = transactions_schema.dump(transactions)
         return jsonify(result)
+
     elif grouping == "holding":
-        transactions = Transaction.query.filter(Transaction.holding_id == group_id).all()
+        transactions = Transaction.query.filter(Transaction.holding_id == group_id).order_by(Transaction.tdate).all()
 
         result = transactions_schema.dump(transactions)
         return jsonify(result)
+
     elif grouping == "client":
         client = Client.query.get(group_id)
         if client.isPrimary == True:
-            transactions = Transaction.query.filter(Transaction.owner1_id == group_id).all()
+            transactions = Transaction.query.filter(Transaction.owner1_id == group_id).order_by(Transaction.tdate).all()
         elif client.isPrimary == False:
-            transactions = Transaction.query.filter(Transaction.owner2_id == group_id).all()
+            transactions = Transaction.query.filter(Transaction.owner2_id == group_id).order_by(Transaction.tdate).all()
         
         result = transactions_schema.dump(transactions)
         return jsonify(result)
