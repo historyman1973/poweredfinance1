@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
   AreaChart,
@@ -14,6 +14,8 @@ import { Button, Paper } from "@mui/material";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddAssetForm from "./components/AddAssetForm";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -227,6 +229,24 @@ function Assets() {
   const handleAddAssetOpen = () => setOpen(true);
   const handleAddAssetClose = () => setOpen(false);
   const [open, setOpen] = React.useState(false);
+  const [client, setClient] = useState([]);
+
+  const getClient = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/get-client/` +
+          window.location.pathname.split("/")[2]
+      );
+      setClient(res.data || []);
+      // setLoading(false);
+      console.log(client);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => getClient(), []);
 
   return (
     <div>
@@ -237,6 +257,16 @@ function Assets() {
       <br />
       <br />
       <div class="main-container">
+        <div style={{ textAlign: "left", marginLeft: "5%" }}>
+          <h1>Assets</h1>
+          <div style={{ marginTop: "10px" }}>
+            <h5>
+              Client ID: {client.id}
+              <br />
+              {client.forename} {client.middle_names} {client.surname}
+            </h5>
+          </div>
+        </div>
         <div class="row">
           <div class="columnChart">
             <div style={{ width: "100%", height: 500 }}>

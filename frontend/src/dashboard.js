@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   AreaChart,
   Area,
@@ -9,6 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Header from "./components/Header";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const data = [
   {
@@ -85,59 +87,87 @@ const data = [
   },
 ];
 
-class Dashboard extends Component {
-  render() {
-    return (
-      <div>
-        <Header
-          title={"dashboard"}
-          viewingId={window.location.pathname.split("/")[2]}
-        />
-        <br />
-        <br />
-        <div class="main-container">
-          <div class="row">
-            <div class="columnChart">
-              <div style={{ width: "100%", height: 500 }}>
-                <ResponsiveContainer width="100%">
-                  <AreaChart
-                    width={500}
-                    height={400}
-                    data={data}
-                    margin={{
-                      top: 10,
-                      right: 30,
-                      left: 0,
-                      bottom: 0,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area
-                      type="monotone"
-                      dataKey="uv"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+function Dashboard() {
+  const [client, setClient] = useState([]);
+
+  const getClient = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/get-client/` +
+          window.location.pathname.split("/")[2]
+      );
+      setClient(res.data || []);
+      // setLoading(false);
+      console.log(client);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => getClient(), []);
+
+  return (
+    <div>
+      <Header
+        title={"dashboard"}
+        viewingId={window.location.pathname.split("/")[2]}
+      />
+      <br />
+      <br />
+      <div class="main-container">
+        <div style={{ textAlign: "left", marginLeft: "5%" }}>
+          <h1>Dashboard</h1>
+          <div style={{ marginTop: "10px" }}>
+            <h5>
+              Client ID: {client.id}
+              <br />
+              {client.forename} {client.middle_names} {client.surname}
+            </h5>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="columnChart">
+            <div style={{ width: "100%", height: 500, marginTop: "20px" }}>
+              <ResponsiveContainer width="100%">
+                <AreaChart
+                  width={500}
+                  height={400}
+                  data={data}
+                  margin={{
+                    top: 10,
+                    right: 30,
+                    left: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="uv"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
-            <div class="columnSummary">
-              <h1>1,000,501 GBP</h1>
-              <p>TOTAL NET WORTH</p>
-              <h1>1,312,674 GBP</h1>
-              <p>YOU OWN</p>
-              <h1>-312,173 GBP</h1>
-              <p>YOU OWE</p>
-            </div>
+          </div>
+          <div class="columnSummary">
+            <h1>1,000,501 GBP</h1>
+            <p>TOTAL NET WORTH</p>
+            <h1>1,312,674 GBP</h1>
+            <p>YOU OWN</p>
+            <h1>-312,173 GBP</h1>
+            <p>YOU OWE</p>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default Dashboard;
