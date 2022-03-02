@@ -15,6 +15,7 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   property_type: "",
@@ -26,6 +27,7 @@ const initialFValues = {
 };
 
 export default function AddPropertyForm() {
+  const navigate = useNavigate();
   const validate = () => {
     let temp = {};
     temp.address = values.address
@@ -37,7 +39,7 @@ export default function AddPropertyForm() {
     temp.cost = values.cost
       ? ""
       : "Please add the purchase cost of the property, net of fees if these are included in the fees field.";
-    temp.type = values.type ? "" : "Required field.";
+    temp.property_type = values.property_type ? "" : "Required field.";
     setErrors({
       ...temp,
     });
@@ -47,11 +49,22 @@ export default function AddPropertyForm() {
   const { values, setValues, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
-  const handleSubmit = (e) => {
-    if (!validate()) e.preventDefault();
-    else {
+  const handleSubmit = async (e) => {
+    if (!validate()) {
+      e.preventDefault();
+    } else {
       e.preventDefault();
       addProperty(values);
+      const newProperty = await axios.get(
+        `http://127.0.0.1:5000/get-properties/` +
+          window.location.pathname.split("/")[2]
+      );
+      navigate(
+        "/assets/" +
+          window.location.pathname.split("/")[2] +
+          "/property/" +
+          newProperty.data[newProperty.data.length - 1].id
+      );
     }
   };
 
@@ -60,12 +73,6 @@ export default function AddPropertyForm() {
       const res = await axios.post(
         `http://127.0.0.1:5000/add-property`,
         values
-      );
-      console.log(
-        await axios.get(
-          `http://127.0.0.1:5000/get-properties/` +
-            window.location.pathname.split("/")[2]
-        )
       );
       // setLoading(false);
     } catch (error) {
@@ -106,9 +113,9 @@ export default function AddPropertyForm() {
             <FormControl>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
-                name="type"
+                name="property_type"
                 label="Type"
-                value={values.type}
+                value={values.property_type}
                 onChange={handleInputChange}
               >
                 <MenuItem value={"buy-to-let"}>Buy to let</MenuItem>
