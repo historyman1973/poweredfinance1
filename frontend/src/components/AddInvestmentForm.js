@@ -48,16 +48,7 @@ export default function AddInvestmentForm() {
     else {
       e.preventDefault();
       addInvestment(values);
-      const newInvestment = await axios.get(
-        `http://127.0.0.1:5000/get-investments/` +
-          window.location.pathname.split("/")[2]
-      );
-      navigate(
-        "/assets/" +
-          window.location.pathname.split("/")[2] +
-          "/investment/" +
-          newInvestment.data[newInvestment.data.length - 1].id
-      );
+      window.location.reload(false);
     }
   };
 

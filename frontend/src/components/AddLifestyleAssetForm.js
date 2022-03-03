@@ -50,16 +50,7 @@ export default function AddLifestyleAssetForm() {
     else {
       e.preventDefault();
       addLifestyleAsset(values);
-      const newLifestyleAsset = await axios.get(
-        `http://127.0.0.1:5000/get-lifestyle-assets/` +
-          window.location.pathname.split("/")[2]
-      );
-      navigate(
-        "/assets/" +
-          window.location.pathname.split("/")[2] +
-          "/lifestyleasset/" +
-          newLifestyleAsset.data[newLifestyleAsset.data.length - 1].id
-      );
+      window.location.reload(false);
     }
   };
 

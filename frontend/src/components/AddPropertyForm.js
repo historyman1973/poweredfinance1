@@ -55,16 +55,7 @@ export default function AddPropertyForm() {
     } else {
       e.preventDefault();
       addProperty(values);
-      const newProperty = await axios.get(
-        `http://127.0.0.1:5000/get-properties/` +
-          window.location.pathname.split("/")[2]
-      );
-      navigate(
-        "/assets/" +
-          window.location.pathname.split("/")[2] +
-          "/property/" +
-          newProperty.data[newProperty.data.length - 1].id
-      );
+      window.location.reload(false);
     }
   };
 
