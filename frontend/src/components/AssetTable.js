@@ -13,6 +13,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         id: property.id,
         category: "Property",
         value: property.value,
+        view: `property/` + property.id,
       })
     );
   }
@@ -24,6 +25,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         id: investment.id,
         category: "Investment",
         value: investment.value,
+        view: `investment/` + investment.id,
       })
     );
   }
@@ -35,6 +37,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         id: lifestyleAsset.id,
         category: "Lifestyle Asset",
         value: lifestyleAsset.value,
+        view: `lifestyleAsset/` + lifestyleAsset.id,
       })
     );
   }
@@ -44,6 +47,18 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
     { field: "description", headerName: "Description", width: 300 },
     { field: "category", headerName: "Category", width: 130 },
     { field: "value", headerName: "Value", width: 130 },
+    {
+      field: "view",
+      headerName: "View",
+      width: 150,
+      renderCell: (params) => (
+        <Link
+          href={`${window.location.pathname.split("/")[2]}/${params.value}`}
+        >
+          View
+        </Link>
+      ),
+    },
   ];
 
   return (
