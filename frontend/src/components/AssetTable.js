@@ -52,17 +52,14 @@ const style = {
 function AssetTable({ properties, investments, lifestyleAssets }) {
   const rows = Array();
 
-  //const handleViewInvestmentOpen = (id) => handleClick(id);
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
   const [investment, setInvestment] = React.useState(false);
 
-  //const handleViewPropertyOpen = () => setOpenViewProperty(true);
   const handleViewPropertyClose = () => setOpenViewProperty(false);
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
 
-  //const handleViewLifestyleOpen = () => setOpenViewLifestyle(true);
   const handleViewLifestyleClose = () => setOpenViewLifestyle(false);
   const [openViewLifestyle, setOpenViewLifestyle] = React.useState(false);
   const [lifestyle, setLifestyle] = React.useState(false);
