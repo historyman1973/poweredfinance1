@@ -13,6 +13,20 @@ function AssetOverviewProperty(id) {
 
   useEffect(() => getProperty(), []);
 
+  const getReadableType = (type) => {
+    if (type == "main-residence") {
+      return "Main residence";
+    } else if (type == "buy-to-let") {
+      return "Buy to let";
+    } else if (type == "holiday-home") {
+      return "Holiday home";
+    } else if (type == "commercial") {
+      return "Commercial";
+    } else if (type == "second-residence") {
+      return "Second residence";
+    }
+  };
+
   return (
     <div>
       <div
@@ -30,7 +44,7 @@ function AssetOverviewProperty(id) {
         >
           <h1>{property.address}</h1>
           <hr />
-          <h3>{property.property_type}</h3>
+          <h3>{getReadableType(property.property_type)}</h3>
           Value:
           <CurrencyFormat
             value={property.value}
