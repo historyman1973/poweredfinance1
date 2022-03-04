@@ -3,13 +3,12 @@ import Header from "./components/Header";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 
-function AssetOverviewLifestyle() {
+function AssetOverviewLifestyle(id) {
   const [lifestyleAsset, setLifestyleAsset] = useState([]);
 
   const getLifestyleAsset = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-lifestyle-asset/` +
-        window.location.pathname.split("/")[4]
+      `http://127.0.0.1:5000/get-lifestyle-asset/` + id.id
     );
     setLifestyleAsset(res.data || []);
   };
@@ -18,10 +17,6 @@ function AssetOverviewLifestyle() {
 
   return (
     <div>
-      <Header
-        title={"assets"}
-        viewingId={window.location.pathname.split("/")[2]}
-      />
       <div
         class="main-container"
         style={{ width: "80%", margin: "auto", marginTop: 25 }}

@@ -3,13 +3,12 @@ import Header from "./components/Header";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 
-function AssetOverviewInvestment() {
+function AssetOverviewInvestment(id) {
   const [investment, setInvestment] = useState([]);
 
   const getInvestment = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-investment/` +
-        window.location.pathname.split("/")[4]
+      `http://127.0.0.1:5000/get-investment/` + id.id
     );
     setInvestment(res.data || []);
   };
@@ -18,10 +17,6 @@ function AssetOverviewInvestment() {
 
   return (
     <div>
-      <Header
-        title={"assets"}
-        viewingId={window.location.pathname.split("/")[2]}
-      />
       <div
         class="main-container"
         style={{ width: "80%", margin: "auto", marginTop: 25 }}

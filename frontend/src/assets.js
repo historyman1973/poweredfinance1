@@ -135,9 +135,10 @@ const chartData = [
 ];
 
 function Assets() {
-  const handleAddAssetOpen = () => setOpen(true);
-  const handleAddAssetClose = () => setOpen(false);
-  const [open, setOpen] = React.useState(false);
+  const handleAddAssetOpen = () => setOpenAddAsset(true);
+  const handleAddAssetClose = () => setOpenAddAsset(false);
+  const [openAddAsset, setOpenAddAsset] = React.useState(false);
+
   const [client, setClient] = useState([]);
 
   const [properties, setProperties] = useState([]);
@@ -260,7 +261,7 @@ function Assets() {
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
-            open={open}
+            open={openAddAsset}
             onClose={handleAddAssetClose}
             BackdropComponent={Backdrop}
           >

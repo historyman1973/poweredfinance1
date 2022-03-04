@@ -3,26 +3,18 @@ import Header from "./components/Header";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 
-function AssetOverviewProperty() {
-
+function AssetOverviewProperty(id) {
   const [property, setProperty] = useState([]);
 
   const getProperty = async () => {
-    const res = await axios.get(
-      `http://127.0.0.1:5000/get-property/` +
-      window.location.pathname.split("/")[4]
-    );
-    setProperty(res.data || [])
+    const res = await axios.get(`http://127.0.0.1:5000/get-property/` + id.id);
+    setProperty(res.data || []);
   };
 
   useEffect(() => getProperty(), []);
 
   return (
     <div>
-      <Header
-        title={"assets"}
-        viewingId={window.location.pathname.split("/")[2]}
-      />
       <div
         class="main-container"
         style={{ width: "80%", margin: "auto", marginTop: 25 }}
