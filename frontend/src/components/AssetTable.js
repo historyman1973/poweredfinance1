@@ -4,9 +4,9 @@ import React, { Component, useState, useEffect } from "react";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
-import AssetOverviewProperty from "../AssetOverviewProperty";
-import AssetOverviewInvestment from "../AssetOverviewInvestment";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import AssetOverviewProperty from "../assetOverviewProperty";
+import AssetOverviewInvestment from "../assetOverviewInvestment";
+import AssetOverviewLifestyle from "../assetOverviewLifestyle";
 
 const Backdrop = styled("div")`
   z-index: -1;
