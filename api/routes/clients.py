@@ -1,11 +1,10 @@
+from models import Client, clients_schema, client_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 
 
 clients_blueprint = Blueprint('clients_blueprint', __name__)
-
-from models import Client, clients_schema, client_schema
 
 
 @clients_blueprint.route("/")
