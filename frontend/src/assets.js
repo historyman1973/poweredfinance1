@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
   AreaChart,
@@ -14,6 +14,9 @@ import { Button, Paper } from "@mui/material";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddAssetForm from "./components/AddAssetForm";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import AssetTable from "./components/AssetTable";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -131,102 +134,60 @@ const chartData = [
   },
 ];
 
-const assetListColumns = [
-  {
-    field: "id",
-    headerName: "ID",
-    width: 100,
-    type: "number",
-    editable: false,
-  },
-  {
-    field: "assetName",
-    headerName: "Asset name",
-    minWidth: 300,
-    editable: false,
-  },
-  {
-    field: "value",
-    headerName: "Value",
-    type: "number",
-    width: 150,
-    editable: false,
-  },
-  {
-    field: "currency",
-    headerName: "Currency",
-    minWidth: 150,
-    editable: false,
-  },
-  {
-    field: "allocation",
-    headerName: "Allocation %",
-    minWidth: 200,
-    editable: false,
-  },
-  {
-    field: "lastUpdated",
-    headerName: "Last Updated",
-    minWidth: 200,
-    editable: false,
-  },
-];
-
-const assetListRows = [
-  {
-    id: 1,
-    assetName: "Home #1",
-    value: 376799,
-    currency: "GBP",
-    allocation: "28.7%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 2,
-    assetName: "S&S ISA",
-    value: 10320,
-    currency: "GBP",
-    allocation: "0.8%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 3,
-    assetName: "Lifetime ISA",
-    value: 1012,
-    currency: "GBP",
-    allocation: "0.1%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 4,
-    assetName: "Ledger Crypto",
-    value: 912541,
-    currency: "GBP",
-    allocation: "69.5%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 5,
-    assetName: "Car #1",
-    value: 3228,
-    currency: "GBP",
-    allocation: "0.2%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 6,
-    assetName: "Work Pension",
-    value: 8774,
-    currency: "GBP",
-    allocation: "0.7%",
-    lastUpdated: "12/10/2021",
-  },
-];
-
 function Assets() {
-  const handleAddAssetOpen = () => setOpen(true);
-  const handleAddAssetClose = () => setOpen(false);
-  const [open, setOpen] = React.useState(false);
+  const handleAddAssetOpen = () => setOpenAddAsset(true);
+  const handleAddAssetClose = () => setOpenAddAsset(false);
+  const [openAddAsset, setOpenAddAsset] = React.useState(false);
+
+  const [client, setClient] = useState([]);
+
+  const [properties, setProperties] = useState([]);
+  const [investments, setInvestments] = useState([]);
+  const [lifestyleAssets, setLifestyleAssets] = useState([]);
+
+  const getProperties = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-properties/` +
+        window.location.pathname.split("/")[2]
+    );
+    setProperties(res.data || []);
+  };
+
+  const getLifestyleAssets = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-lifestyle-assets/` +
+        window.location.pathname.split("/")[2]
+    );
+    setLifestyleAssets(res.data || []);
+  };
+
+  const getInvestments = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-investments/` +
+        window.location.pathname.split("/")[2]
+    );
+    setInvestments(res.data || []);
+  };
+
+  useEffect(() => getProperties(), []);
+  useEffect(() => getInvestments(), []);
+  useEffect(() => getLifestyleAssets(), []);
+
+  const getClient = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/get-client/` +
+          window.location.pathname.split("/")[2]
+      );
+      setClient(res.data || []);
+      // setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => getClient(), []);
 
   return (
     <div>
@@ -237,6 +198,16 @@ function Assets() {
       <br />
       <br />
       <div class="main-container">
+        <div style={{ textAlign: "left", marginLeft: "5%" }}>
+          <h1>Assets</h1>
+          <div style={{ marginTop: "10px" }}>
+            <h5>
+              Client ID: {client.id}
+              <br />
+              {client.forename} {client.middle_names} {client.surname}
+            </h5>
+          </div>
+        </div>
         <div class="row">
           <div class="columnChart">
             <div style={{ width: "100%", height: 500 }}>
@@ -290,7 +261,7 @@ function Assets() {
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
-            open={open}
+            open={openAddAsset}
             onClose={handleAddAssetClose}
             BackdropComponent={Backdrop}
           >
@@ -298,7 +269,12 @@ function Assets() {
               <AddAssetForm />
             </Paper>
           </StyledModal>
-          <DataGrid rows={assetListRows} columns={assetListColumns} />
+          <AssetTable
+            class="padding-left-right"
+            properties={properties}
+            investments={investments}
+            lifestyleAssets={lifestyleAssets}
+          />
         </div>
       </div>
     </div>

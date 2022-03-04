@@ -7,7 +7,6 @@ otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)
 
 from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema
 
-
 @otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
 def add_lifestyleasset():
     asset_type = request.json['asset_type']
@@ -15,7 +14,6 @@ def add_lifestyleasset():
     value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
-
 
     new_lifestyleasset = LifestyleAsset(
         asset_type=asset_type,
@@ -65,7 +63,6 @@ def add_property():
     value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
-
 
     new_property = Property(
         property_type=property_type,

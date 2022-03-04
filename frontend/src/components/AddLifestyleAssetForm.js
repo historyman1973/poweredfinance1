@@ -15,6 +15,7 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   asset_type: "",
@@ -25,6 +26,7 @@ const initialFValues = {
 };
 
 export default function AddLifestyleAssetForm() {
+  const navigate = useNavigate();
   const validate = () => {
     let temp = {};
     temp.value = values.value
@@ -43,15 +45,16 @@ export default function AddLifestyleAssetForm() {
   const { values, setValues, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (!validate()) e.preventDefault();
     else {
       e.preventDefault();
-      addProperty(values);
+      addLifestyleAsset(values);
+      window.location.reload(false);
     }
   };
 
-  const addProperty = async (values) => {
+  const addLifestyleAsset = async (values) => {
     try {
       const res = await axios.post(
         `http://127.0.0.1:5000/add-lifestyleasset`,

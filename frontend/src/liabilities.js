@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
   AreaChart,
@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const chartData = [
   {
@@ -162,66 +164,92 @@ const liabilityListRows = [
   },
 ];
 
-class Liabilities extends Component {
-  render() {
-    return (
-      <div>
-        <Header
-          title={"liabilities"}
-          viewingId={window.location.pathname.split("/")[2]}
-        />
-        <br />
-        <br />
-        <div class="main-container">
-          <div class="row">
-            <div class="columnChart">
-              <div style={{ width: "100%", height: 500 }}>
-                <ResponsiveContainer>
-                  <AreaChart
-                    width={500}
-                    height={400}
-                    data={chartData}
-                    margin={{
-                      top: 10,
-                      right: 30,
-                      left: 0,
-                      bottom: 0,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area
-                      type="monotone"
-                      dataKey="uv"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div class="columnSummary">
-              <div class="summaryCardOuter">
-                <h1>312,173 GBP</h1>
-                <p>TOTAL LIABILITIES</p>
-                <div class="summaryCardInner">
-                  <h3>(+7%) 1,299 GBP</h3>
-                  <p>30-DAY PERFORMANCE</p>
-                  <h3>(-19%) 111,293 GBP</h3>
-                  <p>120-DAY PERFORMANCE</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style={{ height: "350px", margin: "50px" }}>
-            <DataGrid rows={liabilityListRows} columns={liabilityListColumns} />
+function Liabilities() {
+  const [client, setClient] = useState([]);
+
+  const getClient = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/get-client/` +
+          window.location.pathname.split("/")[2]
+      );
+      setClient(res.data || []);
+      // setLoading(false);
+      console.log(client);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => getClient(), []);
+  return (
+    <div>
+      <Header
+        title={"liabilities"}
+        viewingId={window.location.pathname.split("/")[2]}
+      />
+      <br />
+      <br />
+      <div class="main-container">
+        <div style={{ textAlign: "left", marginLeft: "5%" }}>
+          <h1>Liabilities</h1>
+          <div style={{ marginTop: "10px" }}>
+            <h5>
+              Client ID: {client.id}
+              <br />
+              {client.forename} {client.middle_names} {client.surname}
+            </h5>
           </div>
         </div>
+        <div class="row">
+          <div class="columnChart">
+            <div style={{ width: "100%", height: 500 }}>
+              <ResponsiveContainer>
+                <AreaChart
+                  width={500}
+                  height={400}
+                  data={chartData}
+                  margin={{
+                    top: 10,
+                    right: 30,
+                    left: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="uv"
+                    stroke="#8884d8"
+                    fill="#8884d8"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div class="columnSummary">
+            <div class="summaryCardOuter">
+              <h1>312,173 GBP</h1>
+              <p>TOTAL LIABILITIES</p>
+              <div class="summaryCardInner">
+                <h3>(+7%) 1,299 GBP</h3>
+                <p>30-DAY PERFORMANCE</p>
+                <h3>(-19%) 111,293 GBP</h3>
+                <p>120-DAY PERFORMANCE</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ height: "350px", margin: "50px" }}>
+          <DataGrid rows={liabilityListRows} columns={liabilityListColumns} />
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default Liabilities;

@@ -15,6 +15,7 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   investment_type: "",
@@ -26,6 +27,7 @@ const initialFValues = {
 };
 
 export default function AddInvestmentForm() {
+  const navigate = useNavigate();
   const validate = () => {
     let temp = {};
     temp.provider = values.provider
@@ -41,15 +43,16 @@ export default function AddInvestmentForm() {
   const { values, setValues, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if (!validate()) e.preventDefault();
     else {
       e.preventDefault();
-      addProperty(values);
+      addInvestment(values);
+      window.location.reload(false);
     }
   };
 
-  const addProperty = async (values) => {
+  const addInvestment = async (values) => {
     try {
       const res = await axios.post(
         `http://127.0.0.1:5000/add-investment`,
