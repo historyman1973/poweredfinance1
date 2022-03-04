@@ -37,31 +37,27 @@ def add_investment():
 @investments_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
 def get_investment(investment_id):
     investment = Investment.query.get(investment_id)
-    result = investment_schema.dump(investment)
-    return jsonify(result)
+    if investment:
+        result = investment_schema.dump(investment)
+        return jsonify(result)
+    else:
+        return("Investment id " + investment_id + " doesn't exist."), 404
 
 
 @investments_blueprint.route("/get-investments/<client_id>", methods=["GET"])
 def get_investments(client_id):
     client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        investments = db.session.query(
-            Investment).filter_by(owner1_id=client_id)
+    if client:
+        if client.isPrimary == True:
+            investments = db.session.query(
+                Investment).filter_by(owner1_id=client_id)
+        else:
+            investments = db.session.query(
+                Investment).filter_by(owner2_id=client_id)
+
+        return investments_schema.jsonify(investments)
     else:
-        investments = db.session.query(
-            Investment).filter_by(owner2_id=client_id)
-
-    return investments_schema.jsonify(investments)
-
-
-@investments_blueprint.route("/instrument-to-investment/<instrument_id>/<investment_id>", methods=["POST"])
-def link_instrument_to_investment(instrument_id, investment_id):
-    investment = Investment.query.get(investment_id)
-    instrument = Instrument.query.get(instrument_id)
-    investment.instruments.append(instrument)
-    db.session.commit()
-
-    return "Linked " + instrument.symbol + " to " + investment.investment_type, 200
+        return("Client id " + client_id + " doesn't exist."), 404
 
 
 @investments_blueprint.route("/add-transaction", methods=["POST"])
@@ -126,29 +122,40 @@ def get_transaction(transaction_id):
 @investments_blueprint.route("/get-transactions/<grouping>/<group_id>", methods=["GET"])
 def get_transactions(grouping, group_id):
     if grouping == "account":
-        holdings = Investment.query.get(group_id).holdings
-        target_holdings = []
-        # For each holding, add it's ID to a list, ready to be iterated through in the function below.
-        for holding in holdings:
-            target_holdings.append(holding.id)
+        investment = Investment.query.get(group_id)
+        if investment:
+            holdings = investment.holdings
+            target_holdings = []
+            # For each holding, add it's ID to a list, ready to be iterated through in the function below.
+            for holding in holdings:
+                target_holdings.append(holding.id)
 
-        transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).order_by(Transaction.tdate).all()
-        
-        result = transactions_schema.dump(transactions)
-        return jsonify(result)
+            transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).order_by(Transaction.tdate).all()
+            
+            result = transactions_schema.dump(transactions)
+            return jsonify(result)
+        else:
+            return("Account id " + group_id + " doesn't exist."), 404
 
     elif grouping == "holding":
-        transactions = Transaction.query.filter(Transaction.holding_id == group_id).order_by(Transaction.tdate).all()
+        holding = Holding.query.get(group_id)
+        if holding:
+            transactions = Transaction.query.filter(Transaction.holding_id == group_id).order_by(Transaction.tdate).all()
 
-        result = transactions_schema.dump(transactions)
-        return jsonify(result)
+            result = transactions_schema.dump(transactions)
+            return jsonify(result)
+        else:
+            return("Holding id " + group_id + " doesn't exist."), 404
 
     elif grouping == "client":
         client = Client.query.get(group_id)
-        if client.isPrimary == True:
-            transactions = Transaction.query.filter(Transaction.owner1_id == group_id).order_by(Transaction.tdate).all()
-        elif client.isPrimary == False:
-            transactions = Transaction.query.filter(Transaction.owner2_id == group_id).order_by(Transaction.tdate).all()
-        
-        result = transactions_schema.dump(transactions)
-        return jsonify(result)
+        if client:
+            if client.isPrimary == True:
+                transactions = Transaction.query.filter(Transaction.owner1_id == group_id).order_by(Transaction.tdate).all()
+            elif client.isPrimary == False:
+                transactions = Transaction.query.filter(Transaction.owner2_id == group_id).order_by(Transaction.tdate).all()
+            
+            result = transactions_schema.dump(transactions)
+            return jsonify(result)
+        else:
+            return ("Client id " + group_id + " doesn't exist."), 404

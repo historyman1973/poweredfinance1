@@ -40,8 +40,11 @@ def add_client():
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
 def get_client(client_id):
     client = Client.query.get(client_id)
-    result = client_schema.dump(client)
-    return jsonify(result)
+    if client:
+        result = client_schema.dump(client)
+        return jsonify(result)
+    else:
+        return("Client id " + client_id + " doesn't exist."), 404
 
 
 @clients_blueprint.route("/client-list", methods=["GET"])
