@@ -31,7 +31,7 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const style = {
+const styleLifestyle = {
   p: 2,
   px: 4,
   pb: 3,
@@ -42,9 +42,47 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: "95%",
-  minWidth: "95%",
-  height: "80%",
+  maxWidth: "50%",
+  minWidth: "50%",
+  height: "50%",
+  bgcolor: "#ffffff",
+  boxShadow: 24,
+  p: 4,
+};
+
+const styleProperty = {
+  p: 2,
+  px: 4,
+  pb: 3,
+  borderRadius: 5,
+  position: "fixed",
+  overflowY: "auto",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  maxWidth: "60%",
+  minWidth: "60%",
+  height: "60%",
+  bgcolor: "#ffffff",
+  boxShadow: 24,
+  p: 4,
+};
+
+const styleInvestment = {
+  p: 2,
+  px: 4,
+  pb: 3,
+  borderRadius: 5,
+  position: "fixed",
+  overflowY: "auto",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  maxWidth: "90%",
+  minWidth: "90%",
+  height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
   p: 4,
@@ -138,7 +176,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         onClose={handleViewPropertyClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={style}>
+        <Paper sx={styleProperty}>
           <AssetOverviewProperty id={property} />
         </Paper>
       </StyledModal>
@@ -149,7 +187,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         onClose={handleViewInvestmentClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={style}>
+        <Paper sx={styleInvestment}>
           <AssetOverviewInvestment id={investment} />
         </Paper>
       </StyledModal>
@@ -160,7 +198,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         onClose={handleViewLifestyleClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={style}>
+        <Paper sx={styleLifestyle}>
           <AssetOverviewLifestyle id={lifestyle} />
         </Paper>
       </StyledModal>
