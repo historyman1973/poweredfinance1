@@ -31,7 +31,7 @@ def add_investment():
     db.session.add(new_investment)
     db.session.commit()
 
-    return investment_schema.jsonify(new_investment)
+    return investment_schema.jsonify(new_investment), 201
 
 
 @investments_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
@@ -64,52 +64,61 @@ def get_investments(client_id):
 def add_transaction():
     investment_id = request.json['investment_id']
     instrument_id = request.json['instrument_id']
-    ttype = request.json['ttype']
-    tdate = request.json['tdate']
-    units = request.json['units']
-    price = request.json['price']
-    owner1_id = request.json['owner1_id']
-    owner2_id = request.json['owner2_id']
+    investment = Investment.query.get(investment_id)
+    instrument = Instrument.query.get(instrument_id)
+    if investment and instrument:
+        ttype = request.json['ttype']
+        tdate = request.json['tdate']
+        units = request.json['units']
+        price = request.json['price']
+        owner1_id = request.json['owner1_id']
+        owner2_id = request.json['owner2_id']
 
-    holding = Holding.query.filter(
-            Holding.investment_id == investment_id,
-            Holding.instrument_id == instrument_id).scalar()
+        holding = Holding.query.filter(
+                Holding.investment_id == investment_id,
+                Holding.instrument_id == instrument_id).scalar()
 
-    if holding:
-        # If there's already a holding, add the units to it
-        holding.units = holding.units + units
-    else:
-        # Create the holding and link it to the investment
-        holding = Holding(investment_id = investment_id, instrument_id = instrument_id, units = units)
-        db.session.add(holding)
+        if holding:
+            # If there's already a holding, add the units to it
+            holding.units = holding.units + units
+        else:
+            # Create the holding and link it to the investment
+            holding = Holding(investment_id = investment_id, instrument_id = instrument_id, units = units)
+            db.session.add(holding)
+            db.session.commit()
+            db.session.flush()
+            # investment = Investment.query.get(investment_id)
+            investment.holdings.append(holding)
+            db.session.commit()
+
+        # Add the new transaction
+        new_transaction = Transaction(ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
+
+        # Link the transaction to its holding
+        new_transaction.holding_id = holding.id
+
+        db.session.add(new_transaction)
         db.session.commit()
         db.session.flush()
-        investment = Investment.query.get(investment_id)
-        investment.holdings.append(holding)
+
+        holding.transactions.append(new_transaction)
         db.session.commit()
 
-    # Add the new transaction
-    new_transaction = Transaction(ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
+        # Update the holding history table
+        history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate)
+        db.session.add(history_update)
+        db.session.commit()
+        db.session.flush()    
 
-    # Link the transaction to its holding
-    new_transaction.holding_id = holding.id
+        transaction_result = transaction_schema.dump(new_transaction)
 
-    db.session.add(new_transaction)
-    db.session.commit()
-    db.session.flush()
-
-    holding.transactions.append(new_transaction)
-    db.session.commit()
-
-    # Update the holding history table
-    history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate)
-    db.session.add(history_update)
-    db.session.commit()
-    db.session.flush()    
-
-    transaction_result = transaction_schema.dump(new_transaction)
-
-    return jsonify(transaction_result)
+        return jsonify(transaction_result), 201
+    elif investment is None and instrument:
+        return("Investment id " + str(investment_id) + " doesn't exist."), 404
+    elif investment and instrument is None:
+        return("Instrument id " + str(instrument_id) + " doesn't exist."), 404
+    elif investment is None and instrument is None:
+        return("Neither investment id " + str(investment_id) + " nor instrument id " + str(instrument_id) + " exists."), 404
 
 
 @investments_blueprint.route("/get-transaction/<transaction_id>", methods=["GET"])

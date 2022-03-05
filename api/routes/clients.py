@@ -33,7 +33,7 @@ def add_client():
     db.session.add(new_client)
     db.session.commit()
 
-    return client_schema.jsonify(new_client)
+    return client_schema.jsonify(new_client), 201
 
 
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
