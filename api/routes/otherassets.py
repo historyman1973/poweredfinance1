@@ -26,7 +26,7 @@ def add_lifestyleasset():
     db.session.add(new_lifestyleasset)
     db.session.commit()
 
-    return lifestyleasset_schema.jsonify(new_lifestyleasset)
+    return lifestyleasset_schema.jsonify(new_lifestyleasset), 201
 
 
 @otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])

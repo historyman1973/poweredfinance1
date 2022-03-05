@@ -29,7 +29,7 @@ def add_liability():
     db.session.add(new_liability)
     db.session.commit()
 
-    return liability_schema.jsonify(new_liability)
+    return liability_schema.jsonify(new_liability), 201
 
 
 @liability_blueprint.route("/get-liability/<liability_id>", methods=["GET"])
