@@ -1,7 +1,6 @@
 import { Link } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React, { Component, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import React from "react";
 
 function ClientTable({ clients }) {
   const rows = Array();

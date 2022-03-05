@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from "react";
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Radio,
-  Select,
-  TextField,
-} from "@mui/material";
+import React from "react";
+import { Grid } from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const genderItems = [
   { id: "male", title: "Male" },

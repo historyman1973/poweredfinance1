@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import ClientTable from "./components/ClientTable";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./components/Header";
-import { Button, Modal, Paper, TextField } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import AddClientForm from "./components/AddClientForm";
-import { styled, Box } from "@mui/system";
+import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
 const StyledModal = styled(ModalUnstyled)`

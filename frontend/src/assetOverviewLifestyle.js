@@ -1,7 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import Header from "./components/Header";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import CurrencyFormat from "react-currency-format";
 
 function AssetOverviewLifestyle(id) {
   const [lifestyleAsset, setLifestyleAsset] = useState([]);

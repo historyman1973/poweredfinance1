@@ -1,8 +1,6 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import {
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,8 +9,6 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import { DataGrid } from "@mui/x-data-grid";
-import { Container } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
 import CurrencyFormat from "react-currency-format";

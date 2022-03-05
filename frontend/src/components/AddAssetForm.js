@@ -1,15 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Paper,
-  Radio,
-  Select,
-  TextField,
-} from "@mui/material";
+import React from "react";
+import { Button, Paper } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
 import AddInvestmentForm from "./AddInvestmentForm";
 import AddLifestyleAssetForm from "./AddLifestyleAssetForm";
@@ -46,7 +36,6 @@ const style = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",

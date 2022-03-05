@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
   AreaChart,
@@ -9,13 +9,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { DataGrid } from "@mui/x-data-grid";
 import { Button, Paper } from "@mui/material";
-import { styled, Box } from "@mui/system";
+import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddAssetForm from "./components/AddAssetForm";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import AssetTable from "./components/AssetTable";
 
 const StyledModal = styled(ModalUnstyled)`

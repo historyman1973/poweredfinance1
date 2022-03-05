@@ -1,5 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
-import Header from "./components/Header";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 
@@ -14,15 +13,15 @@ function AssetOverviewProperty(id) {
   useEffect(() => getProperty(), []);
 
   const getReadableType = (type) => {
-    if (type == "main-residence") {
+    if (type === "main-residence") {
       return "Main residence";
-    } else if (type == "buy-to-let") {
+    } else if (type === "buy-to-let") {
       return "Buy to let";
-    } else if (type == "holiday-home") {
+    } else if (type === "holiday-home") {
       return "Holiday home";
-    } else if (type == "commercial") {
+    } else if (type === "commercial") {
       return "Commercial";
-    } else if (type == "second-residence") {
+    } else if (type === "second-residence") {
       return "Second residence";
     }
   };
