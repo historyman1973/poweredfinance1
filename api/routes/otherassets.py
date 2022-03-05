@@ -1,4 +1,3 @@
-from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -6,6 +5,7 @@ from flask.json import jsonify
 
 otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)
 
+from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema
 
 @otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
 def add_lifestyleasset():
@@ -32,21 +32,27 @@ def add_lifestyleasset():
 @otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
 def get_lifestyle_asset(lifestyle_asset_id):
     lifestyleasset = LifestyleAsset.query.get(lifestyle_asset_id)
-    result = lifestyleasset_schema.dump(lifestyleasset)
-    return jsonify(result)
+    if lifestyleasset:
+        result = lifestyleasset_schema.dump(lifestyleasset)
+        return jsonify(result)
+    else:
+        return("Asset id " + lifestyle_asset_id + " doesn't exist."), 404
 
 
 @otherassets_blueprint.route("/get-lifestyle-assets/<client_id>", methods=["GET"])
 def get_lifestyleassets(client_id):
     client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        lifestyleassets = db.session.query(
-            LifestyleAsset).filter_by(owner1_id=client_id)
-    else:
-        lifestyleassets = db.session.query(
-            LifestyleAsset).filter_by(owner2_id=client_id)
+    if client:
+        if client.isPrimary == True:
+            lifestyleassets = db.session.query(
+                LifestyleAsset).filter_by(owner1_id=client_id)
+        else:
+            lifestyleassets = db.session.query(
+                LifestyleAsset).filter_by(owner2_id=client_id)
 
-    return lifestyleassets_schema.jsonify(lifestyleassets)
+        return lifestyleassets_schema.jsonify(lifestyleassets)
+    else:
+        return("Client " + client_id + " doesn't exist."), 404
 
 
 @otherassets_blueprint.route("/add-property", methods=["POST"])
@@ -77,17 +83,23 @@ def add_property():
 def get_property(property_id):
     property = Property.query.get(property_id)
     result = property_schema.dump(property)
-    return jsonify(result)
+    if result:
+        return jsonify(result)
+    else:
+        return("Property id " + property_id + " doesn't exist."), 404
 
 
 @otherassets_blueprint.route("/get-properties/<client_id>", methods=["GET"])
 def get_properties(client_id):
     client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        properties = db.session.query(
-            Property).filter_by(owner1_id=client_id)
-    else:
-        properties = db.session.query(
-            Property).filter_by(owner2_id=client_id)
+    if client:
+        if client.isPrimary == True:
+            properties = db.session.query(
+                Property).filter_by(owner1_id=client_id)
+        else:
+            properties = db.session.query(
+                Property).filter_by(owner2_id=client_id)
 
-    return properties_schema.jsonify(properties)
+        return properties_schema.jsonify(properties)
+    else:
+        return("Client id " + client_id + " doesn't exist."), 404

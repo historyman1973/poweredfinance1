@@ -4,9 +4,9 @@ import React, { Component, useState, useEffect } from "react";
 import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
-import AssetOverviewProperty from "../AssetOverviewProperty";
-import AssetOverviewInvestment from "../AssetOverviewInvestment";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import AssetOverviewProperty from "../assetOverviewProperty";
+import AssetOverviewInvestment from "../assetOverviewInvestment";
+import AssetOverviewLifestyle from "../assetOverviewLifestyle";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -104,13 +104,13 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
   const [lifestyle, setLifestyle] = React.useState(false);
 
   const handleClick = (category, id) => {
-    if (category == "Property") {
+    if (category === "Property") {
       setProperty(id);
       setOpenViewProperty(true);
-    } else if (category == "Investment") {
+    } else if (category === "Investment") {
       setInvestment(id);
       setOpenViewInvestment(true);
-    } else if (category == "Lifestyle Asset") {
+    } else if (category === "Lifestyle Asset") {
       setLifestyle(id);
       setOpenViewLifestyle(true);
     }

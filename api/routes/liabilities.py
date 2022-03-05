@@ -35,21 +35,27 @@ def add_liability():
 @liability_blueprint.route("/get-liability/<liability_id>", methods=["GET"])
 def get_liability(liability_id):
     liability = Liability.query.get(liability_id)
-    result = liability_schema.dump(liability)
-    return jsonify(result)
+    if liability:
+        result = liability_schema.dump(liability)
+        return jsonify(result)
+    else:
+        return("Liability id " + liability_id + " doesn't exist."), 404
 
 
 @liability_blueprint.route("/get-liabilities/<client_id>", methods=["GET"])
 def get_liabilities(client_id):
     client = Client.query.get(client_id)
-    if client.isPrimary == True:
-        liabilities = db.session.query(
-            Liability).filter_by(owner1_id=client_id)
-    else:
-        liabilities = db.session.query(
-            Liability).filter_by(owner2_id=client_id)
+    if client:
+        if client.isPrimary == True:
+            liabilities = db.session.query(
+                Liability).filter_by(owner1_id=client_id)
+        else:
+            liabilities = db.session.query(
+                Liability).filter_by(owner2_id=client_id)
 
-    return liabilities_schema.jsonify(liabilities)
+        return liabilities_schema.jsonify(liabilities)
+    else:
+        return("Client id " + client_id + " doesn't exist."), 404
 
 
 @liability_blueprint.route("/mortgage-to-property", methods=["POST"])
@@ -58,7 +64,13 @@ def link_mortgage_to_property():
     property_id = request.json['property_id']
     liability = Liability.query.get(liability_id)
     property = Property.query.get(property_id)
-    liability.property_id = property.id
-    db.session.commit()
-
-    return "200 - linked mortgage to property", 200
+    if liability and property:
+        liability.property_id = property.id
+        db.session.commit()
+        return("Linked mortgage id " + liability.id + " to property id " + property.id + "."), 200
+    elif liability is None and property:
+        return("Liability id doesn't exist."), 404
+    elif liability and property is None:
+        return("Property id doesn't exist."), 404
+    elif liability is None and property is None:
+        return("Neither liability id " + str(request.json['liability_id']) + " nor property id " + str(request.json['property_id']) + " exist."), 404

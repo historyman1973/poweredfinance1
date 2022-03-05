@@ -1,4 +1,3 @@
-from models import Client, clients_schema, client_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -6,6 +5,7 @@ from flask.json import jsonify
 
 clients_blueprint = Blueprint('clients_blueprint', __name__)
 
+from models import Client, clients_schema, client_schema
 
 @clients_blueprint.route("/")
 def index():
@@ -39,8 +39,11 @@ def add_client():
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
 def get_client(client_id):
     client = Client.query.get(client_id)
-    result = client_schema.dump(client)
-    return jsonify(result)
+    if client:
+        result = client_schema.dump(client)
+        return jsonify(result)
+    else:
+        return("Client id " + client_id + " doesn't exist."), 404
 
 
 @clients_blueprint.route("/client-list", methods=["GET"])
