@@ -14,7 +14,6 @@ def add_investment():
     investment_type = request.json['investment_type']
     provider = request.json['provider']
     investment_ref = request.json['investment_ref']
-    value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
 
@@ -43,7 +42,6 @@ def add_investment():
             investment_type=investment_type,
             provider=provider,
             investment_ref=investment_ref,
-            value=value,
             owner1_id=owner1_id,
             owner2_id=owner2_id
         )

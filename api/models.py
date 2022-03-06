@@ -70,7 +70,6 @@ class Investment(db.Model):
     investment_type = db.Column(db.String)
     provider = db.Column(db.String)
     investment_ref = db.Column(db.String)
-    value = db.Column(db.Numeric)
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 
@@ -90,7 +89,6 @@ class InvestmentSchema(ma.Schema):
             'investment_type',
             'provider',
             'investment_ref',
-            'value',
             'owner1_id',
             'owner2_id'
         )
