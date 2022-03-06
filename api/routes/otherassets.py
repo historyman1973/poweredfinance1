@@ -15,18 +15,39 @@ def add_lifestyleasset():
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
 
-    new_lifestyleasset = LifestyleAsset(
-        asset_type=asset_type,
-        description=description,
-        value=value,
-        owner1_id=owner1_id,
-        owner2_id=owner2_id
-    )
+    # Check if there's a value for owner1 in the request
+    if owner1_id:
+        # If there is an owner1 then check it exists in the database
+        check_owner1 = Client.query.get(owner1_id)
+        # If it does exist in the database, set owner1 to the resulting CLient object
+        if check_owner1:
+            owner1 = check_owner1
+        else:
+            return("Client id " + str(owner1_id) + " doesn't exist."), 404
+    
+    # Check if there's a value for owner2 in the request
+    if owner2_id:
+        # If there is an owner2 then check it exists in the database
+        check_owner2 = Client.query.get(owner2_id)
+        # If it does exist in the database, set owner2 to the resulting Client object
+        if check_owner2:
+            owner2 = check_owner2
+        else:
+            return("Client id " + str(owner2_id) + " doesn't exist."), 404
 
-    db.session.add(new_lifestyleasset)
-    db.session.commit()
+    if owner1 or owner2:    
+        new_lifestyleasset = LifestyleAsset(
+            asset_type=asset_type,
+            description=description,
+            value=value,
+            owner1_id=owner1_id,
+            owner2_id=owner2_id
+        )
 
-    return lifestyleasset_schema.jsonify(new_lifestyleasset), 201
+        db.session.add(new_lifestyleasset)
+        db.session.commit()
+
+        return lifestyleasset_schema.jsonify(new_lifestyleasset), 201
 
 
 @otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
@@ -64,19 +85,41 @@ def add_property():
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
 
-    new_property = Property(
+    # Check if there's a value for owner1 in the request
+    if owner1_id:
+        # If there is an owner1 then check it exists in the database
+        check_owner1 = Client.query.get(owner1_id)
+        # If it does exist in the database, set owner1 to the resulting CLient object
+        if check_owner1:
+            owner1 = check_owner1
+        else:
+            return("Client id " + str(owner1_id) + " doesn't exist."), 404
+    
+    # Check if there's a value for owner2 in the request
+    if owner2_id:
+        # If there is an owner2 then check it exists in the database
+        check_owner2 = Client.query.get(owner2_id)
+        # If it does exist in the database, set owner2 to the resulting Client object
+        if check_owner2:
+            owner2 = check_owner2
+        else:
+            return("Client id " + str(owner2_id) + " doesn't exist."), 404
+
+
+    if owner1 or owner2:
+        new_property = Property(
         property_type=property_type,
         address=address,
         cost=cost,
         value=value,
         owner1_id=owner1_id,
         owner2_id=owner2_id
-    )
+        )
 
-    db.session.add(new_property)
-    db.session.commit()
+        db.session.add(new_property)
+        db.session.commit()
 
-    return property_schema.jsonify(new_property)
+        return property_schema.jsonify(new_property), 201
 
 
 @otherassets_blueprint.route("/get-property/<property_id>", methods=["GET"])

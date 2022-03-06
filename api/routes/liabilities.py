@@ -16,20 +16,41 @@ def add_liability():
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
 
+    # Check if there's a value for owner1 in the request
+    if owner1_id:
+        # If there is an owner1 then check it exists in the database
+        check_owner1 = Client.query.get(owner1_id)
+        # If it does exist in the database, set owner1 to the resulting CLient object
+        if check_owner1:
+            owner1 = check_owner1
+        else:
+            return("Client id " + str(owner1_id) + " doesn't exist."), 404
+    
+    # Check if there's a value for owner2 in the request
+    if owner2_id:
+        # If there is an owner2 then check it exists in the database
+        check_owner2 = Client.query.get(owner2_id)
+        # If it does exist in the database, set owner2 to the resulting Client object
+        if check_owner2:
+            owner2 = check_owner2
+        else:
+            return("Client id " + str(owner2_id) + " doesn't exist."), 404
 
-    new_liability = Liability(
-        category=category,
-        liability_type=liability_type,
-        amount_borrowed=amount_borrowed,
-        amount_outstanding=amount_outstanding,
-        owner1_id=owner1_id,
-        owner2_id=owner2_id
-    )
 
-    db.session.add(new_liability)
-    db.session.commit()
+    if owner1 or owner2:
+        new_liability = Liability(
+            category=category,
+            liability_type=liability_type,
+            amount_borrowed=amount_borrowed,
+            amount_outstanding=amount_outstanding,
+            owner1_id=owner1_id,
+            owner2_id=owner2_id
+        )
 
-    return liability_schema.jsonify(new_liability), 201
+        db.session.add(new_liability)
+        db.session.commit()
+
+        return liability_schema.jsonify(new_liability), 201
 
 
 @liability_blueprint.route("/get-liability/<liability_id>", methods=["GET"])
