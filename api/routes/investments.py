@@ -6,7 +6,30 @@ from flask.json import jsonify
 investments_blueprint = Blueprint('investments_blueprint', __name__)
 
 from models import Client, Investment, investment_schema, investments_schema, \
-    Instrument, Holding, Transaction, transaction_schema, transactions_schema, HoldingHistory
+    Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
+        instrument_schema
+
+
+@investments_blueprint.route("/get-holdings/<investment_id>", methods=["GET"])
+def get_holdings(investment_id):
+    investment = Investment.query.get(investment_id)
+    if investment:
+        holdings = investment.holdings
+        result = holdings_schema.dump(holdings)
+        return jsonify(result)
+    else:
+        return("Investment id " + investment_id + " doesn't exist."), 404
+
+
+@investments_blueprint.route("/get-instrument/<instrument_id>", methods=["GET"])
+def get_instrument(instrument_id):
+    instrument = Instrument.query.get(instrument_id)
+    if instrument:
+        result = instrument_schema.dump(instrument)
+        return jsonify(result)
+    else:
+        return("Instrument id " + instrument_id + " doesn't exist."), 404
+
 
 
 @investments_blueprint.route("/add-investment", methods=["POST"])
