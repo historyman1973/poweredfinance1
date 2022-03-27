@@ -27,7 +27,6 @@ def add_instruments():
             symbol = request.json[i]['symbol']
             exchange = request.json[i]['exchange']
 
-
             new_instrument = Instrument(
                 symbol=symbol,
                 exchange=exchange
@@ -94,12 +93,12 @@ def get_value_as_at_date():
         target_holdings.append(holding.id)
     # Create an empty list to hold the results you'll return in the API response
     units_as_at_date = []
-    
 
     for item in target_holdings:
         # Try and detect how many units each holding had on the as_at_date, but don't error if the holding didn't exist on that date
         try:
-            last_updated_date = HoldingHistory.query.filter(HoldingHistory.holding_id == int(item), HoldingHistory.updated_date <= as_at_date).order_by(desc(HoldingHistory.updated_date)).first()
+            last_updated_date = HoldingHistory.query.filter(HoldingHistory.holding_id == int(
+                item), HoldingHistory.updated_date <= as_at_date).order_by(desc(HoldingHistory.updated_date)).first()
         except:
             pass
         # If the holding was in place on the as_at_date, then create a dictionary of the holding's id and the number of units, adding it to the results list
