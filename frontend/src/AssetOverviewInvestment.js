@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import HoldingTable from "./components/HoldingTable";
 
 function AssetOverviewInvestment(id) {
   const [investment, setInvestment] = useState([]);
@@ -33,7 +34,7 @@ function AssetOverviewInvestment(id) {
           <h3>{investment.investment_type}</h3>
           {investment.investment_ref}
           <br />
-          [grid with holdings - transactions/securitydrilldown]
+          <HoldingTable investmentId={id.id} />
         </div>
       </div>
     </div>
