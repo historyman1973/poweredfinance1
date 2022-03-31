@@ -265,7 +265,7 @@ class Transaction(db.Model):
 class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
-        fields = ('id', 'ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id', 'holding_id')
+        fields = ('ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id', 'holding_id')
 
 transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
