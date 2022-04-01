@@ -107,22 +107,22 @@ function HoldingTable({ investmentId }) {
     {
       field: "instrument_name",
       headerName: "Name",
-      width: 150,
+      width: 250,
     },
     { field: "units", headerName: "Units", width: 130 },
-    { field: "value", headerName: "Value", width: 130 },
+    { field: "value", headerName: "Value", width: 180 },
     {
       field: "view",
       headerName: "View",
       width: 150,
       renderCell: (params) => (
-        <Link href={`security/${params.value}`}>View</Link>
+        <Link href={`/security/${params.value}`}>View</Link>
       ),
     },
   ];
 
   return (
-    <div style={{ height: "600px", margin: "50px" }}>
+    <div style={{ height: "600px", width: "100%", margin: "50px" }}>
       <DataGrid rows={rows} columns={columns} />
     </div>
   );

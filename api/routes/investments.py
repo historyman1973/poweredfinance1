@@ -110,7 +110,10 @@ def add_transaction():
     if investment and instrument:
         ttype = request.json['ttype']
         tdate = request.json['tdate']
-        units = request.json['units']
+        if ttype == "sell":
+            units = float(request.json['units']) * -1
+        else:
+            units = float(request.json['units'])
         price = request.json['price']
         owner1_id = request.json['owner1_id']
         owner2_id = request.json['owner2_id']
@@ -121,7 +124,7 @@ def add_transaction():
 
         if holding:
             # If there's already a holding, add the units to it
-            holding.units = holding.units + units
+            holding.units = holding.units + float(units)
         else:
             # Create the holding and link it to the investment
             holding = Holding(investment_id = investment_id, instrument_id = instrument_id, units = units)
