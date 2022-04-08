@@ -49,10 +49,17 @@ const style = {
 
 function HoldingTable({ investmentId }) {
   const [holdings, setHoldings] = useState([]);
+  const [instrumentName, setInstrumentName] = useState([]);
+  const [holdingValue, setHoldingValue] = useState([]);
+  const [holdingTicker, setHoldingTicker] = useState([]);
+  const [rowsState, setRowsState] = useState([]);
 
   const rows = Array();
 
   useEffect(() => getHoldingsForInvestment(), []);
+  useEffect(() => setInstrumentNamesToState(), []);
+  useEffect(() => setHoldingValuesToState(), []);
+  useEffect(() => setHoldingTickersToState(), []);
 
   const getHoldingsForInvestment = async () => {
     const res = await axios.get(
@@ -61,31 +68,40 @@ function HoldingTable({ investmentId }) {
     setHoldings(res.data || []);
   };
 
-  const getInstrumentName = async (id) => {
-    const resTicker = await axios.get(
-      `http://127.0.0.1:5000/get-instrument/` + id
+  const setInstrumentNamesToState = async () => {
+    holdings.map((holding) =>
+      //const resTicker = await axios.get(
+      //  `http://127.0.0.1:5000/get-instrument/` + holding.instrument_id
+      //);
+      //const res = await axios.get(
+      //  `http://127.0.0.1:5000/get-ticker/` + resTicker.data.symbol
+      //);
+      //return res.data[0].name;
+      setInstrumentName({ [holding.instrument_id]: "Apple Inc" })
     );
-    const res = await axios.get(
-      `http://127.0.0.1:5000/get-ticker/` + resTicker.data.symbol
-    );
-    return res.data[0].name;
   };
 
-  const getHoldingValue = async (id, units) => {
-    const resTicker = await axios.get(
-      `http://127.0.0.1:5000/get-instrument/` + id
+  const setHoldingValuesToState = async () => {
+    holdings.map((holding) =>
+      //const resTicker = await axios.get(
+      //  `http://127.0.0.1:5000/get-instrument/` + holding.instrument_id
+      //);
+      //const resPrice = await axios.get(
+      //  `http://127.0.0.1:5000/get-latest-data/` + resTicker.data[0].close
+      //);
+      //return resPrice * units;
+      setHoldingValue({ [holding.id]: holding.units * 250 })
     );
-    const resPrice = await axios.get(
-      `http://127.0.0.1:5000/get-latest-data/` + resTicker.data[0].close
-    );
-    return resPrice * units;
   };
 
-  const getTicker = async (id) => {
-    const resTicker = await axios.get(
-      `http://127.0.0.1:5000/get-instrument/` + id
+  const setHoldingTickersToState = async () => {
+    holdings.map((holding) =>
+      //const resTicker = await axios.get(
+      //  `http://127.0.0.1:5000/get-instrument/` + id
+      //);
+      //return resTicker.data.symbol;
+      setHoldingTicker({ [holding.id]: "AAPL" })
     );
-    return resTicker.data.symbol;
   };
 
   {
@@ -93,10 +109,10 @@ function HoldingTable({ investmentId }) {
       rows.push({
         id: holding.id,
         instrument_id: holding.instrument_id,
-        instrument_name: getInstrumentName(holding.instrument_id),
+        instrument_name: instrumentName[holding.instrument_id],
         units: holding.units,
-        value: getHoldingValue(holding.instrument_id, holding.units),
-        view: getTicker(holding.instrument_id),
+        value: holdingValue[holding.id],
+        view: holdingTicker[holding.id],
       })
     );
   }
