@@ -1,11 +1,12 @@
 import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import axios from "axios";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -87,7 +88,12 @@ const styleInvestment = {
   p: 4,
 };
 
-function AssetTable({ properties, investments, lifestyleAssets }) {
+function AssetTable({
+  properties,
+  investments,
+  investmentValues,
+  lifestyleAssets,
+}) {
   const rows = Array();
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
@@ -132,7 +138,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         description: investment.provider,
         id: investment.id,
         category: "Investment",
-        value: investment.value,
+        value: investmentValues[investment.id],
       })
     );
   }

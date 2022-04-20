@@ -4,6 +4,8 @@ import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import axios from "axios";
 import { Link } from "@mui/material";
+import { Button } from "@mui/material";
+import DataTable from "react-data-table-component";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -47,76 +49,7 @@ const style = {
   p: 4,
 };
 
-function HoldingTable({ investmentId }) {
-  const [holdings, setHoldings] = useState([]);
-  const [instrumentName, setInstrumentName] = useState([]);
-  const [holdingValue, setHoldingValue] = useState([]);
-  const [holdingTicker, setHoldingTicker] = useState([]);
-  const [rowsState, setRowsState] = useState([]);
-
-  const rows = Array();
-
-  useEffect(() => getHoldingsForInvestment(), []);
-  useEffect(() => setInstrumentNamesToState(), []);
-  useEffect(() => setHoldingValuesToState(), []);
-  useEffect(() => setHoldingTickersToState(), []);
-
-  const getHoldingsForInvestment = async () => {
-    const res = await axios.get(
-      `http://127.0.0.1:5000/get-holdings/` + investmentId
-    );
-    setHoldings(res.data || []);
-  };
-
-  const setInstrumentNamesToState = async () => {
-    holdings.map((holding) =>
-      //const resTicker = await axios.get(
-      //  `http://127.0.0.1:5000/get-instrument/` + holding.instrument_id
-      //);
-      //const res = await axios.get(
-      //  `http://127.0.0.1:5000/get-ticker/` + resTicker.data.symbol
-      //);
-      //return res.data[0].name;
-      setInstrumentName({ [holding.instrument_id]: "Apple Inc" })
-    );
-  };
-
-  const setHoldingValuesToState = async () => {
-    holdings.map((holding) =>
-      //const resTicker = await axios.get(
-      //  `http://127.0.0.1:5000/get-instrument/` + holding.instrument_id
-      //);
-      //const resPrice = await axios.get(
-      //  `http://127.0.0.1:5000/get-latest-data/` + resTicker.data[0].close
-      //);
-      //return resPrice * units;
-      setHoldingValue({ [holding.id]: holding.units * 250 })
-    );
-  };
-
-  const setHoldingTickersToState = async () => {
-    holdings.map((holding) =>
-      //const resTicker = await axios.get(
-      //  `http://127.0.0.1:5000/get-instrument/` + id
-      //);
-      //return resTicker.data.symbol;
-      setHoldingTicker({ [holding.id]: "AAPL" })
-    );
-  };
-
-  {
-    holdings.map((holding) =>
-      rows.push({
-        id: holding.id,
-        instrument_id: holding.instrument_id,
-        instrument_name: instrumentName[holding.instrument_id],
-        units: holding.units,
-        value: holdingValue[holding.id],
-        view: holdingTicker[holding.id],
-      })
-    );
-  }
-
+function HoldingTable({ holdings }) {
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "instrument_id", headerName: "Instrument ID", width: 100 },
@@ -137,9 +70,25 @@ function HoldingTable({ investmentId }) {
     },
   ];
 
+  const returnTable = () => {
+    const rows = Array();
+    console.log(holdings);
+    holdings.map((holding) =>
+      rows.push({
+        id: holding.holding_id,
+        instrument_id: holding.instrument_id,
+        instrument_name: holding.instrument_name,
+        units: holding.current_units,
+        value: holding.current_value,
+        view: holding.holding_ticker,
+      })
+    );
+    return <DataGrid rows={rows} columns={columns} />;
+  };
+
   return (
     <div style={{ height: "600px", width: "100%", margin: "50px" }}>
-      <DataGrid rows={rows} columns={columns} />
+      {returnTable()}
     </div>
   );
 }

@@ -51,6 +51,7 @@ function AssetOverviewInvestment(id) {
   const handleAddTransactionOpen = () => setOpen(true);
   const handleAddTransactionClose = () => setOpen(false);
   const [open, setOpen] = React.useState(false);
+  const [holdings, setHoldings] = useState([]);
 
   const getInvestment = async () => {
     const res = await axios.get(
@@ -59,7 +60,15 @@ function AssetOverviewInvestment(id) {
     setInvestment(res.data || []);
   };
 
+  const getHoldingsForInvestment = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-holding-data/` + id.id
+    );
+    setHoldings(res.data || []);
+  };
+
   useEffect(() => getInvestment(), []);
+  useEffect(() => getHoldingsForInvestment(), []);
 
   return (
     <div>
@@ -100,7 +109,7 @@ function AssetOverviewInvestment(id) {
               <AddTransactionForm investmentId={id.id} />
             </Paper>
           </StyledModal>
-          <HoldingTable investmentId={id.id} />
+          <HoldingTable holdings={holdings} />
         </div>
       </div>
     </div>
