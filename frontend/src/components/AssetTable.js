@@ -88,12 +88,7 @@ const styleInvestment = {
   p: 4,
 };
 
-function AssetTable({
-  properties,
-  investments,
-  investmentValues,
-  lifestyleAssets,
-}) {
+function AssetTable({ properties, investments, lifestyleAssets }) {
   const rows = Array();
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
@@ -136,9 +131,9 @@ function AssetTable({
     investments.map((investment) =>
       rows.push({
         description: investment.provider,
-        id: investment.id,
+        id: investment.investment_id,
         category: "Investment",
-        value: investmentValues[investment.id],
+        value: investment.current_value,
       })
     );
   }
