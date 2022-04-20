@@ -10,20 +10,34 @@ from models import Client, Investment, investment_schema, investments_schema, \
         instrument_schema
 
 
-@investments_blueprint.route("/get-holding-data/<holding_id>", methods=["GET"])
-def get_holding_data(holding_id):
-    holding = Holding.query.get(holding_id)
-    instrument = Instrument.query.get(holding.instrument_id)
-    unit_price = get_latest_data(instrument.symbol).get_json()[0]["close"]
+@investments_blueprint.route("/get-holding-data/<investment_id>", methods=["GET"])
+def get_holding_data(investment_id):
+    investment = Investment.query.get(investment_id)
+    data = []
+    for holding in investment.holdings:
+        instrument = Instrument.query.get(holding.instrument_id)
+        unit_price = get_latest_data(instrument.symbol).get_json()[0]["close"]
+        current_value = holding.units*unit_price
 
-    return jsonify(
-        holding_id=holding.id,
-        instrument_id=instrument.id,
-        instrument_name=instrument.name,
-        current_units=holding.units,
-        holding_ticker=instrument.symbol,
-        current_value=holding.units*unit_price
-    )
+        data.append(
+            {"holding_id": holding.id,
+            "instrument_id": instrument.id,
+            "instrument_name": instrument.name,
+            "current_units": holding.units,
+            "holding_ticker": instrument.symbol,
+            "current_value": current_value}
+            )
+
+    return jsonify(data)
+
+    # return jsonify(
+    #     holding_id=holding.id,
+    #     instrument_id=instrument.id,
+    #     instrument_name=instrument.name,
+    #     current_units=holding.units,
+    #     holding_ticker=instrument.symbol,
+    #     current_value=holding.units*unit_price
+    # )
 
 
 
