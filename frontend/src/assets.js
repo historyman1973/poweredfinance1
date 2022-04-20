@@ -142,6 +142,7 @@ function Assets() {
 
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
+  const [investmentValues, setInvestmentValues] = useState([]);
   const [lifestyleAssets, setLifestyleAssets] = useState([]);
 
   const getProperties = async () => {
@@ -165,6 +166,13 @@ function Assets() {
       `http://127.0.0.1:5000/get-investments/` +
         window.location.pathname.split("/")[2]
     );
+    const investments = res.data;
+    investments.map(async (investment) => {
+      const resData = await axios.get(
+        `http://127.0.0.1:5000/get-investment-value/` + investment.id
+      );
+      setInvestmentValues({ [investment.id]: resData.data.total_value });
+    });
     setInvestments(res.data || []);
   };
 
@@ -272,6 +280,7 @@ function Assets() {
             class="padding-left-right"
             properties={properties}
             investments={investments}
+            investmentValues={investmentValues}
             lifestyleAssets={lifestyleAssets}
           />
         </div>
