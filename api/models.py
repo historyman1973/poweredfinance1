@@ -37,6 +37,54 @@ client_schema = ClientSchema()
 clients_schema = ClientSchema(many=True)
 
 
+class Holding(db.Model):
+    __tablename__ = "holding"
+
+    id = db.Column(db.Integer, primary_key=True)
+    investment_id = db.Column(db.Integer, db.ForeignKey('investment.id'))
+    instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
+    units = db.Column(db.Float)
+
+    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
+
+    def __init__(self, **kwargs):
+        super(Holding, self).__init__(**kwargs)
+
+class HoldingSchema(ma.Schema):
+    class Meta:
+        model = Holding
+        fields = ('id', 'investment_id', 'instrument_id', 'units')
+
+holding_schema = HoldingSchema()
+holdings_schema = HoldingSchema(many=True)
+
+
+class HoldingHistory(db.Model):
+    __tablename__ = "holdinghistory"
+
+    id = db.Column(db.Integer, primary_key=True)
+    holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
+    units = db.Column(db.Float)
+    updated_date = db.Column(db.String)
+
+    def __init__(self, **kwargs):
+        super(HoldingHistory, self).__init__(**kwargs)
+
+class HoldingHistorySchema(ma.Schema):
+    class Meta:
+        model = HoldingHistory
+        fields = (
+            'id',
+            'holding_id',
+            'units',
+            'updated_date'
+        )
+
+holdinghistory_schema = HoldingHistorySchema()
+holdinghistories_schema = HoldingHistorySchema(many=True)
+
+
+
 class Instrument(db.Model):
     __tablename__ = "instrument"
 
@@ -98,53 +146,6 @@ class InvestmentSchema(ma.Schema):
 
 investment_schema = InvestmentSchema()
 investments_schema = InvestmentSchema(many=True)
-
-
-class Holding(db.Model):
-    __tablename__ = "holding"
-
-    id = db.Column(db.Integer, primary_key=True)
-    investment_id = db.Column(db.Integer, db.ForeignKey('investment.id'))
-    instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
-    units = db.Column(db.Float)
-
-    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
-
-    def __init__(self, **kwargs):
-        super(Holding, self).__init__(**kwargs)
-
-class HoldingSchema(ma.Schema):
-    class Meta:
-        model = Holding
-        fields = ('id', 'investment_id', 'instrument_id', 'units')
-
-holding_schema = HoldingSchema()
-holdings_schema = HoldingSchema(many=True)
-
-
-class HoldingHistory(db.Model):
-    __tablename__ = "holdinghistory"
-
-    id = db.Column(db.Integer, primary_key=True)
-    holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
-    units = db.Column(db.Float)
-    updated_date = db.Column(db.String)
-
-    def __init__(self, **kwargs):
-        super(HoldingHistory, self).__init__(**kwargs)
-
-class HoldingHistorySchema(ma.Schema):
-    class Meta:
-        model = HoldingHistory
-        fields = (
-            'id',
-            'holding_id',
-            'units',
-            'updated_date'
-        )
-
-holdinghistory_schema = HoldingHistorySchema()
-holdinghistories_schema = HoldingHistorySchema(many=True)
 
 
 class Liability(db.Model):
