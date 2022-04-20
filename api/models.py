@@ -43,6 +43,7 @@ class Instrument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     symbol = db.Column(db.String)
     exchange = db.Column(db.String)
+    name = db.Column(db.String)
 
     def __init__(self, **kwargs):
         super(Instrument, self).__init__(**kwargs)
@@ -54,7 +55,8 @@ class InstrumentSchema(ma.Schema):
         fields = (
             'id',
             'symbol',
-            'exchange'
+            'exchange',
+            'name'
         )
 
 

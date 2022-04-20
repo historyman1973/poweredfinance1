@@ -27,10 +27,15 @@ def add_instruments():
             symbol = request.json[i]['symbol']
             exchange = request.json[i]['exchange']
 
+            # name_call = str(get_ticker(symbol))
+            name_call_result = get_ticker(symbol).get_json()[i]['name']
+
             new_instrument = Instrument(
                 symbol=symbol,
-                exchange=exchange
+                exchange=exchange,
+                name=name_call_result
             )
+
 
             instruments_added.append(symbol)
 

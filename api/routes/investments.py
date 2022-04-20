@@ -1,13 +1,31 @@
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
-
+from routes.marketdata import get_latest_data
 
 investments_blueprint = Blueprint('investments_blueprint', __name__)
 
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
         instrument_schema
+
+
+@investments_blueprint.route("/get-holding-data/<holding_id>", methods=["GET"])
+def get_holding_data(holding_id):
+    holding = Holding.query.get(holding_id)
+    instrument = Instrument.query.get(holding.instrument_id)
+    unit_price = get_latest_data(instrument.symbol).get_json()[0]["close"]
+
+    return jsonify(
+        holding_id=holding.id,
+        instrument_id=instrument.id,
+        instrument_name=instrument.name,
+        current_units=holding.units,
+        holding_ticker=instrument.symbol,
+        current_value=holding.units*unit_price
+    )
+
+
 
 
 @investments_blueprint.route("/get-holdings/<investment_id>", methods=["GET"])
@@ -84,6 +102,24 @@ def get_investment(investment_id):
     else:
         return("Investment id " + investment_id + " doesn't exist."), 404
 
+
+@investments_blueprint.route("/get-investment-value/<investment_id>", methods=["GET"])
+def get_investment_value(investment_id):
+    # Given an investment ID, return it's total value across all holdings
+    investment = Investment.query.get(investment_id)
+    
+    total_value = 0
+    for holding in investment.holdings:
+        units = holding.units
+        instrument = Instrument.query.get(holding.instrument_id)
+        current_unit_price = get_latest_data(instrument.symbol).get_json()[0]["close"]
+        holding_current_value = units*current_unit_price
+        total_value += holding_current_value
+    
+    return jsonify(
+        investment_id=investment.id,
+        total_value=total_value
+    )
 
 @investments_blueprint.route("/get-investments/<client_id>", methods=["GET"])
 def get_investments(client_id):
