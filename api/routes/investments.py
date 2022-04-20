@@ -138,6 +138,7 @@ def get_investment_value(investment_id):
 @investments_blueprint.route("/get-investments/<client_id>", methods=["GET"])
 def get_investments(client_id):
     client = Client.query.get(client_id)
+    data = []
     if client:
         if client.isPrimary == True:
             investments = db.session.query(
@@ -146,9 +147,23 @@ def get_investments(client_id):
             investments = db.session.query(
                 Investment).filter_by(owner2_id=client_id)
 
-        return investments_schema.jsonify(investments)
-    else:
-        return("Client id " + client_id + " doesn't exist."), 404
+    for investment in investments:
+        current_investment = Investment.query.get(investment.id)
+        current_value = get_investment_value(current_investment.id).get_json()["total_value"]
+
+        data.append(
+            {"investment_id": investment.id,
+            "investment_type": investment.investment_type,
+            "provider": investment.provider,
+            "investment_ref": investment.investment_ref,
+            "current_value": current_value}
+        )
+
+    return jsonify(data)
+
+    #     return investments_schema.jsonify(investments)
+    # else:
+    #     return("Client id " + client_id + " doesn't exist."), 404
 
 
 @investments_blueprint.route("/add-transaction", methods=["POST"])
