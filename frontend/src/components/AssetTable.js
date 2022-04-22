@@ -88,6 +88,10 @@ const styleInvestment = {
   p: 4,
 };
 
+function currencyFormat(num) {
+  return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
+
 function AssetTable({ properties, investments, lifestyleAssets }) {
   const rows = Array();
 
@@ -122,7 +126,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         description: property.address,
         id: property.id,
         category: "Property",
-        value: property.value,
+        value: currencyFormat(parseFloat(property.value)),
       })
     );
   }
@@ -133,7 +137,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         description: investment.provider,
         id: investment.investment_id,
         category: "Investment",
-        value: investment.current_value,
+        value: currencyFormat(investment.current_value),
       })
     );
   }
@@ -144,7 +148,7 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
         description: lifestyleAsset.description,
         id: lifestyleAsset.id,
         category: "Lifestyle Asset",
-        value: lifestyleAsset.value,
+        value: currencyFormat(lifestyleAsset.value),
       })
     );
   }
