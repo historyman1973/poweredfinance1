@@ -9,9 +9,54 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { toast } from "react-toastify";
+import LiabilityTable from "./components/LiabilityTable";
+import { Button, Paper } from "@mui/material";
+import { styled } from "@mui/system";
+import ModalUnstyled from "@mui/base/ModalUnstyled";
+import AddLiabilityForm from "./components/AddLiabilityForm";
+
+const StyledModal = styled(ModalUnstyled)`
+  position: fixed;
+  z-index: 1300;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Backdrop = styled("div")`
+  z-index: -1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent;
+`;
+
+const style = {
+  p: 2,
+  px: 4,
+  pb: 3,
+  borderRadius: 5,
+  position: "fixed",
+  overflowY: "auto",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  maxWidth: "40%",
+  minWidth: 400,
+  bgcolor: "#ffffff",
+  boxShadow: 24,
+  p: 4,
+};
 
 const chartData = [
   {
@@ -88,84 +133,22 @@ const chartData = [
   },
 ];
 
-const liabilityListColumns = [
-  {
-    field: "id",
-    headerName: "ID",
-    width: 100,
-    type: "number",
-    editable: false,
-  },
-  {
-    field: "liabilityName",
-    headerName: "Liability name",
-    minWidth: 300,
-    editable: false,
-  },
-  {
-    field: "value",
-    headerName: "Value",
-    type: "number",
-    width: 150,
-    editable: false,
-  },
-  {
-    field: "currency",
-    headerName: "Currency",
-    minWidth: 150,
-    editable: false,
-  },
-  {
-    field: "allocation",
-    headerName: "Allocation %",
-    minWidth: 200,
-    editable: false,
-  },
-  {
-    field: "lastUpdated",
-    headerName: "Last Updated",
-    minWidth: 200,
-    editable: false,
-  },
-];
-
-const liabilityListRows = [
-  {
-    id: 1,
-    liabilityName: "Mortgage #1",
-    value: 288092,
-    currency: "GBP",
-    allocation: "92.3%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 2,
-    liabilityName: "Car loan #1",
-    value: 2545,
-    currency: "GBP",
-    allocation: "0.8%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 3,
-    liabilityName: "NatWest credit",
-    value: 930,
-    currency: "GBP",
-    allocation: "0.3%",
-    lastUpdated: "12/10/2021",
-  },
-  {
-    id: 4,
-    liabilityName: "Personal loan",
-    value: 20606,
-    currency: "GBP",
-    allocation: "6.6%",
-    lastUpdated: "12/10/2021",
-  },
-];
-
 function Liabilities() {
   const [client, setClient] = useState([]);
+  const handleAddLiabilityOpen = () => setOpenAddLiability(true);
+  const handleAddLiabilityClose = () => setOpenAddLiability(false);
+  const [openAddLiability, setOpenAddLiability] = React.useState(false);
+  const [liabilities, setLiabilities] = useState([]);
+
+  const getLiabilities = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-liabilities/` +
+        window.location.pathname.split("/")[2]
+    );
+    setLiabilities(res.data || []);
+  };
+
+  useEffect(() => getLiabilities(), []);
 
   const getClient = async () => {
     try {
@@ -245,7 +228,28 @@ function Liabilities() {
           </div>
         </div>
         <div style={{ height: "350px", margin: "50px" }}>
-          <DataGrid rows={liabilityListRows} columns={liabilityListColumns} />
+          <Button
+            onClick={handleAddLiabilityOpen}
+            variant="outlined"
+            style={{ margin: 10, marginBottom: 20 }}
+          >
+            Add Liability
+          </Button>
+          <StyledModal
+            aria-labelledby="unstyled-modal-title"
+            aria-describedby="unstyled-modal-description"
+            open={openAddLiability}
+            onClose={handleAddLiabilityClose}
+            BackdropComponent={Backdrop}
+          >
+            <Paper sx={style}>
+              <AddLiabilityForm />
+            </Paper>
+          </StyledModal>
+          <LiabilityTable
+            class="padding-left-right"
+            liabilities={liabilities}
+          />
         </div>
       </div>
     </div>
