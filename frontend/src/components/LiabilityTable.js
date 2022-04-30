@@ -75,6 +75,38 @@ function currencyFormat(num) {
   }
 }
 
+const formatLiabilityType = (type) => {
+  if (type == "credit-card") {
+    return "Credit Card";
+  } else if (type == "main-residence-mortgage") {
+    return "Main Residence Mortgage";
+  } else if (type == "commercial-mortgage") {
+    return "Commercial Mortgage";
+  } else if (type == "buy-to-let-mortgage") {
+    return "Buy-to-let Mortgage";
+  } else if (type == "holiday-home-mortgage") {
+    return "Holiday Home Mortgage";
+  } else if (type == "second-residence-mortgage") {
+    return "Second Residence Mortgage";
+  } else if (type == "personal-loan") {
+    return "Personal Loan";
+  } else if (type == "miscellaneous") {
+    return "Miscellaneous";
+  } else {
+    return type;
+  }
+};
+
+const formatLiabilityCategory = (category) => {
+  if (category == "secured") {
+    return "Secured";
+  } else if (category == "unsecured") {
+    return "Unsecured";
+  } else {
+    return category;
+  }
+};
+
 function LiabilityTable({ liabilities }) {
   const rows = Array();
 
@@ -91,8 +123,8 @@ function LiabilityTable({ liabilities }) {
     liabilities.map((liability) =>
       rows.push({
         id: liability.id,
-        category: liability.category,
-        liability_type: liability.liability_type,
+        category: formatLiabilityCategory(liability.category),
+        liability_type: formatLiabilityType(liability.liability_type),
         amount_borrowed: currencyFormat(parseFloat(liability.amount_borrowed)),
         amount_outstanding: currencyFormat(
           parseFloat(liability.amount_outstanding)
