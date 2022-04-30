@@ -3,8 +3,12 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
-import axios from "axios";
 import LiabilityOverview from "./LiabilityOverview";
+import {
+  formatLiabilityCategory,
+  formatLiabilityType,
+  currencyFormat,
+} from "./GlobalFunctions";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -65,46 +69,6 @@ const style = {
   bgcolor: "#ffffff",
   boxShadow: 24,
   p: 4,
-};
-
-function currencyFormat(num) {
-  try {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-const formatLiabilityType = (type) => {
-  if (type == "credit-card") {
-    return "Credit Card";
-  } else if (type == "main-residence-mortgage") {
-    return "Main Residence Mortgage";
-  } else if (type == "commercial-mortgage") {
-    return "Commercial Mortgage";
-  } else if (type == "buy-to-let-mortgage") {
-    return "Buy-to-let Mortgage";
-  } else if (type == "holiday-home-mortgage") {
-    return "Holiday Home Mortgage";
-  } else if (type == "second-residence-mortgage") {
-    return "Second Residence Mortgage";
-  } else if (type == "personal-loan") {
-    return "Personal Loan";
-  } else if (type == "miscellaneous") {
-    return "Miscellaneous";
-  } else {
-    return type;
-  }
-};
-
-const formatLiabilityCategory = (category) => {
-  if (category == "secured") {
-    return "Secured";
-  } else if (category == "unsecured") {
-    return "Unsecured";
-  } else {
-    return category;
-  }
 };
 
 function LiabilityTable({ liabilities }) {

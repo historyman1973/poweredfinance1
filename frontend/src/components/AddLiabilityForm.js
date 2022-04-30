@@ -19,7 +19,7 @@ export default function AddLiabilityForm() {
   const navigate = useNavigate();
   const validate = () => {
     let temp = {};
-    temp.amount_borrowed = values.amount_borrowed
+    temp.amount_outstanding = values.amount_outstanding
       ? ""
       : "Please enter the liability amount.";
     temp.liability_type = values.liability_type ? "" : "Required field.";
@@ -68,20 +68,46 @@ export default function AddLiabilityForm() {
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
-            <Controls.Input
-              label="Category"
-              name="category"
-              value={values.category}
-              onChange={handleInputChange}
-              error={errors.category}
-            />
-            <Controls.Input
-              label="Liability Type"
-              name="liability_type"
-              value={values.liability_type}
-              onChange={handleInputChange}
-              error={errors.liability_type}
-            />
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                name="liability_type"
+                label="Type"
+                value={values.liability_type}
+                onChange={handleInputChange}
+              >
+                <MenuItem value={"credit-card"}>Credit Card</MenuItem>
+                <MenuItem value={"main-residence-mortgage"}>
+                  Main Residence Mortgage
+                </MenuItem>
+                <MenuItem value={"commercial-mortgage"}>
+                  Commercial Mortgage
+                </MenuItem>
+                <MenuItem value={"buy-to-let-mortgage"}>
+                  Buy-to-let Mortgage
+                </MenuItem>
+                <MenuItem value={"holiday-home-mortgage"}>
+                  Holiday Home mortgage
+                </MenuItem>
+                <MenuItem value={"second-residence-mortgage"}>
+                  Second Residence Mortgage
+                </MenuItem>
+                <MenuItem value={"personal-loan"}>Personal Loan</MenuItem>
+                <MenuItem value={"miscellaneous"}>Miscellaneous</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                name="category"
+                label="Category"
+                value={values.category}
+                onChange={handleInputChange}
+              >
+                <MenuItem value={"secured"}>Secured</MenuItem>
+                <MenuItem value={"unsecured"}>Unsecured</MenuItem>
+              </Select>
+            </FormControl>
             <Controls.Input
               label="Amount Borrowed"
               name="amount_borrowed"

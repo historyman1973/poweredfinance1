@@ -4,7 +4,6 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   investment_type: "",
@@ -16,7 +15,6 @@ const initialFValues = {
 };
 
 export default function AddInvestmentForm() {
-  const navigate = useNavigate();
   const validate = () => {
     let temp = {};
     temp.provider = values.provider
