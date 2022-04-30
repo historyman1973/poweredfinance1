@@ -10,7 +10,7 @@ const initialFValues = {
   category: "",
   liability_type: "",
   amount_borrowed: "",
-  amount_outstanding: 0,
+  amount_outstanding: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
 };

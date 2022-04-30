@@ -11,6 +11,42 @@ function LiabilityOverview(id) {
 
   useEffect(() => getLiability(), []);
 
+  const formatLiabilityType = (type) => {
+    if (type == "credit-card") {
+      return "Credit Card";
+    } else if (type == "main-residence-mortgage") {
+      return "Main Residence Mortgage";
+    } else if (type == "commercial-mortgage") {
+      return "Commercial Mortgage";
+    } else if (type == "buy-to-let-mortgage") {
+      return "Buy-to-let Mortgage";
+    } else if (type == "holiday-home-mortgage") {
+      return "Holiday Home Mortgage";
+    } else if (type == "second-residence-mortgage") {
+      return "Second Residence Mortgage";
+    } else if (type == "personal-loan") {
+      return "Personal Loan";
+    } else if (type == "miscellaneous") {
+      return "Miscellaneous";
+    }
+  };
+
+  const formatLiabilityCategory = (category) => {
+    if (category == "secured") {
+      return "Secured";
+    } else if (category == "unsecured") {
+      return "Unsecured";
+    }
+  };
+
+  function currencyFormat(num) {
+    try {
+      return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <div>
       <div
@@ -26,11 +62,11 @@ function LiabilityOverview(id) {
             padding: 5,
           }}
         >
-          <h1>{liability.category}</h1>
+          <h3>{formatLiabilityType(liability.liability_type)}</h3>
           <hr />
-          <h3>{liability.liability_type}</h3>
-          <h3>{liability.amount_borrowed}</h3>
-          <h3>{liability.amount_outstanding}</h3>
+          <h4>{formatLiabilityCategory(liability.category)}</h4>
+          <h4>{currencyFormat(parseFloat(liability.amount_borrowed))}</h4>
+          <h4>{currencyFormat(parseFloat(liability.amount_outstanding))}</h4>
         </div>
       </div>
     </div>
