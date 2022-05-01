@@ -2,6 +2,18 @@
   font-family: "Roboto Mono", monospace;
 }
 
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 body {
   font-family: "Roboto Mono", monospace;
   padding: 20px 20px 60px;
@@ -16,7 +28,8 @@ h1 {
 
 .columnChart {
   float: left;
-  width: 80%;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .columnSummary {
@@ -27,7 +40,7 @@ h1 {
 }
 
 .summaryCardOuter {
-  padding: 30px;
+  padding: 20px;
   background-color: #e6e6e6;
   border-radius: 20px;
   width: fit-content;

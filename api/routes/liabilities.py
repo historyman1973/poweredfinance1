@@ -1,3 +1,4 @@
+from models import Client, Property, Liability, liability_schema, liabilities_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -5,7 +6,6 @@ from flask.json import jsonify
 
 liability_blueprint = Blueprint('liability_blueprint', __name__)
 
-from models import Client, Property, Liability, liability_schema, liabilities_schema
 
 @liability_blueprint.route("/add-liability", methods=["POST"])
 def add_liability():
@@ -26,7 +26,7 @@ def add_liability():
             owner1 = check_owner1
         else:
             return("Client id " + str(owner1_id) + " doesn't exist."), 404
-    
+
     # Check if there's a value for owner2 in the request
     if owner2_id:
         # If there is an owner2 then check it exists in the database
@@ -36,7 +36,6 @@ def add_liability():
             owner2 = check_owner2
         else:
             return("Client id " + str(owner2_id) + " doesn't exist."), 404
-
 
     if owner1 or owner2:
         new_liability = Liability(

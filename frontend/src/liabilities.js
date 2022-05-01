@@ -16,6 +16,7 @@ import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddLiabilityForm from "./components/AddLiabilityForm";
+import { currencyFormat } from "./components/GlobalFunctions";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -139,6 +140,17 @@ function Liabilities() {
   const handleAddLiabilityClose = () => setOpenAddLiability(false);
   const [openAddLiability, setOpenAddLiability] = React.useState(false);
   const [liabilities, setLiabilities] = useState([]);
+  const [totalLiabilities, setTotalLiabilities] = useState([]);
+
+  const getTotalLiabilities = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    const totalLiabilities =
+      res.data.total_joint_liabilities + res.data.total_sole_liabilities;
+    setTotalLiabilities(totalLiabilities || []);
+  };
 
   const getLiabilities = async () => {
     const res = await axios.get(
@@ -149,6 +161,7 @@ function Liabilities() {
   };
 
   useEffect(() => getLiabilities(), []);
+  useEffect(() => getTotalLiabilities(), []);
 
   const getClient = async () => {
     try {
@@ -175,16 +188,29 @@ function Liabilities() {
       <br />
       <br />
       <div class="main-container">
-        <div style={{ textAlign: "left", marginLeft: "5%" }}>
-          <h1>Liabilities</h1>
-          <div style={{ marginTop: "10px" }}>
-            <h5>
-              Client ID: {client.id}
-              <br />
-              {client.forename} {client.middle_names} {client.surname}
-            </h5>
+        <div class="row">
+          <div class="column">
+            {" "}
+            <div style={{ textAlign: "left", marginLeft: "5%" }}>
+              <h1>Liabilities</h1>
+              <div style={{ marginTop: "10px" }}>
+                <h5>
+                  Client ID: {client.id}
+                  <br />
+                  {client.forename} {client.middle_names} {client.surname}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            {" "}
+            <div class="summaryCardOuter">
+              <h1>{currencyFormat(parseFloat(totalLiabilities))}</h1>
+              <p>TOTAL LIABILITIES</p>
+            </div>
           </div>
         </div>
+        <hr />
         <div class="row">
           <div class="columnChart">
             <div style={{ width: "100%", height: 500 }}>
@@ -212,18 +238,6 @@ function Liabilities() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
-          </div>
-          <div class="columnSummary">
-            <div class="summaryCardOuter">
-              <h1>312,173 GBP</h1>
-              <p>TOTAL LIABILITIES</p>
-              <div class="summaryCardInner">
-                <h3>(+7%) 1,299 GBP</h3>
-                <p>30-DAY PERFORMANCE</p>
-                <h3>(-19%) 111,293 GBP</h3>
-                <p>120-DAY PERFORMANCE</p>
-              </div>
             </div>
           </div>
         </div>

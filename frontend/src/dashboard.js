@@ -11,6 +11,7 @@ import {
 import Header from "./components/Header";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { currencyFormat } from "./components/GlobalFunctions";
 
 const data = [
   {
@@ -89,6 +90,17 @@ const data = [
 
 function Dashboard() {
   const [client, setClient] = useState([]);
+  const [networth, setNetworth] = useState([]);
+
+  const getNetworth = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    setNetworth(res.data.networth || []);
+  };
+
+  useEffect(() => getNetworth(), []);
 
   const getClient = async () => {
     try {
@@ -116,14 +128,26 @@ function Dashboard() {
       <br />
       <br />
       <div class="main-container">
-        <div style={{ textAlign: "left", marginLeft: "5%" }}>
-          <h1>Dashboard</h1>
-          <div style={{ marginTop: "10px" }}>
-            <h5>
-              Client ID: {client.id}
-              <br />
-              {client.forename} {client.middle_names} {client.surname}
-            </h5>
+        <div class="row">
+          <div class="column">
+            {" "}
+            <div style={{ textAlign: "left", marginLeft: "5%" }}>
+              <h1>Dashboard</h1>
+              <div style={{ marginTop: "10px" }}>
+                <h5>
+                  Client ID: {client.id}
+                  <br />
+                  {client.forename} {client.middle_names} {client.surname}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            {" "}
+            <div class="summaryCardOuter">
+              <h1>{currencyFormat(parseFloat(networth))}</h1>
+              <p>NET WORTH</p>
+            </div>
           </div>
         </div>
         <hr />
@@ -155,14 +179,6 @@ function Dashboard() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
-          <div class="columnSummary">
-            <h1>1,000,501 GBP</h1>
-            <p>TOTAL NET WORTH</p>
-            <h1>1,312,674 GBP</h1>
-            <p>YOU OWN</p>
-            <h1>-312,173 GBP</h1>
-            <p>YOU OWE</p>
           </div>
         </div>
       </div>

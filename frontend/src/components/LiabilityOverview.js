@@ -42,6 +42,8 @@ function LiabilityOverview(id) {
             Amount outstanding:{" "}
             {currencyFormat(parseFloat(liability.amount_outstanding))}
           </h4>
+          <hr />
+          <h4>Linked property ID: {liability.linked_property_id}</h4>
         </div>
       </div>
     </div>

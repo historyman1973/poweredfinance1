@@ -16,6 +16,7 @@ import AddAssetForm from "./components/AddAssetForm";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AssetTable from "./components/AssetTable";
+import { currencyFormat } from "./components/GlobalFunctions";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -143,6 +144,22 @@ function Assets() {
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
   const [lifestyleAssets, setLifestyleAssets] = useState([]);
+  const [totalAssets, setTotalAssets] = useState([]);
+
+  const getTotalAssets = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    const totalAssets =
+      res.data.total_joint_investments +
+      res.data.total_joint_lifestyle_assets +
+      res.data.total_joint_properties +
+      res.data.total_sole_investments +
+      res.data.total_sole_lifestyle_assets +
+      res.data.total_sole_properties;
+    setTotalAssets(totalAssets || []);
+  };
 
   const getProperties = async () => {
     const res = await axios.get(
@@ -171,6 +188,7 @@ function Assets() {
   useEffect(() => getProperties(), []);
   useEffect(() => getInvestments(), []);
   useEffect(() => getLifestyleAssets(), []);
+  useEffect(() => getTotalAssets(), []);
 
   const getClient = async () => {
     try {
@@ -197,16 +215,29 @@ function Assets() {
       <br />
       <br />
       <div class="main-container">
-        <div style={{ textAlign: "left", marginLeft: "5%" }}>
-          <h1>Assets</h1>
-          <div style={{ marginTop: "10px" }}>
-            <h5>
-              Client ID: {client.id}
-              <br />
-              {client.forename} {client.middle_names} {client.surname}
-            </h5>
+        <div class="row">
+          <div class="column">
+            {" "}
+            <div style={{ textAlign: "left", marginLeft: "5%" }}>
+              <h1>Assets</h1>
+              <div style={{ marginTop: "10px" }}>
+                <h5>
+                  Client ID: {client.id}
+                  <br />
+                  {client.forename} {client.middle_names} {client.surname}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            {" "}
+            <div class="summaryCardOuter">
+              <h1>{currencyFormat(parseFloat(totalAssets))}</h1>
+              <p>TOTAL ASSETS</p>
+            </div>
           </div>
         </div>
+        <hr />
         <div class="row">
           <div class="columnChart">
             <div style={{ width: "100%", height: 500 }}>
@@ -234,18 +265,6 @@ function Assets() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
-          </div>
-          <div class="columnSummary">
-            <div class="summaryCardOuter">
-              <h1>1,312,674 GBP</h1>
-              <p>TOTAL ASSETS</p>
-              <div class="summaryCardInner">
-                <h3>(+28%) 51,999 GBP</h3>
-                <p>30-DAY PERFORMANCE</p>
-                <h3>(+314%) 810,011 GBP</h3>
-                <p>120-DAY PERFORMANCE</p>
-              </div>
             </div>
           </div>
         </div>

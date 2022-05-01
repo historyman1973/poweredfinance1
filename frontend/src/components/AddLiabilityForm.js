@@ -13,7 +13,7 @@ const initialFValues = {
   amount_outstanding: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
-  property_id: "",
+  linked_property_id: "",
 };
 
 export default function AddLiabilityForm() {
@@ -132,9 +132,9 @@ export default function AddLiabilityForm() {
                 Linked Property
               </InputLabel>
               <Select
-                name="property_id"
-                label="Property ID"
-                value={values.property_id}
+                name="linked_property_id"
+                label="Linked Property ID"
+                value={values.linked_property_id}
                 onChange={handleInputChange}
               >
                 <MenuItem value={"none"}>None</MenuItem>
