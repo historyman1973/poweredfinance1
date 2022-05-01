@@ -1,7 +1,10 @@
+from msilib.schema import Property
+from api.models import LifestyleAsset
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 from routes.marketdata import get_latest_data
+from sqlalchemy.sql import func
 
 investments_blueprint = Blueprint('investments_blueprint', __name__)
 
@@ -29,17 +32,6 @@ def get_holding_data(investment_id):
             )
 
     return jsonify(data)
-
-    # return jsonify(
-    #     holding_id=holding.id,
-    #     instrument_id=instrument.id,
-    #     instrument_name=instrument.name,
-    #     current_units=holding.units,
-    #     holding_ticker=instrument.symbol,
-    #     current_value=holding.units*unit_price
-    # )
-
-
 
 
 @investments_blueprint.route("/get-holdings/<investment_id>", methods=["GET"])
@@ -130,10 +122,8 @@ def get_investment_value(investment_id):
         holding_current_value = units*current_unit_price
         total_value += holding_current_value
     
-    return jsonify(
-        investment_id=investment.id,
-        total_value=total_value
-    )
+    return jsonify(total_value=total_value)
+
 
 @investments_blueprint.route("/get-investments/<client_id>", methods=["GET"])
 def get_investments(client_id):
@@ -160,10 +150,6 @@ def get_investments(client_id):
         )
 
     return jsonify(data)
-
-    #     return investments_schema.jsonify(investments)
-    # else:
-    #     return("Client id " + client_id + " doesn't exist."), 404
 
 
 @investments_blueprint.route("/add-transaction", methods=["POST"])
