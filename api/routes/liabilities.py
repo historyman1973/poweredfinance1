@@ -15,6 +15,7 @@ def add_liability():
     amount_outstanding = request.json['amount_outstanding']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
+    linked_property_id = request.json['linked_property_id']
 
     # Check if there's a value for owner1 in the request
     if owner1_id:
@@ -44,7 +45,8 @@ def add_liability():
             amount_borrowed=amount_borrowed,
             amount_outstanding=amount_outstanding,
             owner1_id=owner1_id,
-            owner2_id=owner2_id
+            owner2_id=owner2_id,
+            property_id=linked_property_id
         )
 
         db.session.add(new_liability)

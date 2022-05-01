@@ -92,6 +92,12 @@ class Instrument(db.Model):
     symbol = db.Column(db.String)
     exchange = db.Column(db.String)
     name = db.Column(db.String)
+    market_cap = db.Column(db.Integer)
+    country = db.Column(db.String)
+    ipo_year = db.Column(db.Integer)
+    volume = db.Column(db.Integer)
+    sector = db.Column(db.String)
+    industry = db.Column(db.String)
 
     def __init__(self, **kwargs):
         super(Instrument, self).__init__(**kwargs)
@@ -154,6 +160,7 @@ class Liability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String)
     liability_type = db.Column(db.String)
+    description = db.Column(db.String)
     amount_borrowed = db.Column(db.Numeric)
     amount_outstanding = db.Column(db.Numeric)
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
@@ -172,10 +179,12 @@ class LiabilitySchema(ma.Schema):
             'id',
             'category',
             'liability_type',
+            'description',
             'amount_borrowed',
             'amount_outstanding',
             'owner1_id',
-            'owner2_id'
+            'owner2_id',
+            'property_id'
         )
 
 

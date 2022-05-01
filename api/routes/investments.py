@@ -1,5 +1,3 @@
-from msilib.schema import Property
-from api.models import LifestyleAsset
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
