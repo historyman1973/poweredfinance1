@@ -165,8 +165,9 @@ class Liability(db.Model):
     amount_outstanding = db.Column(db.Numeric)
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
-
     property_id = db.Column(db.Integer, db.ForeignKey('property.id'))
+
+    property = db.relationship("Property", back_populates="liability")
 
     def __init__(self, **kwargs):
         super(Liability, self).__init__(**kwargs)
@@ -183,8 +184,7 @@ class LiabilitySchema(ma.Schema):
             'amount_borrowed',
             'amount_outstanding',
             'owner1_id',
-            'owner2_id',
-            'property_id'
+            'owner2_id'
         )
 
 
@@ -233,8 +233,9 @@ class Property(db.Model):
     value = db.Column(db.Numeric)
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    liability_id = db.Column(db.Integer, db.ForeignKey('liability.id'))
 
-    mortgage = db.relationship('Liability', backref='property', uselist=False)
+    liability = db.relationship("Liability", back_populates="property", uselist=False)
 
     def __init__(self, **kwargs):
         super(Property, self).__init__(**kwargs)
