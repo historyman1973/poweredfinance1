@@ -127,7 +127,7 @@ def get_networth(client_id):
             Liability.owner1_id != None,
             Liability.owner2_id == client_id).all()
 
-# TODO
+
     total_sole_investments = 0
     for investment in sole_investments:
         value = get_investment_value(investment.id).get_json()["total_value"]

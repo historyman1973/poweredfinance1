@@ -5,7 +5,7 @@ from flask.json import jsonify
 
 otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)
 
-from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema
+from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema, Liability
 
 @otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
 def add_lifestyleasset():
@@ -84,6 +84,7 @@ def add_property():
     value = request.json['value']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
+    liability_id = request.json['liability_id']
 
     # Check if there's a value for owner1 in the request
     if owner1_id:
@@ -107,17 +108,24 @@ def add_property():
 
 
     if owner1 or owner2:
+        liability = None
+        if liability_id:
+            liability = Liability.query.get(int(liability_id))
+
         new_property = Property(
         property_type=property_type,
         address=address,
         cost=cost,
         value=value,
         owner1_id=owner1_id,
-        owner2_id=owner2_id
+        owner2_id=owner2_id,
+        liability=liability
         )
 
         db.session.add(new_property)
         db.session.commit()
+
+        print(new_property.liability)
 
         return property_schema.jsonify(new_property), 201
 

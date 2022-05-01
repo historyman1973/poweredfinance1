@@ -15,7 +15,7 @@ def add_liability():
     amount_outstanding = request.json['amount_outstanding']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
-    linked_property_id = request.json['linked_property_id']
+    property_id = request.json['property_id']
 
     # Check if there's a value for owner1 in the request
     if owner1_id:
@@ -39,6 +39,10 @@ def add_liability():
 
 
     if owner1 or owner2:
+        property = None
+        if property_id:
+            property = Property.query.get(int(property_id))
+        
         new_liability = Liability(
             category=category,
             liability_type=liability_type,
@@ -46,11 +50,13 @@ def add_liability():
             amount_outstanding=amount_outstanding,
             owner1_id=owner1_id,
             owner2_id=owner2_id,
-            property_id=linked_property_id
+            property=property
         )
 
         db.session.add(new_liability)
         db.session.commit()
+
+        print(new_liability.property)
 
         return liability_schema.jsonify(new_liability), 201
 
