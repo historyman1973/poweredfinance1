@@ -233,7 +233,6 @@ class Property(db.Model):
     value = db.Column(db.Numeric)
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
-    liability_id = db.Column(db.Integer, db.ForeignKey('liability.id'))
 
     liability = db.relationship("Liability", back_populates="property", uselist=False)
 
