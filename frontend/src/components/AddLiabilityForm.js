@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
@@ -13,10 +13,11 @@ const initialFValues = {
   amount_outstanding: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
+  property_id: "",
 };
 
 export default function AddLiabilityForm() {
-  const navigate = useNavigate();
+  const [properties, setProperties] = useState([]);
   const validate = () => {
     let temp = {};
     temp.amount_outstanding = values.amount_outstanding
@@ -41,6 +42,8 @@ export default function AddLiabilityForm() {
     }
   };
 
+  useEffect(() => getProperties(), []);
+
   const addLiability = async (values) => {
     try {
       const res = await axios.post(
@@ -58,6 +61,14 @@ export default function AddLiabilityForm() {
       console.log(error);
       toast.error(error.message);
     }
+  };
+
+  const getProperties = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-properties/` +
+        window.location.pathname.split("/")[2]
+    );
+    setProperties(res.data);
   };
 
   return (
@@ -122,6 +133,22 @@ export default function AddLiabilityForm() {
               onChange={handleInputChange}
               error={errors.amount_outstanding}
             />
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">
+                Linked Property
+              </InputLabel>
+              <Select
+                name="property_id"
+                label="Property ID"
+                value={values.property_id}
+                onChange={handleInputChange}
+              >
+                <MenuItem value={"none"}>None</MenuItem>
+                {properties.map((property) => (
+                  <MenuItem value={property.id}>{property.address}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <div>

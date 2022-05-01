@@ -34,8 +34,14 @@ function LiabilityOverview(id) {
           <h3>{formatLiabilityType(liability.liability_type)}</h3>
           <hr />
           <h4>{formatLiabilityCategory(liability.category)}</h4>
-          <h4>{currencyFormat(parseFloat(liability.amount_borrowed))}</h4>
-          <h4>{currencyFormat(parseFloat(liability.amount_outstanding))}</h4>
+          <h4>
+            Amount borrowed:{" "}
+            {currencyFormat(parseFloat(liability.amount_borrowed))}
+          </h4>
+          <h4>
+            Amount outstanding:{" "}
+            {currencyFormat(parseFloat(liability.amount_outstanding))}
+          </h4>
         </div>
       </div>
     </div>
