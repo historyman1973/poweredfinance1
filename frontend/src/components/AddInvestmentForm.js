@@ -9,7 +9,6 @@ const initialFValues = {
   investment_type: "",
   provider: "",
   investment_ref: "",
-  value: 0,
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
 };
