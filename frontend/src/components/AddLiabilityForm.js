@@ -50,13 +50,7 @@ export default function AddLiabilityForm() {
         `http://127.0.0.1:5000/add-liability`,
         values
       );
-      console.log(
-        await axios.get(
-          `http://127.0.0.1:5000/get-liabilities/` +
-            window.location.pathname.split("/")[2]
-        )
-      );
-      // setLoading(false);
+      // add property link to add-liability endpoint instead of separate
     } catch (error) {
       console.log(error);
       toast.error(error.message);
