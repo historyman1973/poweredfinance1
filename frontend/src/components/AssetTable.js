@@ -88,12 +88,15 @@ const styleInvestment = {
   p: 4,
 };
 
-function AssetTable({
-  properties,
-  investments,
-  investmentValues,
-  lifestyleAssets,
-}) {
+function currencyFormat(num) {
+  try {
+    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function AssetTable({ properties, investments, lifestyleAssets }) {
   const rows = Array();
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
@@ -127,7 +130,7 @@ function AssetTable({
         description: property.address,
         id: property.id,
         category: "Property",
-        value: property.value,
+        value: currencyFormat(parseFloat(property.value)),
       })
     );
   }
@@ -136,9 +139,9 @@ function AssetTable({
     investments.map((investment) =>
       rows.push({
         description: investment.provider,
-        id: investment.id,
+        id: investment.investment_id,
         category: "Investment",
-        value: investmentValues[investment.id],
+        value: currencyFormat(parseFloat(investment.current_value)),
       })
     );
   }
@@ -149,7 +152,7 @@ function AssetTable({
         description: lifestyleAsset.description,
         id: lifestyleAsset.id,
         category: "Lifestyle Asset",
-        value: lifestyleAsset.value,
+        value: currencyFormat(parseFloat(lifestyleAsset.value)),
       })
     );
   }

@@ -49,6 +49,14 @@ const style = {
   p: 4,
 };
 
+function currencyFormat(num) {
+  try {
+    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function HoldingTable({ holdings }) {
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -79,7 +87,7 @@ function HoldingTable({ holdings }) {
         instrument_id: holding.instrument_id,
         instrument_name: holding.instrument_name,
         units: holding.current_units,
-        value: holding.current_value,
+        value: currencyFormat(parseFloat(holding.current_value)),
         view: holding.holding_ticker,
       })
     );

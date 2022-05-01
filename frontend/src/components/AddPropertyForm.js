@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
@@ -13,10 +13,11 @@ const initialFValues = {
   value: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
+  mortgage_id: "",
 };
 
 export default function AddPropertyForm() {
-  const navigate = useNavigate();
+  const [mortgages, setMortgages] = useState([]);
   const validate = () => {
     let temp = {};
     temp.address = values.address
@@ -61,6 +62,29 @@ export default function AddPropertyForm() {
     }
   };
 
+  useEffect(() => getMortgages(), []);
+
+  const getMortgages = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-liabilities/` +
+        window.location.pathname.split("/")[2]
+    );
+    const mortgages = Array();
+    res.data.map((liability) => {
+      if (
+        liability.liability_type == "main-residence-mortgage" ||
+        liability.liability_type == "commercial-mortgage" ||
+        liability.liability_type == "buy-to-let-mortgage" ||
+        liability.liability_type == "holiday-home-mortgage" ||
+        liability.liability_type == "second-residence-mortgage"
+      ) {
+        mortgages.push(liability);
+      }
+    });
+    setMortgages(res.data);
+    console.log(mortgages);
+  };
+
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
       <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
@@ -103,6 +127,22 @@ export default function AddPropertyForm() {
                 <MenuItem value={"holiday-home"}>Holiday home</MenuItem>
                 <MenuItem value={"commercial"}>Commercial</MenuItem>
                 <MenuItem value={"second-residence"}>Second residence</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">
+                Linked Mortgage
+              </InputLabel>
+              <Select
+                name="mortgage_id"
+                label="Mortgage ID"
+                value={values.mortgage_id}
+                onChange={handleInputChange}
+              >
+                <MenuItem value={"none"}>None</MenuItem>
+                {mortgages.map((mortgage) => (
+                  <MenuItem value={mortgage.id}>{mortgage.id} (name)</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
