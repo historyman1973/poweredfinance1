@@ -11,6 +11,7 @@ from models import Client, Property, Liability, liability_schema, liabilities_sc
 def add_liability():
     category = request.json['category']
     liability_type = request.json['liability_type']
+    description = request.json['description']
     amount_borrowed = request.json['amount_borrowed']
     amount_outstanding = request.json['amount_outstanding']
     owner1_id = request.json['owner1_id']
@@ -46,6 +47,7 @@ def add_liability():
         new_liability = Liability(
             category=category,
             liability_type=liability_type,
+            description=description,
             amount_borrowed=amount_borrowed,
             amount_outstanding=amount_outstanding,
             owner1_id=owner1_id,
