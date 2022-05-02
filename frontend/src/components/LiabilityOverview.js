@@ -31,8 +31,9 @@ function LiabilityOverview(id) {
             padding: 5,
           }}
         >
-          <h3>{formatLiabilityType(liability.liability_type)}</h3>
+          <h3>{liability.description}</h3>
           <hr />
+          <h3>{formatLiabilityType(liability.liability_type)}</h3>
           <h4>{formatLiabilityCategory(liability.category)}</h4>
           <h4>
             Amount borrowed:{" "}
