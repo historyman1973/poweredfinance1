@@ -171,7 +171,6 @@ function Liabilities() {
       );
       setClient(res.data || []);
       // setLoading(false);
-      console.log(client);
     } catch (error) {
       console.log(error);
       toast.error(error.message);

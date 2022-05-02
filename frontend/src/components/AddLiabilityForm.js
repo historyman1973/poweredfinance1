@@ -4,16 +4,16 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   category: "",
   liability_type: "",
+  description: "",
   amount_borrowed: "",
   amount_outstanding: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
-  linked_property_id: "",
+  property_id: "",
 };
 
 export default function AddLiabilityForm() {
@@ -23,6 +23,9 @@ export default function AddLiabilityForm() {
     temp.amount_outstanding = values.amount_outstanding
       ? ""
       : "Please enter the liability amount.";
+    temp.description = values.description
+      ? ""
+      : "Please enter the liability description.";
     temp.liability_type = values.liability_type ? "" : "Required field.";
     setErrors({
       ...temp,
@@ -50,7 +53,6 @@ export default function AddLiabilityForm() {
         `http://127.0.0.1:5000/add-liability`,
         values
       );
-      // add property link to add-liability endpoint instead of separate
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -127,14 +129,21 @@ export default function AddLiabilityForm() {
               onChange={handleInputChange}
               error={errors.amount_outstanding}
             />
+            <Controls.Input
+              label="Description"
+              name="description"
+              value={values.description}
+              onChange={handleInputChange}
+              error={errors.description}
+            />
             <FormControl>
               <InputLabel id="demo-simple-select-label">
                 Linked Property
               </InputLabel>
               <Select
-                name="linked_property_id"
+                name="property_id"
                 label="Linked Property ID"
-                value={values.linked_property_id}
+                value={values.property_id}
                 onChange={handleInputChange}
               >
                 <MenuItem value={"none"}>None</MenuItem>

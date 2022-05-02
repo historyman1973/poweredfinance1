@@ -42,7 +42,7 @@ def add_liability():
         property = None
         if property_id:
             property = Property.query.get(int(property_id))
-        
+
         new_liability = Liability(
             category=category,
             liability_type=liability_type,
