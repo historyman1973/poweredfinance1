@@ -214,7 +214,7 @@ function Assets() {
       />
       <br />
       <br />
-      <div class="main-container">
+      <div>
         <div class="row">
           <div class="column">
             {" "}
@@ -233,7 +233,9 @@ function Assets() {
             {" "}
             <div class="summaryCardOuter">
               <h1>{currencyFormat(parseFloat(totalAssets))}</h1>
-              <p>TOTAL ASSETS</p>
+              <div class="textRight">
+                <p>TOTAL ASSETS</p>
+              </div>
             </div>
           </div>
         </div>
@@ -287,12 +289,14 @@ function Assets() {
               <AddAssetForm />
             </Paper>
           </StyledModal>
-          <AssetTable
-            class="padding-left-right"
-            properties={properties}
-            investments={investments}
-            lifestyleAssets={lifestyleAssets}
-          />
+          <div class="paddingBottom">
+            <AssetTable
+              class="padding-left-right"
+              properties={properties}
+              investments={investments}
+              lifestyleAssets={lifestyleAssets}
+            />
+          </div>
         </div>
       </div>
     </div>

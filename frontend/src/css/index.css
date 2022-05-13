@@ -5,6 +5,9 @@
 .column {
   float: left;
   width: 50%;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 25px;
 }
 
 /* Clear floats after the columns */
@@ -12,6 +15,10 @@
   content: "";
   display: table;
   clear: both;
+}
+
+.paddingBottom {
+  padding-bottom: 50px;
 }
 
 body {
@@ -30,6 +37,12 @@ h1 {
   float: left;
   width: 100%;
   margin-top: 50px;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+.textRight {
+  text-align: right;
 }
 
 .columnSummary {
@@ -41,8 +54,6 @@ h1 {
 
 .summaryCardOuter {
   padding: 20px;
-  background-color: #e6e6e6;
-  border-radius: 20px;
   width: fit-content;
   float: right;
 }

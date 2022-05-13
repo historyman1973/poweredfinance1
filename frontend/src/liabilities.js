@@ -186,7 +186,7 @@ function Liabilities() {
       />
       <br />
       <br />
-      <div class="main-container">
+      <div>
         <div class="row">
           <div class="column">
             {" "}
@@ -205,7 +205,9 @@ function Liabilities() {
             {" "}
             <div class="summaryCardOuter">
               <h1>{currencyFormat(parseFloat(totalLiabilities))}</h1>
-              <p>TOTAL LIABILITIES</p>
+              <div class="textRight">
+                <p>TOTAL LIABILITIES</p>
+              </div>
             </div>
           </div>
         </div>
@@ -259,10 +261,12 @@ function Liabilities() {
               <AddLiabilityForm />
             </Paper>
           </StyledModal>
-          <LiabilityTable
-            class="padding-left-right"
-            liabilities={liabilities}
-          />
+          <div class="paddingBottom">
+            <LiabilityTable
+              class="padding-left-right"
+              liabilities={liabilities}
+            />
+          </div>
         </div>
       </div>
     </div>

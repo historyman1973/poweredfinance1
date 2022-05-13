@@ -127,7 +127,7 @@ function Dashboard() {
       />
       <br />
       <br />
-      <div class="main-container">
+      <div>
         <div class="row">
           <div class="column">
             {" "}
@@ -146,7 +146,9 @@ function Dashboard() {
             {" "}
             <div class="summaryCardOuter">
               <h1>{currencyFormat(parseFloat(networth))}</h1>
-              <p>NET WORTH</p>
+              <div class="textRight">
+                <p>NET WORTH</p>
+              </div>
             </div>
           </div>
         </div>
