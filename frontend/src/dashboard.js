@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -119,6 +119,20 @@ function Dashboard() {
 
   useEffect(() => getClient(), []);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${currencyFormat(
+            parseFloat(payload[0].value)
+          )}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div>
       <Header
@@ -157,7 +171,7 @@ function Dashboard() {
           <div class="columnChart">
             <div style={{ width: "100%", height: 500, marginTop: "20px" }}>
               <ResponsiveContainer width="100%">
-                <AreaChart
+                <LineChart
                   width={500}
                   height={400}
                   data={data}
@@ -170,15 +184,16 @@ function Dashboard() {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
+                  <YAxis tickFormatter={currencyFormat} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
                     type="monotone"
                     dataKey="uv"
                     stroke="#8884d8"
                     fill="#8884d8"
+                    dot={false}
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>

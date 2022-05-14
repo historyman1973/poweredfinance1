@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -206,6 +206,20 @@ function Assets() {
 
   useEffect(() => getClient(), []);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${currencyFormat(
+            parseFloat(payload[0].value)
+          )}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div>
       <Header
@@ -244,7 +258,7 @@ function Assets() {
           <div class="columnChart">
             <div style={{ width: "100%", height: 500 }}>
               <ResponsiveContainer>
-                <AreaChart
+                <LineChart
                   width={500}
                   height={400}
                   data={chartData}
@@ -257,15 +271,16 @@ function Assets() {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
+                  <YAxis tickFormatter={currencyFormat} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
                     type="monotone"
                     dataKey="uv"
                     stroke="#8884d8"
                     fill="#8884d8"
+                    dot={false}
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>

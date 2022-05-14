@@ -11,6 +11,10 @@ class App extends Component {
     return (
       <div>
         <div className="App">
+          <style>
+            @import
+            url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300&family=Mulish:wght@200&family=Roboto:wght@300&display=swap');
+          </style>
           <Layout />
         </div>
         <ToastContainer position="bottom-right" />
