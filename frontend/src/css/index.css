@@ -1,5 +1,5 @@
 * {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
 }
 
 .column {
@@ -22,14 +22,14 @@
 }
 
 body {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
   padding: 20px 20px 60px;
   max-width: 100%;
   margin: 0 auto;
 }
 
 h1 {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
   margin: 0 auto;
 }
 
