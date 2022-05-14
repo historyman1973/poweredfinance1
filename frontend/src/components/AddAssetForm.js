@@ -3,7 +3,7 @@ import { Button, Paper } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
 import AddInvestmentForm from "./AddInvestmentForm";
 import AddLifestyleAssetForm from "./AddLifestyleAssetForm";
-import { styled, Box } from "@mui/system";
+import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
 const StyledModal = styled(ModalUnstyled)`
