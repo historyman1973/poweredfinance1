@@ -229,7 +229,7 @@ function Liabilities() {
         <hr />
         <div class="row">
           <div class="columnChart">
-            <div style={{ width: "100%", height: 500 }}>
+            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
               <ResponsiveContainer>
                 <LineChart
                   width={500}
@@ -258,14 +258,14 @@ function Liabilities() {
             </div>
           </div>
         </div>
-        <div style={{ height: "350px", margin: "50px" }}>
-          <Button
-            onClick={handleAddLiabilityOpen}
-            variant="outlined"
-            style={{ margin: 10, marginBottom: 20 }}
-          >
-            Add Liability
-          </Button>
+        <hr />
+        <div
+          style={{
+            height: "350px",
+            marginTop: "20px",
+            display: "grid",
+          }}
+        >
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
@@ -278,6 +278,20 @@ function Liabilities() {
             </Paper>
           </StyledModal>
           <div class="paddingBottom">
+            <div class="row" style={{ marginTop: "20px", marginLeft: "50px" }}>
+              <div class="column">
+                <h3>List of liabilities</h3>
+              </div>
+              <div class="column">
+                <Button
+                  onClick={handleAddLiabilityOpen}
+                  style={{ float: "right", marginRight: 80 }}
+                  size="large"
+                >
+                  Add Liability
+                </Button>
+              </div>
+            </div>
             <LiabilityTable
               class="padding-left-right"
               liabilities={liabilities}

@@ -256,7 +256,7 @@ function Assets() {
         <hr />
         <div class="row">
           <div class="columnChart">
-            <div style={{ width: "100%", height: 500 }}>
+            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
               <ResponsiveContainer>
                 <LineChart
                   width={500}
@@ -285,14 +285,14 @@ function Assets() {
             </div>
           </div>
         </div>
-        <div style={{ height: "350px", margin: "50px" }}>
-          <Button
-            onClick={handleAddAssetOpen}
-            variant="outlined"
-            style={{ margin: 10, marginBottom: 20 }}
-          >
-            Add Asset
-          </Button>
+        <hr />
+        <div
+          style={{
+            height: "350px",
+            marginTop: "20px",
+            display: "grid",
+          }}
+        >
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
@@ -305,6 +305,20 @@ function Assets() {
             </Paper>
           </StyledModal>
           <div class="paddingBottom">
+            <div class="row" style={{ marginTop: "20px", marginLeft: "50px" }}>
+              <div class="column">
+                <h3>List of assets</h3>
+              </div>
+              <div class="column">
+                <Button
+                  onClick={handleAddAssetOpen}
+                  style={{ float: "right", marginRight: 80 }}
+                  size="large"
+                >
+                  Add Asset
+                </Button>
+              </div>
+            </div>
             <AssetTable
               class="padding-left-right"
               properties={properties}
