@@ -130,6 +130,15 @@ def add_property():
         return property_schema.jsonify(new_property), 201
 
 
+@otherassets_blueprint.route("/delete-property/<property_id>", methods=["DELETE"])
+def delete_property(property_id):
+    db.session.delete(Property.query.get(property_id))
+    db.session.commit()
+
+    return("Property deleted"), 204
+
+
+
 @otherassets_blueprint.route("/get-property/<property_id>", methods=["GET"])
 def get_property(property_id):
     property = Property.query.get(property_id)
