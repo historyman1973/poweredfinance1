@@ -66,6 +66,7 @@ class HoldingHistory(db.Model):
     holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
     units = db.Column(db.Float)
     updated_date = db.Column(db.String)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'))
 
     def __init__(self, **kwargs):
         super(HoldingHistory, self).__init__(**kwargs)
@@ -77,7 +78,8 @@ class HoldingHistorySchema(ma.Schema):
             'id',
             'holding_id',
             'units',
-            'updated_date'
+            'updated_date',
+            'transaction_id'
         )
 
 holdinghistory_schema = HoldingHistorySchema()

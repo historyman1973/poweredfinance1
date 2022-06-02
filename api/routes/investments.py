@@ -1,14 +1,15 @@
+from multiprocessing import synchronize
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 from routes.marketdata import get_latest_data
-from sqlalchemy.sql import func
+from sqlalchemy import delete
 
 investments_blueprint = Blueprint('investments_blueprint', __name__)
 
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
-        instrument_schema
+        instrument_schema, holdings_transactions, investment_holdings
 
 
 @investments_blueprint.route("/get-holding-data/<investment_id>", methods=["GET"])
@@ -95,6 +96,37 @@ def add_investment():
         db.session.commit()
 
         return investment_schema.jsonify(new_investment), 201
+
+
+@investments_blueprint.route("/delete-investment/<investment_id>", methods=["DELETE"])
+def delete_investment(investment_id):
+    linked_holdings = Investment.query.get(investment_id).holdings
+    linked_holdings_ids = []
+    for linked_holding in linked_holdings:
+        linked_holdings_ids.append(linked_holding.id)
+    print(linked_holdings_ids)
+    
+    
+    db.session.query(HoldingHistory).filter(HoldingHistory.holding_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+    db.session.commit()
+    # HoldingHistory.query.filter_by(HoldingHistory.holding_id.in_(linked_holdings_ids).delete())
+
+    print("Moving onto transactions now")
+
+    db.session.query(Transaction).filter(Transaction.holding_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+    db.session.commit()    
+    # Transaction.query.filter_by(Transaction.holding_id.in_(linked_holdings_ids).delete())
+
+    print("Moving onto holdings now")
+
+    db.session.query(Holding).filter(Holding.id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+    db.session.commit()
+    # Holding.query.filter_by(Holding.id.in_(linked_holdings_ids).delete())
+
+    db.session.delete(Investment.query.get(investment_id))
+    db.session.commit()
+
+    return("Investment deleted"), 204
 
 
 @investments_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
@@ -198,7 +230,7 @@ def add_transaction():
         db.session.commit()
 
         # Update the holding history table
-        history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate)
+        history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate, transaction_id=new_transaction.id)
         db.session.add(history_update)
         db.session.commit()
         db.session.flush()    
@@ -212,6 +244,32 @@ def add_transaction():
         return("Instrument id " + str(instrument_id) + " doesn't exist."), 404
     elif investment is None and instrument is None:
         return("Neither investment id " + str(investment_id) + " nor instrument id " + str(instrument_id) + " exists."), 404
+
+
+@investments_blueprint.route("/delete-transaction/<transaction_id>", methods=["DELETE"])
+def delete_transaction(transaction_id):
+    transaction_to_delete = Transaction.query.get(transaction_id)
+    if transaction_to_delete:
+        print(transaction_to_delete)
+        
+        # Now adjust the current holdings by the number of units for the transaction
+        holding_to_amend = Holding.query.filter(Holding.id == transaction_to_delete.holding_id).scalar()
+        if holding_to_amend:
+            holding_to_amend.units -= transaction_to_delete.units
+
+        # Delete the HoldingHistory record to remove the units from the transaction from the history
+        holdinghistory_to_delete = HoldingHistory.query.filter(HoldingHistory.transaction_id == transaction_to_delete.id).scalar()
+        if holdinghistory_to_delete:
+            db.session.delete(holdinghistory_to_delete)
+            db.session.commit()
+
+        # Delete the transaction
+        db.session.delete(transaction_to_delete)
+        db.session.commit()
+
+        return("Transaction deleted"), 204
+    else:
+        return("Transaction doesn't exist"), 404
 
 
 @investments_blueprint.route("/get-transaction/<transaction_id>", methods=["GET"])

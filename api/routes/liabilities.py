@@ -63,6 +63,14 @@ def add_liability():
         return liability_schema.jsonify(new_liability), 201
 
 
+@liability_blueprint.route("/delete-liability/<liability_id>", methods=["DELETE"])
+def delete_liability(liability_id):
+    db.session.delete(Liability.query.get(liability_id))
+    db.session.commit()
+
+    return("Liability deleted"), 204
+
+
 @liability_blueprint.route("/get-liability/<liability_id>", methods=["GET"])
 def get_liability(liability_id):
     liability = Liability.query.get(liability_id)
