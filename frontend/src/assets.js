@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,6 +16,7 @@ import AddAssetForm from "./components/AddAssetForm";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AssetTable from "./components/AssetTable";
+import { currencyFormat } from "./components/GlobalFunctions";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -143,6 +144,22 @@ function Assets() {
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
   const [lifestyleAssets, setLifestyleAssets] = useState([]);
+  const [totalAssets, setTotalAssets] = useState([]);
+
+  const getTotalAssets = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    const totalAssets =
+      res.data.total_joint_investments +
+      res.data.total_joint_lifestyle_assets +
+      res.data.total_joint_properties +
+      res.data.total_sole_investments +
+      res.data.total_sole_lifestyle_assets +
+      res.data.total_sole_properties;
+    setTotalAssets(totalAssets || []);
+  };
 
   const getProperties = async () => {
     const res = await axios.get(
@@ -171,6 +188,7 @@ function Assets() {
   useEffect(() => getProperties(), []);
   useEffect(() => getInvestments(), []);
   useEffect(() => getLifestyleAssets(), []);
+  useEffect(() => getTotalAssets(), []);
 
   const getClient = async () => {
     try {
@@ -188,6 +206,20 @@ function Assets() {
 
   useEffect(() => getClient(), []);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${currencyFormat(
+            parseFloat(payload[0].value)
+          )}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div>
       <Header
@@ -196,22 +228,37 @@ function Assets() {
       />
       <br />
       <br />
-      <div class="main-container">
-        <div style={{ textAlign: "left", marginLeft: "5%" }}>
-          <h1>Assets</h1>
-          <div style={{ marginTop: "10px" }}>
-            <h5>
-              Client ID: {client.id}
-              <br />
-              {client.forename} {client.middle_names} {client.surname}
-            </h5>
+      <div>
+        <div class="row">
+          <div class="column">
+            {" "}
+            <div style={{ textAlign: "left", marginLeft: "5%" }}>
+              <h1>Assets</h1>
+              <div style={{ marginTop: "10px" }}>
+                <h5>
+                  Client ID: {client.id}
+                  <br />
+                  {client.forename} {client.middle_names} {client.surname}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            {" "}
+            <div class="summaryCardOuter">
+              <h1>{currencyFormat(parseFloat(totalAssets))}</h1>
+              <div class="textRight">
+                <p>TOTAL ASSETS</p>
+              </div>
+            </div>
           </div>
         </div>
+        <hr />
         <div class="row">
           <div class="columnChart">
-            <div style={{ width: "100%", height: 500 }}>
+            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
               <ResponsiveContainer>
-                <AreaChart
+                <LineChart
                   width={500}
                   height={400}
                   data={chartData}
@@ -224,39 +271,28 @@ function Assets() {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
+                  <YAxis tickFormatter={currencyFormat} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
                     type="monotone"
                     dataKey="uv"
                     stroke="#8884d8"
                     fill="#8884d8"
+                    dot={false}
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <div class="columnSummary">
-            <div class="summaryCardOuter">
-              <h1>1,312,674 GBP</h1>
-              <p>TOTAL ASSETS</p>
-              <div class="summaryCardInner">
-                <h3>(+28%) 51,999 GBP</h3>
-                <p>30-DAY PERFORMANCE</p>
-                <h3>(+314%) 810,011 GBP</h3>
-                <p>120-DAY PERFORMANCE</p>
-              </div>
-            </div>
-          </div>
         </div>
-        <div style={{ height: "350px", margin: "50px" }}>
-          <Button
-            onClick={handleAddAssetOpen}
-            variant="outlined"
-            style={{ margin: 10, marginBottom: 20 }}
-          >
-            Add Asset
-          </Button>
+        <hr />
+        <div
+          style={{
+            height: "350px",
+            marginTop: "20px",
+            display: "grid",
+          }}
+        >
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
@@ -268,12 +304,28 @@ function Assets() {
               <AddAssetForm />
             </Paper>
           </StyledModal>
-          <AssetTable
-            class="padding-left-right"
-            properties={properties}
-            investments={investments}
-            lifestyleAssets={lifestyleAssets}
-          />
+          <div class="paddingBottom">
+            <div class="row" style={{ marginTop: "20px", marginLeft: "50px" }}>
+              <div class="column">
+                <h3>List of assets</h3>
+              </div>
+              <div class="column">
+                <Button
+                  onClick={handleAddAssetOpen}
+                  style={{ float: "right", marginRight: 80 }}
+                  size="large"
+                >
+                  Add Asset
+                </Button>
+              </div>
+            </div>
+            <AssetTable
+              class="padding-left-right"
+              properties={properties}
+              investments={investments}
+              lifestyleAssets={lifestyleAssets}
+            />
+          </div>
         </div>
       </div>
     </div>

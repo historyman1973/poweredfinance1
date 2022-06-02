@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,6 +16,7 @@ import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddLiabilityForm from "./components/AddLiabilityForm";
+import { currencyFormat } from "./components/GlobalFunctions";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -139,6 +140,17 @@ function Liabilities() {
   const handleAddLiabilityClose = () => setOpenAddLiability(false);
   const [openAddLiability, setOpenAddLiability] = React.useState(false);
   const [liabilities, setLiabilities] = useState([]);
+  const [totalLiabilities, setTotalLiabilities] = useState([]);
+
+  const getTotalLiabilities = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    const totalLiabilities =
+      res.data.total_joint_liabilities + res.data.total_sole_liabilities;
+    setTotalLiabilities(totalLiabilities || []);
+  };
 
   const getLiabilities = async () => {
     const res = await axios.get(
@@ -149,6 +161,7 @@ function Liabilities() {
   };
 
   useEffect(() => getLiabilities(), []);
+  useEffect(() => getTotalLiabilities(), []);
 
   const getClient = async () => {
     try {
@@ -158,7 +171,6 @@ function Liabilities() {
       );
       setClient(res.data || []);
       // setLoading(false);
-      console.log(client);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -166,6 +178,21 @@ function Liabilities() {
   };
 
   useEffect(() => getClient(), []);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${currencyFormat(
+            parseFloat(payload[0].value)
+          )}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div>
       <Header
@@ -174,22 +201,37 @@ function Liabilities() {
       />
       <br />
       <br />
-      <div class="main-container">
-        <div style={{ textAlign: "left", marginLeft: "5%" }}>
-          <h1>Liabilities</h1>
-          <div style={{ marginTop: "10px" }}>
-            <h5>
-              Client ID: {client.id}
-              <br />
-              {client.forename} {client.middle_names} {client.surname}
-            </h5>
+      <div>
+        <div class="row">
+          <div class="column">
+            {" "}
+            <div style={{ textAlign: "left", marginLeft: "5%" }}>
+              <h1>Liabilities</h1>
+              <div style={{ marginTop: "10px" }}>
+                <h5>
+                  Client ID: {client.id}
+                  <br />
+                  {client.forename} {client.middle_names} {client.surname}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            {" "}
+            <div class="summaryCardOuter">
+              <h1>{currencyFormat(parseFloat(totalLiabilities))}</h1>
+              <div class="textRight">
+                <p>TOTAL LIABILITIES</p>
+              </div>
+            </div>
           </div>
         </div>
+        <hr />
         <div class="row">
           <div class="columnChart">
-            <div style={{ width: "100%", height: 500 }}>
+            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
               <ResponsiveContainer>
-                <AreaChart
+                <LineChart
                   width={500}
                   height={400}
                   data={chartData}
@@ -202,39 +244,28 @@ function Liabilities() {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
+                  <YAxis tickFormatter={currencyFormat} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
                     type="monotone"
                     dataKey="uv"
                     stroke="#8884d8"
                     fill="#8884d8"
+                    dot={false}
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <div class="columnSummary">
-            <div class="summaryCardOuter">
-              <h1>312,173 GBP</h1>
-              <p>TOTAL LIABILITIES</p>
-              <div class="summaryCardInner">
-                <h3>(+7%) 1,299 GBP</h3>
-                <p>30-DAY PERFORMANCE</p>
-                <h3>(-19%) 111,293 GBP</h3>
-                <p>120-DAY PERFORMANCE</p>
-              </div>
-            </div>
-          </div>
         </div>
-        <div style={{ height: "350px", margin: "50px" }}>
-          <Button
-            onClick={handleAddLiabilityOpen}
-            variant="outlined"
-            style={{ margin: 10, marginBottom: 20 }}
-          >
-            Add Liability
-          </Button>
+        <hr />
+        <div
+          style={{
+            height: "350px",
+            marginTop: "20px",
+            display: "grid",
+          }}
+        >
           <StyledModal
             aria-labelledby="unstyled-modal-title"
             aria-describedby="unstyled-modal-description"
@@ -246,10 +277,26 @@ function Liabilities() {
               <AddLiabilityForm />
             </Paper>
           </StyledModal>
-          <LiabilityTable
-            class="padding-left-right"
-            liabilities={liabilities}
-          />
+          <div class="paddingBottom">
+            <div class="row" style={{ marginTop: "20px", marginLeft: "50px" }}>
+              <div class="column">
+                <h3>List of liabilities</h3>
+              </div>
+              <div class="column">
+                <Button
+                  onClick={handleAddLiabilityOpen}
+                  style={{ float: "right", marginRight: 80 }}
+                  size="large"
+                >
+                  Add Liability
+                </Button>
+              </div>
+            </div>
+            <LiabilityTable
+              class="padding-left-right"
+              liabilities={liabilities}
+            />
+          </div>
         </div>
       </div>
     </div>

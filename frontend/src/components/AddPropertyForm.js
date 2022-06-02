@@ -4,7 +4,6 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   property_type: "",
@@ -141,7 +140,9 @@ export default function AddPropertyForm() {
               >
                 <MenuItem value={"none"}>None</MenuItem>
                 {mortgages.map((mortgage) => (
-                  <MenuItem value={mortgage.id}>{mortgage.id} (name)</MenuItem>
+                  <MenuItem value={mortgage.id}>
+                    {mortgage.description}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>

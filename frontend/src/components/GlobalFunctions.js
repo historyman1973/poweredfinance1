@@ -1,9 +1,4 @@
-import React from "react";
-import { Grid } from "@mui/material";
-import { useForm, Form } from "./useForm";
-import Controls from "./controls/Controls";
-import axios from "axios";
-import { toast } from "react-toastify";
+import abbreviate from "number-abbreviate";
 
 export function formatLiabilityType(type) {
   if (type == "credit-card") {
@@ -39,7 +34,29 @@ export function formatLiabilityCategory(category) {
 
 export function currencyFormat(num) {
   try {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    if (num < 1000) {
+      return "£" + abbreviate(num, 0);
+    } else if (num == 1000 || (num > 1000 && num < 10000)) {
+      return "£" + abbreviate(num, 2);
+    } else if (num == 10000 || (num > 10000 && num < 100000)) {
+      return "£" + abbreviate(num, 1);
+    } else if (num == 100000 || (num > 100000 && num < 1000000)) {
+      return "£" + abbreviate(num, 0);
+    } else if (num == 1000000 || (num > 1000000 && num < 10000000)) {
+      return "£" + abbreviate(num, 2);
+    } else if (num == 10000000 || (num > 10000000 && num < 100000000)) {
+      return "£" + abbreviate(num, 1);
+    } else if (num == 100000000 || (num > 100000000 && num < 1000000000)) {
+      return "£" + abbreviate(num, 0);
+    } else if (num == 1000000000 || (num > 1000000000 && num < 10000000000)) {
+      return "£" + abbreviate(num, 2);
+    } else if (num == 1000000000 || (num > 1000000000 && num < 10000000000)) {
+      return "£" + abbreviate(num, 1);
+    } else if (num == 1000000000 || (num > 1000000000 && num < 10000000000)) {
+      return "£" + abbreviate(num, 0);
+    } else {
+      return "£" + abbreviate(num);
+    }
   } catch (e) {
     console.log(e);
   }

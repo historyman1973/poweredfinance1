@@ -1,5 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
@@ -7,6 +7,7 @@ import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
 import axios from "axios";
+import { currencyFormat } from "../components/GlobalFunctions";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -87,14 +88,6 @@ const styleInvestment = {
   boxShadow: 24,
   p: 4,
 };
-
-function currencyFormat(num) {
-  try {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 function AssetTable({ properties, investments, lifestyleAssets }) {
   const rows = Array();

@@ -1,22 +1,48 @@
 * {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 25px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.paddingBottom {
+  padding-bottom: 50px;
 }
 
 body {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
   padding: 20px 20px 60px;
   max-width: 100%;
   margin: 0 auto;
 }
 
 h1 {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto', sans-serif;
   margin: 0 auto;
 }
 
 .columnChart {
   float: left;
-  width: 80%;
+  width: 100%;
+  margin-top: 50px;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+.textRight {
+  text-align: right;
 }
 
 .columnSummary {
@@ -27,9 +53,7 @@ h1 {
 }
 
 .summaryCardOuter {
-  padding: 30px;
-  background-color: #e6e6e6;
-  border-radius: 20px;
+  padding: 20px;
   width: fit-content;
   float: right;
 }

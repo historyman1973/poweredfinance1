@@ -1,11 +1,9 @@
 import { DataGrid } from "@mui/x-data-grid";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
-import axios from "axios";
 import { Link } from "@mui/material";
-import { Button } from "@mui/material";
-import DataTable from "react-data-table-component";
+import { currencyFormat } from "../components/GlobalFunctions";
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -48,14 +46,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-function currencyFormat(num) {
-  try {
-    return num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 function HoldingTable({ holdings }) {
   const columns = [

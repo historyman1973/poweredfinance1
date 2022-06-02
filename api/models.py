@@ -11,6 +11,7 @@ holdings_transactions = db.Table('holdings_transactions',
                                            db.ForeignKey('transaction.id'))
                                  )
 
+
 class Client(db.Model):
     __tablename__ = "client"
 
@@ -45,15 +46,18 @@ class Holding(db.Model):
     instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
     units = db.Column(db.Float)
 
-    transactions = db.relationship('Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
+    transactions = db.relationship(
+        'Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Holding, self).__init__(**kwargs)
+
 
 class HoldingSchema(ma.Schema):
     class Meta:
         model = Holding
         fields = ('id', 'investment_id', 'instrument_id', 'units')
+
 
 holding_schema = HoldingSchema()
 holdings_schema = HoldingSchema(many=True)
@@ -71,6 +75,7 @@ class HoldingHistory(db.Model):
     def __init__(self, **kwargs):
         super(HoldingHistory, self).__init__(**kwargs)
 
+
 class HoldingHistorySchema(ma.Schema):
     class Meta:
         model = HoldingHistory
@@ -82,9 +87,9 @@ class HoldingHistorySchema(ma.Schema):
             'transaction_id'
         )
 
+
 holdinghistory_schema = HoldingHistorySchema()
 holdinghistories_schema = HoldingHistorySchema(many=True)
-
 
 
 class Instrument(db.Model):
@@ -186,7 +191,8 @@ class LiabilitySchema(ma.Schema):
             'amount_borrowed',
             'amount_outstanding',
             'owner1_id',
-            'owner2_id'
+            'owner2_id',
+            'property_id'
         )
 
 
@@ -236,7 +242,8 @@ class Property(db.Model):
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 
-    liability = db.relationship("Liability", back_populates="property", uselist=False)
+    liability = db.relationship(
+        "Liability", back_populates="property", uselist=False)
 
     def __init__(self, **kwargs):
         super(Property, self).__init__(**kwargs)
@@ -259,6 +266,7 @@ class PropertySchema(ma.Schema):
 property_schema = PropertySchema()
 properties_schema = PropertySchema(many=True)
 
+
 class Transaction(db.Model):
     __tablename__ = "transaction"
 
@@ -279,7 +287,9 @@ class Transaction(db.Model):
 class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
-        fields = ('ttype', 'tdate', 'units', 'price', 'owner1_id', 'owner2_id', 'holding_id')
+        fields = ('ttype', 'tdate', 'units', 'price',
+                  'owner1_id', 'owner2_id', 'holding_id')
+
 
 transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
