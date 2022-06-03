@@ -9,6 +9,11 @@ liability_blueprint = Blueprint('liability_blueprint', __name__)
 
 @liability_blueprint.route("/add-liability", methods=["POST"])
 def add_liability():
+    # Initialise owners
+
+    owner1 = None
+    owner2 = None
+        
     category = request.json['category']
     liability_type = request.json['liability_type']
     description = request.json['description']
