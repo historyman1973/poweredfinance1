@@ -318,7 +318,7 @@ def add_test_client():
     fake = Faker()
 
     ################################################################
-    # Create a pair of test clients
+    # Create a pair of test clients.
 
     # Create gender randomiser
     class Gender(BaseProvider):
