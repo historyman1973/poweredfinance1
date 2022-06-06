@@ -57,11 +57,17 @@ def get_instrument(instrument_id):
 
 @investments_blueprint.route("/add-investment", methods=["POST"])
 def add_investment():
+    # Initialise Owners
+    owner1 = None
+    owner2 = None
+
+    category = request.json['category']
     investment_type = request.json['investment_type']
     provider = request.json['provider']
     investment_ref = request.json['investment_ref']
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
+
 
     # Check if there's a value for owner1 in the request
     if owner1_id:
@@ -85,6 +91,7 @@ def add_investment():
 
     if owner1 or owner2:
         new_investment = Investment(
+            category=category,
             investment_type=investment_type,
             provider=provider,
             investment_ref=investment_ref,
@@ -122,6 +129,10 @@ def delete_investment(investment_id):
     db.session.query(Holding).filter(Holding.id.in_(linked_holdings_ids)).delete(synchronize_session=False)
     db.session.commit()
     # Holding.query.filter_by(Holding.id.in_(linked_holdings_ids).delete())
+
+    # db.session.query(investment_holdings).filter(investment_holdings.investment_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+    # db.session.commit()
+
 
     db.session.delete(Investment.query.get(investment_id))
     db.session.commit()

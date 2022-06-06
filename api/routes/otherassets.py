@@ -9,6 +9,11 @@ from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleasset
 
 @otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
 def add_lifestyleasset():
+    # Initialise owners
+
+    owner1 = None
+    owner2 = None
+    
     asset_type = request.json['asset_type']
     description = request.json['description']
     value = request.json['value']
@@ -50,6 +55,18 @@ def add_lifestyleasset():
         return lifestyleasset_schema.jsonify(new_lifestyleasset), 201
 
 
+@otherassets_blueprint.route("/delete-lifestyleasset/<lifestyleasset_id>", methods=["DELETE"])
+def delete_lifestyleasset(lifestyleasset_id):
+    if LifestyleAsset.query.get(lifestyleasset_id):
+        db.session.delete(LifestyleAsset.query.get(lifestyleasset_id))
+        db.session.commit()
+
+        return("Lifestyle asset deleted"), 204
+    else:
+        return("Lifestyle asset doesn't exist"), 404
+
+
+
 @otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
 def get_lifestyle_asset(lifestyle_asset_id):
     lifestyleasset = LifestyleAsset.query.get(lifestyle_asset_id)
@@ -78,6 +95,11 @@ def get_lifestyleassets(client_id):
 
 @otherassets_blueprint.route("/add-property", methods=["POST"])
 def add_property():
+    # Initialise owners
+
+    owner1 = None
+    owner2 = None
+    
     property_type = request.json['property_type']
     address = request.json['address']
     cost = request.json['cost']
@@ -132,10 +154,13 @@ def add_property():
 
 @otherassets_blueprint.route("/delete-property/<property_id>", methods=["DELETE"])
 def delete_property(property_id):
-    db.session.delete(Property.query.get(property_id))
-    db.session.commit()
+    if Property.query.get(property_id):
+        db.session.delete(Property.query.get(property_id))
+        db.session.commit()
 
-    return("Property deleted"), 204
+        return("Property deleted"), 204
+    else:
+        return("Property doesn't exist"), 404
 
 
 
