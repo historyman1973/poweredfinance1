@@ -171,7 +171,7 @@ function Dashboard() {
                   marginTop: "60px",
                 }}
               >
-                Asset composition
+                Asset categories
               </h5>
               <Chart
                 chartType="PieChart"
@@ -188,7 +188,7 @@ function Dashboard() {
                   marginTop: "60px",
                 }}
               >
-                Liability composition
+                Liability categories
               </h5>
               <Chart
                 chartType="PieChart"
