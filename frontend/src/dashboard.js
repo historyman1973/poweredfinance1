@@ -202,7 +202,12 @@ function Dashboard() {
         </div>
         <div
           class="row"
-          style={{ marginTop: "6%", marginLeft: "10%", marginRight: "10%" }}
+          style={{
+            marginTop: "6%",
+            marginLeft: "10%",
+            marginRight: "10%",
+            justifyContent: "center",
+          }}
         >
           <h5
             style={{
