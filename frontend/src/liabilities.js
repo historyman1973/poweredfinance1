@@ -204,7 +204,6 @@ function Liabilities() {
       <div>
         <div class="row">
           <div class="column">
-            {" "}
             <div style={{ textAlign: "left", marginLeft: "5%" }}>
               <h1>Liabilities</h1>
               <div style={{ marginTop: "10px" }}>
@@ -217,7 +216,6 @@ function Liabilities() {
             </div>
           </div>
           <div class="column">
-            {" "}
             <div class="summaryCardOuter">
               <h1>{currencyFormat(parseFloat(totalLiabilities))}</h1>
               <div class="textRight">
