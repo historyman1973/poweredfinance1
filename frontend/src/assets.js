@@ -258,7 +258,6 @@ function Assets() {
       <div>
         <div class="row">
           <div class="column">
-            {" "}
             <div style={{ textAlign: "left", marginLeft: "5%" }}>
               <h1>Assets</h1>
               <div style={{ marginTop: "10px" }}>

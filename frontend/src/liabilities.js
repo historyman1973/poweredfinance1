@@ -17,6 +17,7 @@ import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import AddLiabilityForm from "./components/AddLiabilityForm";
 import { currencyFormat } from "./components/GlobalFunctions";
+import { Chart } from "react-google-charts";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -141,6 +142,7 @@ function Liabilities() {
   const [openAddLiability, setOpenAddLiability] = React.useState(false);
   const [liabilities, setLiabilities] = useState([]);
   const [totalLiabilities, setTotalLiabilities] = useState([]);
+  const [totalLiabilitiesComp, setTotalLiabilitiesComp] = useState([]);
 
   const getTotalLiabilities = async () => {
     const res = await axios.get(
@@ -160,8 +162,19 @@ function Liabilities() {
     setLiabilities(res.data || []);
   };
 
+  const getLiabilityComp = async () => {
+    const res = await axios.get(
+      `http://127.0.0.1:5000/get-networth/` +
+        window.location.pathname.split("/")[2]
+    );
+    const totalLiabilities =
+      res.data.total_joint_liabilities + res.data.total_sole_liabilities;
+    setTotalLiabilitiesComp(totalLiabilities || []);
+  };
+
   useEffect(() => getLiabilities(), []);
   useEffect(() => getTotalLiabilities(), []);
+  useEffect(() => getLiabilityComp(), []);
 
   const getClient = async () => {
     try {
@@ -179,6 +192,11 @@ function Liabilities() {
 
   useEffect(() => getClient(), []);
 
+  const options = {
+    legend: "none",
+    chartArea: { width: "80%", height: "80%" },
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -192,6 +210,11 @@ function Liabilities() {
 
     return null;
   };
+
+  const liabilityComp = [
+    ["Category", "Value"],
+    ["Liabilities", parseFloat(totalLiabilitiesComp)],
+  ];
 
   return (
     <div>
@@ -226,33 +249,70 @@ function Liabilities() {
         </div>
         <hr />
         <div class="row">
-          <div class="columnChart">
-            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
-              <ResponsiveContainer>
-                <LineChart
-                  width={500}
-                  height={400}
-                  data={chartData}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis tickFormatter={currencyFormat} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          <div class="col-md-6">
+            <h5
+              style={{
+                textAlign: "center",
+                marginTop: "60px",
+              }}
+            >
+              Asset categories
+            </h5>
+            <div style={{ marginTop: "20px" }}>
+              <Chart
+                chartType="PieChart"
+                width="100%"
+                height="500px"
+                data={liabilityComp}
+                options={options}
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h5
+              style={{
+                textAlign: "center",
+                marginTop: "60px",
+              }}
+            >
+              Total investments over time
+            </h5>
+            <div class="columnChart">
+              <div
+                style={{
+                  height: 500,
+                  marginBottom: "40px",
+                  marginLeft: "10%",
+                  marginRight: "10%",
+                  marginTop: "40px",
+                }}
+              >
+                <ResponsiveContainer>
+                  <LineChart
+                    width={500}
+                    height={400}
+                    data={chartData}
+                    margin={{
+                      top: 10,
+                      right: 30,
+                      left: 0,
+                      bottom: 0,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis tickFormatter={currencyFormat} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Line
+                      type="monotone"
+                      dataKey="uv"
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
