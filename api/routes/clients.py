@@ -96,11 +96,6 @@ def delete_client(client_id):
             Transaction.query.get(joint_investment.id).owner2_id = None
             db.session.commit()
 
-    #TODO Remove partner only transactions
-    #TODO Remove investment_holdings entries
-    #TODO Remove holdings_transactions entries
-
-
 
     # Delete all liabilities where the client is the only owner
     if Client.query.get(client_id).isPrimary == 1:
@@ -406,6 +401,7 @@ def add_test_client():
     new_partner_investment = Investment.query.get(new_partner_investment_id)
 
 
+
     joint_investment = requests.post('http://localhost:5000/add-investment', json={
         "category": "Non-retirement",
         "investment_type": "General Investment Account",
@@ -501,7 +497,7 @@ def add_test_client():
     print("New property ID is " + str(new_joint_property_id))
 
 
-    # Create a set of liabilities and linked them to the corresponding properties created above
+    # Create a set of liabilities and linked them to
 
     client_liability = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",

@@ -17,6 +17,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import AssetTable from "./components/AssetTable";
 import { currencyFormat } from "./components/GlobalFunctions";
+import { Chart } from "react-google-charts";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -144,6 +145,10 @@ function Assets() {
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
   const [lifestyleAssets, setLifestyleAssets] = useState([]);
+
+  const [investmentTotal, setInvestmentTotal] = useState([]);
+  const [propertyTotal, setPropertyTotal] = useState([]);
+  const [lifestyleTotal, setLifestyleTotal] = useState([]);
   const [totalAssets, setTotalAssets] = useState([]);
 
   const getTotalAssets = async () => {
@@ -159,6 +164,16 @@ function Assets() {
       res.data.total_sole_lifestyle_assets +
       res.data.total_sole_properties;
     setTotalAssets(totalAssets || []);
+    setInvestmentTotal(
+      res.data.total_sole_investments + res.data.total_joint_investments || []
+    );
+    setPropertyTotal(
+      res.data.total_sole_properties + res.data.total_joint_properties || []
+    );
+    setLifestyleTotal(
+      res.data.total_sole_lifestyle_assets +
+        res.data.total_joint_lifestyle_assets || []
+    );
   };
 
   const getProperties = async () => {
@@ -185,10 +200,22 @@ function Assets() {
     setInvestments(res.data || []);
   };
 
+  const assetComp = [
+    ["Category", "Value"],
+    ["Investments", parseFloat(investmentTotal)],
+    ["Properties", parseFloat(propertyTotal)],
+    ["Lifestyle Assets", parseFloat(lifestyleTotal)],
+  ];
+
   useEffect(() => getProperties(), []);
   useEffect(() => getInvestments(), []);
   useEffect(() => getLifestyleAssets(), []);
   useEffect(() => getTotalAssets(), []);
+
+  const options = {
+    legend: "none",
+    chartArea: { width: "90%", height: "90%" },
+  };
 
   const getClient = async () => {
     try {
@@ -231,7 +258,6 @@ function Assets() {
       <div>
         <div class="row">
           <div class="column">
-            {" "}
             <div style={{ textAlign: "left", marginLeft: "5%" }}>
               <h1>Assets</h1>
               <div style={{ marginTop: "10px" }}>
@@ -244,7 +270,6 @@ function Assets() {
             </div>
           </div>
           <div class="column">
-            {" "}
             <div class="summaryCardOuter">
               <h1>{currencyFormat(parseFloat(totalAssets))}</h1>
               <div class="textRight">
@@ -255,33 +280,70 @@ function Assets() {
         </div>
         <hr />
         <div class="row">
-          <div class="columnChart">
-            <div style={{ width: "100%", height: 500, marginBottom: "40px" }}>
-              <ResponsiveContainer>
-                <LineChart
-                  width={500}
-                  height={400}
-                  data={chartData}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis tickFormatter={currencyFormat} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          <div class="col-md-6">
+            <h5
+              style={{
+                textAlign: "center",
+                marginTop: "60px",
+              }}
+            >
+              Asset categories
+            </h5>
+            <div style={{ marginTop: "20px" }}>
+              <Chart
+                chartType="PieChart"
+                width="100%"
+                height="500px"
+                data={assetComp}
+                options={options}
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h5
+              style={{
+                textAlign: "center",
+                marginTop: "60px",
+              }}
+            >
+              Total investments over time
+            </h5>
+            <div class="columnChart">
+              <div
+                style={{
+                  height: 500,
+                  marginBottom: "40px",
+                  marginLeft: "10%",
+                  marginRight: "10%",
+                  marginTop: "40px",
+                }}
+              >
+                <ResponsiveContainer>
+                  <LineChart
+                    width={500}
+                    height={400}
+                    data={chartData}
+                    margin={{
+                      top: 10,
+                      right: 30,
+                      left: 0,
+                      bottom: 0,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis tickFormatter={currencyFormat} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Line
+                      type="monotone"
+                      dataKey="uv"
+                      stroke="#8884d8"
+                      fill="#8884d8"
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>

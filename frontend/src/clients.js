@@ -55,7 +55,6 @@ function Clients() {
   const handleAddClientModalClose = () => setOpen(false);
   const [clientList, setClientList] = useState([]);
   const [open, setOpen] = React.useState(false);
-  // const [loading, setLoading] = useState(true)
 
   const getClientList = async () => {
     try {
@@ -68,11 +67,23 @@ function Clients() {
     }
   };
 
+  const addRandomClients = async () => {
+    try {
+      await axios.post(`http://127.0.0.1:5000/add-test-client`);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => getClientList(), []);
 
   return (
     <div>
       <Header title={"clients"} />
+      <Button onClick={addRandomClients} variant="outlined" size="large">
+        Add 2 random clients
+      </Button>
       <div class="add-client-btn">
         <Button
           onClick={handleAddClientModalOpen}
