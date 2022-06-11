@@ -470,8 +470,8 @@ def add_test_client():
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
-        "owner1_id": ids[0],
-        "owner2_id": None,
+        "owner1_id": None,
+        "owner2_id": ids[1],
         "liability_id": None
     })
 
@@ -487,7 +487,7 @@ def add_test_client():
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
         "owner1_id": ids[0],
-        "owner2_id": None,
+        "owner2_id": ids[1],
         "liability_id": None
     })
 
