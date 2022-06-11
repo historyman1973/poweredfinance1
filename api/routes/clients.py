@@ -1,3 +1,4 @@
+from sqlalchemy import null
 from routes.investments import delete_investment, get_investment_value, delete_transaction
 from routes.liabilities import delete_liability
 from routes.otherassets import delete_property, delete_lifestyleasset
@@ -8,6 +9,9 @@ from flask.json import jsonify
 from faker import Faker
 from faker.providers import BaseProvider
 import random
+import requests
+import json
+from routes.otherassets import add_lifestyleasset
 
 
 clients_blueprint = Blueprint('clients_blueprint', __name__)
@@ -16,6 +20,9 @@ clients_blueprint = Blueprint('clients_blueprint', __name__)
 @clients_blueprint.route("/")
 def index():
     return "Server is operational"
+
+
+
 
 
 @clients_blueprint.route("/add-client", methods=['POST'])
@@ -372,216 +379,210 @@ def add_test_client():
     ##############################################################################################################
     # Create a set of investments - client, partner and joint owned
 
-    new_investment_client = Investment(
-        category="Retirement",
-        investment_type="Stakeholder pension",
-        provider=fake.word().title(),
-        investment_ref=random.randint(1000000, 99999999),
-        owner1_id=ids[0],
-        owner2_id=None
-    )
+    client_investment = requests.post('http://localhost:5000/add-investment', json={
+        "category": "Retirement",
+        "investment_type": "Stakeholder pension",
+        "provider": fake.word().title(),
+        "investment_ref": random.randint(10000000, 99999999),
+        "owner1_id": ids[0],
+        "owner2_id": None
+    })
 
-    new_investment_joint = Investment(
-        category="Retirement",
-        investment_type="Stakeholder pension",
-        provider=fake.word().title(),
-        investment_ref=random.randint(1000000, 99999999),
-        owner1_id=ids[0],
-        owner2_id=ids[1]
-    )
+    new_client_investment_id = client_investment.json()['id']
+    new_client_investment = Investment.query.get(new_client_investment_id)
+    print("New client investment object is " + str(new_client_investment))
 
-    new_investment_partner = Investment(
-        category="Non-retirement",
-        investment_type="Stocks and shares ISA",
-        provider=fake.word().title(),
-        investment_ref=random.randint(1000000, 99999999),
-        owner1_id=None,
-        owner2_id=ids[1]
-    )
 
-    db.session.add_all([new_investment_client, new_investment_joint, new_investment_partner])
-    db.session.commit()
+    partner_investment = requests.post('http://localhost:5000/add-investment', json={
+        "category": "Non-retirement",
+        "investment_type": "Stocks and Shares ISA",
+        "provider": fake.word().title(),
+        "investment_ref": random.randint(10000000, 99999999),
+        "owner1_id": None,
+        "owner2_id": ids[1]
+    })
 
-    
+    new_partner_investment_id = partner_investment.json()['id']
+    new_partner_investment = Investment.query.get(new_partner_investment_id)
+
+
+    joint_investment = requests.post('http://localhost:5000/add-investment', json={
+        "category": "Non-retirement",
+        "investment_type": "General Investment Account",
+        "provider": fake.word().title(),
+        "investment_ref": random.randint(10000000, 99999999),
+        "owner1_id": ids[0],
+        "owner2_id": ids[1]
+    })
+
+    new_joint_investment_id = joint_investment.json()['id']
+    new_joint_investment = Investment.query.get(new_joint_investment_id)
+
+
     ##########################################################################################
     # Create a series of transactions for each investment    
-    
-    for investment in [new_investment_client, new_investment_joint, new_investment_partner]:
-        if investment.owner1_id != None and investment.owner2_id == None:
-            investment_type="Client"
-        elif investment.owner1_id == None and investment.owner2_id != None:
-            investment_type="Partner"
-        elif investment.owner1_id != None and investment.owner2_id != None:   
-            investment_type="Joint"
+
+    number_of_existing_instruments = len(Instrument.query.all())
+
+    for investment in [new_client_investment, new_joint_investment, new_partner_investment]:
+
+        random_instrument_id_1 = random.randint(1, number_of_existing_instruments)
+        random_instrument_id_2 = random.randint(1, number_of_existing_instruments)
 
 
-        new_transaction1 = Transaction(
-            ttype="Purchase",
-            tdate=fake.iso8601(),
-            units=random.uniform(1.0, 2000.0),
-            price=random.uniform(0.01, 499.9),
-            owner1_id=investment.owner1_id,
-            owner2_id=investment.owner2_id
-        )
+        transaction1 = requests.post('http://localhost:5000/add-transaction', json={
+            "investment_id": investment.id,
+            "instrument_id": random_instrument_id_1,
+            "tdate": fake.iso8601(),
+            "ttype": "Purchase",
+            "units": random.uniform(1.0, 2000.0),
+            "price": random.uniform(1.0, 2000.0),
+            "owner1_id": investment.owner1_id,
+            "owner2_id": investment.owner2_id,
+        })
 
-        new_transaction2 = Transaction(
-            ttype="Purchase",
-            tdate=fake.iso8601(),
-            units=random.uniform(1.0, 2000.0),
-            price=random.uniform(0.01, 499.9),
-            owner1_id=investment.owner1_id,
-            owner2_id=investment.owner2_id
-        )
-
-        db.session.add_all([new_transaction1, new_transaction2])
-        db.session.commit()
-
-        number_of_existing_instruments = len(Instrument.query.all())
-
-        if investment_type == "Client":
-            investment_id = new_investment_client.id
-        elif investment_type == "Partner":
-            investment_id = new_investment_partner.id
-        elif investment_type == "Joint":
-            investment_id == new_investment_joint.id
-            
+        transaction2 = requests.post('http://localhost:5000/add-transaction', json={
+            "investment_id": investment.id,
+            "instrument_id": random_instrument_id_2,
+            "tdate": fake.iso8601(),
+            "ttype": "Purchase",
+            "units": random.uniform(1.0, 2000.0),
+            "price": random.uniform(1.0, 2000.0),
+            "owner1_id": investment.owner1_id,
+            "owner2_id": investment.owner2_id,
+        })
 
 
-        new_holding1 = Holding(
-            investment_id = investment_id,
-            instrument_id = random.randint(1, number_of_existing_instruments),
-            units = new_transaction1.units
-        )
+    client_property = requests.post('http://localhost:5000/add-property', json={
+        "property_type": "Main residence",
+        "address": fake.address(),
+        "cost": random.randint(100000, 1000000),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "liability_id": None
+    })
 
-        new_holding2 = Holding(
-            investment_id = investment_id,
-            instrument_id = random.randint(1, number_of_existing_instruments),
-            units = new_transaction2.units
-        )
+    new_client_property_id = client_property.json()['id']
 
-        db.session.add_all([new_holding1, new_holding2])
-        db.session.commit()
-    
-        # Link the investment to the two new holdings
-        Investment.query.get(investment.id).holdings.append(new_holding1)
-        Investment.query.get(investment.id).holdings.append(new_holding2)
-        db.session.commit()
-
-        # Link the transactions to their holding
-        new_holding1.transactions.append(new_transaction1)
-        new_holding2.transactions.append(new_transaction2)
-        db.session.commit()
-        
-        new_transaction1.holding_id = new_holding1.id
-        new_transaction2.holding_id = new_holding2.id
-        db.session.commit()
-    
-    
-    
-    
-    
-    ##########################################################################################
-    # Create a set of properties - client, partner and joint owned
-
-    new_property_client = Property(
-        property_type="Main residence",
-        address=fake.address(),
-        cost=random.randint(100000, 1000000),
-        value=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=None
-    )
-
-    new_property_joint = Property(
-        property_type="Buy to let",
-        address=fake.address(),
-        cost=random.randint(100000, 1000000),
-        value=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=ids[1]
-    )
-
-    new_property_partner = Property(
-        property_type="Second home",
-        address=fake.address(),
-        cost=random.randint(100000, 1000000),
-        value=random.randint(100000, 1000000),
-        owner1_id=None,
-        owner2_id=ids[1]
-    )
-
-    db.session.add_all([new_property_client, new_property_joint, new_property_partner])
     db.session.commit()
+    print("New property ID is " + str(new_client_property_id))
 
 
-    ##########################################################################################
-    # Create a set of liabilities - client, partner and joint owned
+    partner_property = requests.post('http://localhost:5000/add-property', json={
+        "property_type": "Second home",
+        "address": fake.address(),
+        "cost": random.randint(100000, 1000000),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "liability_id": None
+    })
 
-    new_liability_client = Liability(
-        category="Long term",
-        liability_type="Main residence mortgage",
-        description=fake.word().title(),
-        amount_borrowed=random.randint(100000, 1000000),
-        amount_outstanding=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=None,
-        property=Property.query.get(new_property_client.id)
-    )
+    new_partner_property_id = partner_property.json()['id']
 
-    new_liability_joint = Liability(
-        category="Long term",
-        liability_type="Buy to let mortgage",
-        description=fake.word().title(),
-        amount_borrowed=random.randint(100000, 1000000),
-        amount_outstanding=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=ids[1],
-        property=Property.query.get(new_property_joint.id)
-    )
-
-    new_liability_partner = Liability(
-        category="Long term",
-        liability_type="Second home mortgage",
-        description=fake.word().title(),
-        amount_borrowed=random.randint(100000, 1000000),
-        amount_outstanding=random.randint(100000, 1000000),
-        owner1_id=None,
-        owner2_id=ids[1],
-        property=Property.query.get(new_property_partner.id)
-    )
-
-    db.session.add_all([new_liability_client, new_liability_joint, new_liability_partner])
     db.session.commit()
+    print("New property ID is " + str(new_partner_property_id))
 
-    ##########################################################################################
-    # Create a set of lifestyle assets - client, partner and joint owned
 
-    new_lifestyleasset_client = LifestyleAsset(
-        asset_type="Fine art",
-        description=fake.word().title(),
-        value=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=None
-    )
+    joint_property = requests.post('http://localhost:5000/add-property', json={
+        "property_type": "Buy to let",
+        "address": fake.address(),
+        "cost": random.randint(100000, 1000000),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "liability_id": None
+    })
 
-    new_lifestyleasset_joint = LifestyleAsset(
-        asset_type="Jewellery",
-        description=fake.word().title(),
-        value=random.randint(100000, 1000000),
-        owner1_id=ids[0],
-        owner2_id=ids[1]
-    )
+    new_joint_property_id = joint_property.json()['id']
 
-    new_lifestyleasset_partner = LifestyleAsset(
-        asset_type="Classic car",
-        description=fake.word().title(),
-        value=random.randint(100000, 1000000),
-        owner1_id=None,
-        owner2_id=ids[1]
-    )
-
-    db.session.add_all([new_lifestyleasset_client, new_lifestyleasset_joint, new_lifestyleasset_partner])
     db.session.commit()
+    print("New property ID is " + str(new_joint_property_id))
+
+
+    # Create a set of liabilities and linked them to the corresponding properties created above
+
+    client_liability = requests.post('http://localhost:5000/add-liability', json={
+        "category": "Long term",
+        "liability_type": "Main residence",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(100000, 1000000),
+        "amount_outstanding": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "property_id": None
+    })
+
+    new_client_liability_id = client_liability.json()['id']
+    Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
+    client_property.liability = Liability.query.get(int(new_client_liability_id))
+    db.session.commit()
+    print("New liability ID is " + str(new_client_liability_id))
+
+    partner_liability = requests.post('http://localhost:5000/add-liability', json={
+        "category": "Long term",
+        "liability_type": "Second home",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(100000, 1000000),
+        "amount_outstanding": random.randint(100000, 1000000),
+        "owner1_id": None,
+        "owner2_id": ids[1],
+        "property_id": None
+    })
+
+    new_partner_liability_id = partner_liability.json()['id']
+    Liability.query.get(new_partner_liability_id).property = Property.query.get(new_partner_property_id)
+    partner_property.liability = Liability.query.get(int(new_partner_liability_id))
+    db.session.commit()
+    print("New liability ID is " + str(new_partner_liability_id))    
+    
+    joint_liability = requests.post('http://localhost:5000/add-liability', json={
+        "category": "Long term",
+        "liability_type": "Buy to let",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(100000, 1000000),
+        "amount_outstanding": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": ids[1],
+        "property_id": None
+    })
+
+    new_joint_liability_id = joint_liability.json()['id']    
+    Liability.query.get(new_joint_liability_id).property = Property.query.get(new_joint_property_id)
+    joint_property.liability = Liability.query.get(int(new_joint_liability_id))
+    db.session.commit()
+    print("New liability ID is " + str(new_joint_liability_id))
+
+    
+    # Create a set of lifestyle assets - client, partner and joint
+
+    requests.post('http://localhost:5000/add-lifestyleasset', json={
+        "asset_type": "Lifestyle",
+        "description": fake.word().title(),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": None
+    })
+
+
+    requests.post('http://localhost:5000/add-lifestyleasset', json={
+        "asset_type": "Lifestyle",
+        "description": fake.word().title(),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": None,
+        "owner2_id": ids[1]
+    })
+
+
+    requests.post('http://localhost:5000/add-lifestyleasset', json={
+        "asset_type": "Lifestyle",
+        "description": fake.word().title(),
+        "value": random.randint(100000, 1000000),
+        "owner1_id": ids[0],
+        "owner2_id": ids[1]
+    })
 
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201
+

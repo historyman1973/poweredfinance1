@@ -2,6 +2,7 @@ from models import Client, Property, Liability, liability_schema, liabilities_sc
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
+import json
 
 
 liability_blueprint = Blueprint('liability_blueprint', __name__)
