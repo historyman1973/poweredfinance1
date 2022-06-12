@@ -89,6 +89,7 @@ function Dashboard() {
     legend: "none",
     chartArea: { width: "80%", height: "80%" },
     pieHole: 0.4,
+    colors: ["ffa6ff", "ff54ff", "ff00ff", "ba00ba", "730073"],
   };
 
   const summaryData = [
@@ -214,9 +215,11 @@ function Dashboard() {
             justifyContent: "center",
           }}
         >
+          <hr />
           <h5
             style={{
               textAlign: "center",
+              marginTop: "20px",
             }}
           >
             Assets and Liabilities

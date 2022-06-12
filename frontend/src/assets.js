@@ -60,81 +60,6 @@ const style = {
   p: 4,
 };
 
-const chartData = [
-  {
-    name: "May 20",
-    uv: 122536,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Jun 20",
-    uv: 125246,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Jul 20",
-    uv: 345265,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Aug 20",
-    uv: 564756,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Sep 20",
-    uv: 767854,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Nov 20",
-    uv: 789918,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Dec 20",
-    uv: 476273,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Jan 21",
-    uv: 399028,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Feb 21",
-    uv: 201829,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Mar 21",
-    uv: 519028,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Apr 21",
-    uv: 981023,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "May 21",
-    uv: 1312674,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
 function Assets() {
   const handleAddAssetOpen = () => setOpenAddAsset(true);
   const handleAddAssetClose = () => setOpenAddAsset(false);
@@ -150,6 +75,29 @@ function Assets() {
   const [propertyTotal, setPropertyTotal] = useState([]);
   const [lifestyleTotal, setLifestyleTotal] = useState([]);
   const [totalAssets, setTotalAssets] = useState([]);
+
+  const barData = [["Description", "Value"]];
+
+  {
+    properties.map((property) =>
+      barData.push([property.address, parseFloat(property.value)])
+    );
+  }
+
+  {
+    investments.map((investment) =>
+      barData.push([investment.provider, parseFloat(investment.current_value)])
+    );
+  }
+
+  {
+    lifestyleAssets.map((lifestyleAsset) =>
+      barData.push([
+        lifestyleAsset.description,
+        parseFloat(lifestyleAsset.value),
+      ])
+    );
+  }
 
   const getTotalAssets = async () => {
     const res = await axios.get(
@@ -216,6 +164,7 @@ function Assets() {
     legend: "none",
     chartArea: { width: "90%", height: "90%" },
     pieHole: 0.4,
+    colors: ["ffa6ff", "ff54ff", "ff00ff", "ba00ba", "730073"],
   };
 
   const getClient = async () => {
@@ -306,44 +255,16 @@ function Assets() {
                 marginTop: "60px",
               }}
             >
-              Total investments over time
+              All assets
             </h5>
-            <div class="columnChart">
-              <div
-                style={{
-                  height: 500,
-                  marginBottom: "40px",
-                  marginLeft: "10%",
-                  marginRight: "10%",
-                  marginTop: "40px",
-                }}
-              >
-                <ResponsiveContainer>
-                  <LineChart
-                    width={500}
-                    height={400}
-                    data={chartData}
-                    margin={{
-                      top: 10,
-                      right: 30,
-                      left: 0,
-                      bottom: 0,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis tickFormatter={currencyFormat} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Line
-                      type="monotone"
-                      dataKey="uv"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <div style={{ marginTop: "20px" }}>
+              <Chart
+                chartType="BarChart"
+                width="100%"
+                height="400px"
+                data={barData}
+                options={options}
+              />
             </div>
           </div>
         </div>

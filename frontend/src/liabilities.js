@@ -131,6 +131,7 @@ function Liabilities() {
     legend: "none",
     chartArea: { width: "80%", height: "80%" },
     pieHole: 0.4,
+    colors: ["ffa6ff", "ff54ff", "ff00ff", "ba00ba", "730073"],
   };
 
   const liabilityComp = [
