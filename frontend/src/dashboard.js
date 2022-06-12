@@ -88,6 +88,7 @@ function Dashboard() {
   const options = {
     legend: "none",
     chartArea: { width: "80%", height: "80%" },
+    pieHole: 0.4,
   };
 
   const summaryData = [

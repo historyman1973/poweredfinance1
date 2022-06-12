@@ -215,6 +215,7 @@ function Assets() {
   const options = {
     legend: "none",
     chartArea: { width: "90%", height: "90%" },
+    pieHole: 0.4,
   };
 
   const getClient = async () => {
@@ -224,7 +225,6 @@ function Assets() {
           window.location.pathname.split("/")[2]
       );
       setClient(res.data || []);
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);

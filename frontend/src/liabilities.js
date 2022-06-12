@@ -60,81 +60,6 @@ const style = {
   p: 4,
 };
 
-const chartData = [
-  {
-    name: "May 20",
-    uv: 122536,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Jun 20",
-    uv: 125246,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Jul 20",
-    uv: 145265,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Aug 20",
-    uv: 164756,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Sep 20",
-    uv: 167854,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Nov 20",
-    uv: 189918,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Dec 20",
-    uv: 176273,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Jan 21",
-    uv: 199028,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Feb 21",
-    uv: 201829,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Mar 21",
-    uv: 219028,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Apr 21",
-    uv: 281023,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "May 21",
-    uv: 312673,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
 function Liabilities() {
   const [client, setClient] = useState([]);
   const handleAddLiabilityOpen = () => setOpenAddLiability(true);
@@ -143,6 +68,8 @@ function Liabilities() {
   const [liabilities, setLiabilities] = useState([]);
   const [totalLiabilities, setTotalLiabilities] = useState([]);
   const [totalLiabilitiesComp, setTotalLiabilitiesComp] = useState([]);
+
+  const barData = [["Description", "Outstanding"]];
 
   const getTotalLiabilities = async () => {
     const res = await axios.get(
@@ -176,6 +103,15 @@ function Liabilities() {
   useEffect(() => getTotalLiabilities(), []);
   useEffect(() => getLiabilityComp(), []);
 
+  {
+    liabilities.map((liability) =>
+      barData.push([
+        liability.description,
+        parseFloat(liability.amount_outstanding),
+      ])
+    );
+  }
+
   const getClient = async () => {
     try {
       const res = await axios.get(
@@ -183,7 +119,6 @@ function Liabilities() {
           window.location.pathname.split("/")[2]
       );
       setClient(res.data || []);
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -195,20 +130,7 @@ function Liabilities() {
   const options = {
     legend: "none",
     chartArea: { width: "80%", height: "80%" },
-  };
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <p className="label">{`${currencyFormat(
-            parseFloat(payload[0].value)
-          )}`}</p>
-        </div>
-      );
-    }
-
-    return null;
+    pieHole: 0.4,
   };
 
   const liabilityComp = [
@@ -256,7 +178,7 @@ function Liabilities() {
                 marginTop: "60px",
               }}
             >
-              Asset categories
+              Liability categories
             </h5>
             <div style={{ marginTop: "20px" }}>
               <Chart
@@ -275,44 +197,16 @@ function Liabilities() {
                 marginTop: "60px",
               }}
             >
-              Total investments over time
+              All liabilities
             </h5>
-            <div class="columnChart">
-              <div
-                style={{
-                  height: 500,
-                  marginBottom: "40px",
-                  marginLeft: "10%",
-                  marginRight: "10%",
-                  marginTop: "40px",
-                }}
-              >
-                <ResponsiveContainer>
-                  <LineChart
-                    width={500}
-                    height={400}
-                    data={chartData}
-                    margin={{
-                      top: 10,
-                      right: 30,
-                      left: 0,
-                      bottom: 0,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis tickFormatter={currencyFormat} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Line
-                      type="monotone"
-                      dataKey="uv"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <div style={{ marginTop: "20px" }}>
+              <Chart
+                chartType="BarChart"
+                width="100%"
+                height="400px"
+                data={barData}
+                options={options}
+              />
             </div>
           </div>
         </div>
