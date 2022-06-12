@@ -46,8 +46,7 @@ class Holding(db.Model):
     instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
     units = db.Column(db.Float)
 
-    transactions = db.relationship(
-        'Transaction', secondary=holdings_transactions, backref='holding', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='holding', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Holding, self).__init__(**kwargs)
@@ -136,8 +135,7 @@ class Investment(db.Model):
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 
-    holdings = db.relationship(
-        'Holding', secondary=investment_holdings, backref='investments')
+    holdings = db.relationship('Holding', backref='investments')
 
     def __init__(self, **kwargs):
         super(Investment, self).__init__(**kwargs)

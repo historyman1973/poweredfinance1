@@ -582,3 +582,12 @@ def add_test_client():
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201
 
+
+@clients_blueprint.route("/delete-all-clients", methods=["POST"])
+def delete_all_clients():
+    all_clients = Client.query.all()
+
+    for client in all_clients:
+        delete_client(client.id)
+    
+    return "Done", 200
