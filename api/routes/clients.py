@@ -290,7 +290,7 @@ def get_networth(client_id):
 
     total_sole_liabilities = 0
     for liability in sole_liabilities:
-        value = float(liability.outstanding)
+        value = float(liability.amount_outstanding)
         total_sole_liabilities += value
 
     total_joint_liabilities = 0
