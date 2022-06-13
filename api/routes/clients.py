@@ -302,6 +302,25 @@ def get_networth(client_id):
         total_sole_properties + total_joint_properties - \
         total_sole_liabilities - total_joint_liabilities
 
+    # grouped_liabilities = db.session.query(Liability.liability_type, db.func.sum(Liability.amount_outstanding)).group_by(Liability.liability_type).all()
+    
+    liability_breakdown = {}
+    for sole_liability in sole_liabilities:
+        if str(sole_liability.liability_type) not in liability_breakdown.keys():
+            keyname = str(sole_liability.liability_type)
+            liability_breakdown[keyname] = float(sole_liability.amount_outstanding)
+        else:
+            liability_breakdown[keyname] += float(sole_liability.amount_outstanding)
+
+    for joint_liability in joint_liabilities:
+        if str(joint_liability.liability_type) not in liability_breakdown.keys():
+            keyname = str(joint_liability.liability_type)
+            liability_breakdown[keyname] = float(joint_liability.amount_outstanding) * 0.5
+        else:
+            liability_breakdown[keyname] += float(joint_liability.amount_outstanding) * 0.5        
+
+    print(liability_breakdown)
+
     return jsonify(
         total_sole_investments=total_sole_investments,
         total_joint_investments=total_joint_investments,
@@ -311,7 +330,8 @@ def get_networth(client_id):
         total_joint_properties=total_joint_properties,
         total_sole_liabilities=total_sole_liabilities,
         total_joint_liabilities=total_joint_liabilities,
-        networth = networth
+        networth = networth,
+        liability_breakdown = liability_breakdown
     )
 
 
