@@ -8,6 +8,7 @@ import { Button, Paper } from "@mui/material";
 import AddClientForm from "./components/AddClientForm";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -54,13 +55,16 @@ function Clients() {
   const handleAddClientModalOpen = () => setOpen(true);
   const handleAddClientModalClose = () => setOpen(false);
   const [clientList, setClientList] = useState([]);
+
+  const [loadingTestClient, setLoadingTestClient] = useState(false);
+  const [loadingDeleteClients, setLoadingDeleteClients] = useState(false);
+
   const [open, setOpen] = React.useState(false);
 
   const getClientList = async () => {
     try {
       const res = await axios.get(`http://127.0.0.1:5000/client-list`);
       setClientList(res.data || []);
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -69,7 +73,20 @@ function Clients() {
 
   const addRandomClients = async () => {
     try {
+      setLoadingTestClient(true);
       await axios.post(`http://127.0.0.1:5000/add-test-client`);
+      window.location.reload(true);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const deleteAllClients = async () => {
+    try {
+      setLoadingDeleteClients(true);
+      await axios.post(`http://127.0.0.1:5000/delete-all-clients`);
+      window.location.reload(true);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -81,9 +98,6 @@ function Clients() {
   return (
     <div>
       <Header title={"clients"} />
-      <Button onClick={addRandomClients} variant="outlined" size="large">
-        Add 2 random clients
-      </Button>
       <div class="add-client-btn">
         <Button
           onClick={handleAddClientModalOpen}
@@ -107,6 +121,30 @@ function Clients() {
         </Paper>
       </StyledModal>
       <ClientTable class="padding-left-right" clients={clientList} />
+      <hr />
+      <div style={{ marginTop: "40px", marginLeft: "40px" }}>
+        <h4>Test tools</h4>
+        <div style={{ marginTop: "20px" }}>
+          <LoadingButton
+            onClick={addRandomClients}
+            variant="outlined"
+            size="large"
+            loading={loadingTestClient}
+          >
+            Add 2 random clients
+          </LoadingButton>
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          <LoadingButton
+            onClick={deleteAllClients}
+            variant="outlined"
+            size="large"
+            loading={loadingDeleteClients}
+          >
+            Delete all clients
+          </LoadingButton>
+        </div>
+      </div>
     </div>
   );
 }

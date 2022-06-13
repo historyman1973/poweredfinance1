@@ -1,3 +1,4 @@
+from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema, Liability
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -5,7 +6,6 @@ from flask.json import jsonify
 
 otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)
 
-from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema, Liability
 
 @otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
 def add_lifestyleasset():
@@ -13,7 +13,7 @@ def add_lifestyleasset():
 
     owner1 = None
     owner2 = None
-    
+
     asset_type = request.json['asset_type']
     description = request.json['description']
     value = request.json['value']
@@ -29,7 +29,7 @@ def add_lifestyleasset():
             owner1 = check_owner1
         else:
             return("Client id " + str(owner1_id) + " doesn't exist."), 404
-    
+
     # Check if there's a value for owner2 in the request
     if owner2_id:
         # If there is an owner2 then check it exists in the database
@@ -40,7 +40,7 @@ def add_lifestyleasset():
         else:
             return("Client id " + str(owner2_id) + " doesn't exist."), 404
 
-    if owner1 or owner2:    
+    if owner1 or owner2:
         new_lifestyleasset = LifestyleAsset(
             asset_type=asset_type,
             description=description,
@@ -64,7 +64,6 @@ def delete_lifestyleasset(lifestyleasset_id):
         return("Lifestyle asset deleted"), 204
     else:
         return("Lifestyle asset doesn't exist"), 404
-
 
 
 @otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
@@ -99,7 +98,7 @@ def add_property():
 
     owner1 = None
     owner2 = None
-    
+
     property_type = request.json['property_type']
     address = request.json['address']
     cost = request.json['cost']
@@ -117,7 +116,7 @@ def add_property():
             owner1 = check_owner1
         else:
             return("Client id " + str(owner1_id) + " doesn't exist."), 404
-    
+
     # Check if there's a value for owner2 in the request
     if owner2_id:
         # If there is an owner2 then check it exists in the database
@@ -128,20 +127,19 @@ def add_property():
         else:
             return("Client id " + str(owner2_id) + " doesn't exist."), 404
 
-
     if owner1 or owner2:
         liability = None
         if liability_id:
             liability = Liability.query.get(int(liability_id))
 
         new_property = Property(
-        property_type=property_type,
-        address=address,
-        cost=cost,
-        value=value,
-        owner1_id=owner1_id,
-        owner2_id=owner2_id,
-        liability=liability
+            property_type=property_type,
+            address=address,
+            cost=cost,
+            value=value,
+            owner1_id=owner1_id,
+            owner2_id=owner2_id,
+            liability=liability
         )
 
         db.session.add(new_property)
@@ -161,7 +159,6 @@ def delete_property(property_id):
         return("Property deleted"), 204
     else:
         return("Property doesn't exist"), 404
-
 
 
 @otherassets_blueprint.route("/get-property/<property_id>", methods=["GET"])

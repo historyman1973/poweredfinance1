@@ -9,10 +9,15 @@ import AssetLiabilityTable from "./components/AssetLiabilityTable";
 function Dashboard() {
   const [client, setClient] = useState([]);
   const [networth, setNetworth] = useState([]);
+
   const [investmentTotal, setInvestmentTotal] = useState([]);
   const [propertyTotal, setPropertyTotal] = useState([]);
   const [lifestyleTotal, setLifestyleTotal] = useState([]);
   const [liabilityTotal, setLiabilityTotal] = useState([]);
+  // const [mortgageTotal, setMortgageTotal] = useState([]);
+  // const [creditCardTotal, setCreditCardTotal] = useState([]);
+  // const [loanTotal, setLoanTotal] = useState([]);
+
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
   const [lifestyleAssets, setLifestyleAssets] = useState([]);
@@ -72,7 +77,6 @@ function Dashboard() {
           window.location.pathname.split("/")[2]
       );
       setClient(res.data || []);
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -84,6 +88,8 @@ function Dashboard() {
   const options = {
     legend: "none",
     chartArea: { width: "80%", height: "80%" },
+    pieHole: 0.4,
+    colors: ["ffa6ff", "ff54ff", "ff00ff", "ba00ba", "730073"],
   };
 
   const summaryData = [
@@ -209,9 +215,11 @@ function Dashboard() {
             justifyContent: "center",
           }}
         >
+          <hr />
           <h5
             style={{
               textAlign: "center",
+              marginTop: "20px",
             }}
           >
             Assets and Liabilities
