@@ -22,9 +22,6 @@ def index():
     return "Server is operational"
 
 
-
-
-
 @clients_blueprint.route("/add-client", methods=['POST'])
 def add_client():
     forename = request.json['forename']
@@ -53,112 +50,126 @@ def add_client():
 def delete_client(client_id):
     # Delete all investments where the client is the only owner
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_investments = Investment.query.filter(Investment.owner1_id == client_id, Investment.owner2_id == None)
+        client_only_investments = Investment.query.filter(
+            Investment.owner1_id == client_id, Investment.owner2_id == None)
     else:
-        client_only_investments = Investment.query.filter(Investment.owner2_id == client_id, Investment.owner1_id == None)
+        client_only_investments = Investment.query.filter(
+            Investment.owner2_id == client_id, Investment.owner1_id == None)
     for client_only_investment in client_only_investments:
-        Holding.query.filter(Holding.investment_id == client_only_investment.id).delete()
+        Holding.query.filter(Holding.investment_id ==
+                             client_only_investment.id).delete()
         db.session.commit()
         delete_investment(client_only_investment.id)
-    
 
     # Update all joint investments to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_investments = Investment.query.filter(Investment.owner1_id == client_id, Investment.owner2_id != None)
+        joint_investments = Investment.query.filter(
+            Investment.owner1_id == client_id, Investment.owner2_id != None)
         for joint_investment in joint_investments:
             Investment.query.get(joint_investment.id).owner1_id = None
             db.session.commit()
     else:
-        joint_investments = Investment.query.filter(Investment.owner2_id == client_id, Investment.owner1_id != None)
+        joint_investments = Investment.query.filter(
+            Investment.owner2_id == client_id, Investment.owner1_id != None)
         for joint_investment in joint_investments:
             Investment.query.get(joint_investment.id).owner2_id = None
             db.session.commit()
 
-
     # Delete all transactions belonging to the client only
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_transactions = Transaction.query.filter(Transaction.owner1_id == client_id, Transaction.owner2_id == None)
+        client_only_transactions = Transaction.query.filter(
+            Transaction.owner1_id == client_id, Transaction.owner2_id == None)
     else:
-        client_only_transactions = Transaction.query.filter(Transaction.owner2_id == client_id, Transaction.owner1_id == None)
+        client_only_transactions = Transaction.query.filter(
+            Transaction.owner2_id == client_id, Transaction.owner1_id == None)
     for client_only_transaction in client_only_transactions:
         delete_transaction(client_only_transaction.id)
 
-
     # Update all joint transactions to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_transactions = Transaction.query.filter(Transaction.owner1_id == client_id, Transaction.owner2_id != None)
+        joint_transactions = Transaction.query.filter(
+            Transaction.owner1_id == client_id, Transaction.owner2_id != None)
         for joint_transaction in joint_transactions:
             Transaction.query.get(joint_transaction.id).owner1_id = None
-            db.session.commit()  
+            db.session.commit()
     else:
-        joint_transactions = Transaction.query.filter(Transaction.owner2_id == client_id, Transaction.owner1_id != None)
+        joint_transactions = Transaction.query.filter(
+            Transaction.owner2_id == client_id, Transaction.owner1_id != None)
         for joint_transaction in joint_transactions:
             Transaction.query.get(joint_investment.id).owner2_id = None
             db.session.commit()
 
-
     # Delete all liabilities where the client is the only owner
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_liabilities = Liability.query.filter(Liability.owner1_id == client_id, Liability.owner2_id == None)
+        client_only_liabilities = Liability.query.filter(
+            Liability.owner1_id == client_id, Liability.owner2_id == None)
     else:
-        client_only_liabilities = Liability.query.filter(Liability.owner2_id == client_id, Liability.owner1_id == None)
+        client_only_liabilities = Liability.query.filter(
+            Liability.owner2_id == client_id, Liability.owner1_id == None)
     for client_only_liability in client_only_liabilities:
         delete_liability(client_only_liability.id)
 
     # Update all joint liabilities to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_liabilities = Liability.query.filter(Liability.owner1_id == client_id, Liability.owner2_id != None)
+        joint_liabilities = Liability.query.filter(
+            Liability.owner1_id == client_id, Liability.owner2_id != None)
         for joint_liability in joint_liabilities:
             Liability.query.get(joint_liability.id).owner1_id = None
             db.session.commit()
     else:
-        joint_liabilities = Liability.query.filter(Liability.owner2_id == client_id, Liability.owner1_id != None)
+        joint_liabilities = Liability.query.filter(
+            Liability.owner2_id == client_id, Liability.owner1_id != None)
         for joint_liability in joint_liabilities:
             Liability.query.get(joint_liability.id).owner2_id = None
             db.session.commit()
 
-
     # Same for properties
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_properties = Property.query.filter(Property.owner1_id == client_id, Property.owner2_id == None)
+        client_only_properties = Property.query.filter(
+            Property.owner1_id == client_id, Property.owner2_id == None)
     else:
-        client_only_properties = Property.query.filter(Property.owner2_id == client_id, Property.owner1_id == None)
+        client_only_properties = Property.query.filter(
+            Property.owner2_id == client_id, Property.owner1_id == None)
     for client_only_property in client_only_properties:
         delete_property(client_only_property.id)
 
     # Update all joint properties to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_properties = Property.query.filter(Property.owner1_id == client_id, Property.owner2_id != None)
+        joint_properties = Property.query.filter(
+            Property.owner1_id == client_id, Property.owner2_id != None)
         for joint_property in joint_properties:
             Property.query.get(joint_property.id).owner1_id = None
             db.session.commit()
     else:
-        joint_properties = Property.query.filter(Property.owner2_id == client_id, Property.owner1_id != None)
+        joint_properties = Property.query.filter(
+            Property.owner2_id == client_id, Property.owner1_id != None)
         for joint_property in joint_properties:
             Property.query.get(joint_property.id).owner2_id = None
             db.session.commit()
 
-
     # Same for lifestyle assets
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_lifestyleassets = LifestyleAsset.query.filter(LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id == None)
+        client_only_lifestyleassets = LifestyleAsset.query.filter(
+            LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id == None)
     else:
-        client_only_lifestyleassets = LifestyleAsset.query.filter(LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id == None)
+        client_only_lifestyleassets = LifestyleAsset.query.filter(
+            LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id == None)
     for client_only_lifestyleasset in client_only_lifestyleassets:
         delete_lifestyleasset(client_only_lifestyleasset.id)
 
     # Update all joint properties to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_lifestyleassets = LifestyleAsset.query.filter(LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id != None)
+        joint_lifestyleassets = LifestyleAsset.query.filter(
+            LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id != None)
         for joint_lifestyleasset in joint_lifestyleassets:
             LifestyleAsset.query.get(joint_lifestyleasset.id).owner1_id = None
             db.session.commit()
     else:
-        joint_lifestyleassets = LifestyleAsset.query.filter(LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id != None)
+        joint_lifestyleassets = LifestyleAsset.query.filter(
+            LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id != None)
         for joint_lifestyleasset in joint_lifestyleassets:
             LifestyleAsset.query.get(joint_lifestyleasset.id).owner2_id = None
             db.session.commit()
-    
 
     # Finally, delete the client
     db.session.delete(Client.query.get(client_id))
@@ -257,7 +268,6 @@ def get_networth(client_id):
             Liability.owner1_id != None,
             Liability.owner2_id == client_id).all()
 
-
     total_sole_investments = 0
     for investment in sole_investments:
         value = get_investment_value(investment.id).get_json()["total_value"]
@@ -303,21 +313,25 @@ def get_networth(client_id):
         total_sole_liabilities - total_joint_liabilities
 
     # grouped_liabilities = db.session.query(Liability.liability_type, db.func.sum(Liability.amount_outstanding)).group_by(Liability.liability_type).all()
-    
+
     liability_breakdown = {}
     for sole_liability in sole_liabilities:
         if str(sole_liability.liability_type) not in liability_breakdown.keys():
             keyname = str(sole_liability.liability_type)
-            liability_breakdown[keyname] = float(sole_liability.amount_outstanding)
+            liability_breakdown[keyname.replace("-", "_")] = float(
+                sole_liability.amount_outstanding)
         else:
-            liability_breakdown[keyname] += float(sole_liability.amount_outstanding)
+            liability_breakdown[keyname.replace("-", "_")] += float(
+                sole_liability.amount_outstanding)
 
     for joint_liability in joint_liabilities:
         if str(joint_liability.liability_type) not in liability_breakdown.keys():
             keyname = str(joint_liability.liability_type)
-            liability_breakdown[keyname] = float(joint_liability.amount_outstanding) * 0.5
+            liability_breakdown[keyname.replace("-", "_")] = float(
+                joint_liability.amount_outstanding) * 0.5
         else:
-            liability_breakdown[keyname] += float(joint_liability.amount_outstanding) * 0.5        
+            liability_breakdown[keyname.replace("-", "_")] += float(
+                joint_liability.amount_outstanding) * 0.5
 
     print(liability_breakdown)
 
@@ -330,8 +344,8 @@ def get_networth(client_id):
         total_joint_properties=total_joint_properties,
         total_sole_liabilities=total_sole_liabilities,
         total_joint_liabilities=total_joint_liabilities,
-        networth = networth,
-        liability_breakdown = liability_breakdown
+        networth=networth,
+        liability_breakdown=liability_breakdown
     )
 
 
@@ -345,15 +359,14 @@ def add_test_client():
     # Create gender randomiser
     class Gender(BaseProvider):
         def gender(self):
-            result = random.randint(0,1)
+            result = random.randint(0, 1)
             if result == 0:
                 gender = "Male"
             else:
                 gender = "Female"
-            
+
             return gender
 
-    
     fake.add_provider(Gender)
 
     random_name_client = fake.name()
@@ -364,15 +377,14 @@ def add_test_client():
     first = True
     ids = []
 
-
     for person_name in [random_name_client, random_name_partner]:
-        
+
         if first:
             first = False
             isPrimary = 1
         else:
             isPrimary = 0
-                
+
         new_test_client = Client(
             forename=person_name.split()[0],
             preferred_name=person_name.split()[0],
@@ -389,7 +401,6 @@ def add_test_client():
         else:
             partnerid = new_test_client.id
             ids.append(partnerid)
-        
 
     ##############################################################################################################
     # Create a set of investments - client, partner and joint owned
@@ -407,7 +418,6 @@ def add_test_client():
     new_client_investment = Investment.query.get(new_client_investment_id)
     print("New client investment object is " + str(new_client_investment))
 
-
     partner_investment = requests.post('http://localhost:5000/add-investment', json={
         "category": "Non-retirement",
         "investment_type": "Stocks and Shares ISA",
@@ -419,8 +429,6 @@ def add_test_client():
 
     new_partner_investment_id = partner_investment.json()['id']
     new_partner_investment = Investment.query.get(new_partner_investment_id)
-
-
 
     joint_investment = requests.post('http://localhost:5000/add-investment', json={
         "category": "Non-retirement",
@@ -434,17 +442,17 @@ def add_test_client():
     new_joint_investment_id = joint_investment.json()['id']
     new_joint_investment = Investment.query.get(new_joint_investment_id)
 
-
     ##########################################################################################
-    # Create a series of transactions for each investment    
+    # Create a series of transactions for each investment
 
     number_of_existing_instruments = len(Instrument.query.all())
 
     for investment in [new_client_investment, new_joint_investment, new_partner_investment]:
 
-        random_instrument_id_1 = random.randint(1, number_of_existing_instruments)
-        random_instrument_id_2 = random.randint(1, number_of_existing_instruments)
-
+        random_instrument_id_1 = random.randint(
+            1, number_of_existing_instruments)
+        random_instrument_id_2 = random.randint(
+            1, number_of_existing_instruments)
 
         transaction1 = requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
@@ -468,9 +476,8 @@ def add_test_client():
             "owner2_id": investment.owner2_id,
         })
 
-
     client_property = requests.post('http://localhost:5000/add-property', json={
-        "property_type": "Main residence",
+        "property_type": "main-residence",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
@@ -484,9 +491,8 @@ def add_test_client():
     db.session.commit()
     print("New property ID is " + str(new_client_property_id))
 
-
     partner_property = requests.post('http://localhost:5000/add-property', json={
-        "property_type": "Second home",
+        "property_type": "holiday-home",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
@@ -500,9 +506,8 @@ def add_test_client():
     db.session.commit()
     print("New property ID is " + str(new_partner_property_id))
 
-
     joint_property = requests.post('http://localhost:5000/add-property', json={
-        "property_type": "Buy to let",
+        "property_type": "buy-to-let",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
@@ -516,12 +521,11 @@ def add_test_client():
     db.session.commit()
     print("New property ID is " + str(new_joint_property_id))
 
-
     # Create a set of liabilities and linked them to
 
     client_liability = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
-        "liability_type": "Main residence",
+        "liability_type": "main-residence-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
         "amount_outstanding": random.randint(100000, 1000000),
@@ -531,14 +535,16 @@ def add_test_client():
     })
 
     new_client_liability_id = client_liability.json()['id']
-    Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
-    client_property.liability = Liability.query.get(int(new_client_liability_id))
+    Liability.query.get(new_client_liability_id).property = Property.query.get(
+        new_client_property_id)
+    client_property.liability = Liability.query.get(
+        int(new_client_liability_id))
     db.session.commit()
     print("New liability ID is " + str(new_client_liability_id))
 
     partner_liability = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
-        "liability_type": "Second home",
+        "liability_type": "holiday-home-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
         "amount_outstanding": random.randint(100000, 1000000),
@@ -548,14 +554,16 @@ def add_test_client():
     })
 
     new_partner_liability_id = partner_liability.json()['id']
-    Liability.query.get(new_partner_liability_id).property = Property.query.get(new_partner_property_id)
-    partner_property.liability = Liability.query.get(int(new_partner_liability_id))
+    Liability.query.get(new_partner_liability_id).property = Property.query.get(
+        new_partner_property_id)
+    partner_property.liability = Liability.query.get(
+        int(new_partner_liability_id))
     db.session.commit()
-    print("New liability ID is " + str(new_partner_liability_id))    
-    
+    print("New liability ID is " + str(new_partner_liability_id))
+
     joint_liability = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
-        "liability_type": "Buy to let",
+        "liability_type": "buy-to-let-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
         "amount_outstanding": random.randint(100000, 1000000),
@@ -564,13 +572,13 @@ def add_test_client():
         "property_id": None
     })
 
-    new_joint_liability_id = joint_liability.json()['id']    
-    Liability.query.get(new_joint_liability_id).property = Property.query.get(new_joint_property_id)
+    new_joint_liability_id = joint_liability.json()['id']
+    Liability.query.get(new_joint_liability_id).property = Property.query.get(
+        new_joint_property_id)
     joint_property.liability = Liability.query.get(int(new_joint_liability_id))
     db.session.commit()
     print("New liability ID is " + str(new_joint_liability_id))
 
-    
     # Create a set of lifestyle assets - client, partner and joint
 
     requests.post('http://localhost:5000/add-lifestyleasset', json={
@@ -581,7 +589,6 @@ def add_test_client():
         "owner2_id": None
     })
 
-
     requests.post('http://localhost:5000/add-lifestyleasset', json={
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
@@ -590,7 +597,6 @@ def add_test_client():
         "owner2_id": ids[1]
     })
 
-
     requests.post('http://localhost:5000/add-lifestyleasset', json={
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
@@ -598,7 +604,6 @@ def add_test_client():
         "owner1_id": ids[0],
         "owner2_id": ids[1]
     })
-
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201
 
@@ -609,5 +614,5 @@ def delete_all_clients():
 
     for client in all_clients:
         delete_client(client.id)
-    
+
     return "Done", 200

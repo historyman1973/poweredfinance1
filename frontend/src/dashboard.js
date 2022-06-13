@@ -13,10 +13,10 @@ function Dashboard() {
   const [investmentTotal, setInvestmentTotal] = useState([]);
   const [propertyTotal, setPropertyTotal] = useState([]);
   const [lifestyleTotal, setLifestyleTotal] = useState([]);
-  const [liabilityTotal, setLiabilityTotal] = useState([]);
-  // const [mortgageTotal, setMortgageTotal] = useState([]);
-  // const [creditCardTotal, setCreditCardTotal] = useState([]);
-  // const [loanTotal, setLoanTotal] = useState([]);
+  const [mortgageTotal, setMortgageTotal] = useState([]);
+  const [creditCardTotal, setCreditCardTotal] = useState([]);
+  const [loanTotal, setLoanTotal] = useState([]);
+  const [miscLiabilityTotal, setMiscLiabilityTotal] = useState([]);
 
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
@@ -29,6 +29,7 @@ function Dashboard() {
         window.location.pathname.split("/")[2]
     );
     setNetworth(res.data.networth || []);
+    console.log(res.data);
     setInvestmentTotal(
       res.data.total_sole_investments + res.data.total_joint_investments || []
     );
@@ -39,9 +40,16 @@ function Dashboard() {
       res.data.total_sole_lifestyle_assets +
         res.data.total_joint_lifestyle_assets || []
     );
-    setLiabilityTotal(
-      res.data.total_sole_liabilities + res.data.total_joint_liabilities || []
+    setMortgageTotal(
+      (res.data.liability_breakdown.buy_to_let_mortgage || 0) +
+        (res.data.liability_breakdown.main_residence_mortgage || 0) +
+        (res.data.liability_breakdown.commercial_mortgage || 0) +
+        (res.data.liability_breakdown.holiday_home_mortgage || 0) +
+        (res.data.liability_breakdown.second_residence_mortgage || 0) || []
     );
+    setCreditCardTotal(res.data.liability_breakdown.credit_card || 0);
+    setLoanTotal(res.data.liability_breakdown.personal_loan || 0);
+    setMiscLiabilityTotal(res.data.liability_breakdown.miscellaneous || 0);
   };
 
   const getAssetsLiabilities = async () => {
@@ -97,7 +105,7 @@ function Dashboard() {
     ["Investments", parseFloat(investmentTotal)],
     ["Properties", parseFloat(propertyTotal)],
     ["Lifestyle Assets", parseFloat(lifestyleTotal)],
-    ["Liabilities", parseFloat(-liabilityTotal)],
+    ["Liabilities", parseFloat(-mortgageTotal)],
   ];
 
   const assetComp = [
@@ -109,7 +117,10 @@ function Dashboard() {
 
   const liabilityComp = [
     ["Category", "Value"],
-    ["Liabilities", parseFloat(liabilityTotal)],
+    ["Mortgages", parseFloat(mortgageTotal)],
+    ["Personal loans", parseFloat(loanTotal)],
+    ["Credit cards", parseFloat(creditCardTotal)],
+    ["Miscellaneous", parseFloat(miscLiabilityTotal)],
   ];
 
   return (
