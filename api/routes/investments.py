@@ -9,7 +9,7 @@ investments_blueprint = Blueprint('investments_blueprint', __name__)
 
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
-        instrument_schema, holdings_transactions, investment_holdings
+        instrument_schema
 
 
 @investments_blueprint.route("/get-holding-data/<investment_id>", methods=["GET"])

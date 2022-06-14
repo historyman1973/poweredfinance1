@@ -517,9 +517,9 @@ def add_test_client():
     print("New property ID is " + str(new_joint_property_id))
 
 
-    # Create a set of liabilities and linked them to
+    # Create a set of liabilities and link them to an owner
 
-    client_liability = requests.post('http://localhost:5000/add-liability', json={
+    client_liability_secured = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
         "liability_type": "Main residence",
         "description": fake.word().title(),
@@ -530,13 +530,32 @@ def add_test_client():
         "property_id": None
     })
 
-    new_client_liability_id = client_liability.json()['id']
+    new_client_liability_id = client_liability_secured.json()['id']
     Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
     client_property.liability = Liability.query.get(int(new_client_liability_id))
     db.session.commit()
     print("New liability ID is " + str(new_client_liability_id))
 
-    partner_liability = requests.post('http://localhost:5000/add-liability', json={
+
+    requests.post('http://localhost:5000/add-liability', json={
+        "category": "Short term",
+        "liability_type": "Credit card",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(1000, 10000),
+        "amount_outstanding": random.randint(1000, 10000),
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "property_id": None
+    })
+
+    new_client_liability_id = client_liability_secured.json()['id']
+    Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
+    client_property.liability = Liability.query.get(int(new_client_liability_id))
+    db.session.commit()
+    print("New liability ID is " + str(new_client_liability_id))
+
+
+    partner_liability_secured = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
         "liability_type": "Second home",
         "description": fake.word().title(),
@@ -547,13 +566,25 @@ def add_test_client():
         "property_id": None
     })
 
-    new_partner_liability_id = partner_liability.json()['id']
+    new_partner_liability_id = partner_liability_secured.json()['id']
     Liability.query.get(new_partner_liability_id).property = Property.query.get(new_partner_property_id)
     partner_property.liability = Liability.query.get(int(new_partner_liability_id))
-    db.session.commit()
-    print("New liability ID is " + str(new_partner_liability_id))    
-    
-    joint_liability = requests.post('http://localhost:5000/add-liability', json={
+    db.session.commit() 
+
+
+    requests.post('http://localhost:5000/add-liability', json={
+        "category": "Short term",
+        "liability_type": "Personal loan",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(1000, 10000),
+        "amount_outstanding": random.randint(1000, 10000),
+        "owner1_id": None,
+        "owner2_id": ids[1],
+        "property_id": None
+    })
+
+
+    joint_liability_secured = requests.post('http://localhost:5000/add-liability', json={
         "category": "Long term",
         "liability_type": "Buy to let",
         "description": fake.word().title(),
@@ -564,11 +595,22 @@ def add_test_client():
         "property_id": None
     })
 
-    new_joint_liability_id = joint_liability.json()['id']    
+    new_joint_liability_id = joint_liability_secured.json()['id']    
     Liability.query.get(new_joint_liability_id).property = Property.query.get(new_joint_property_id)
     joint_property.liability = Liability.query.get(int(new_joint_liability_id))
     db.session.commit()
-    print("New liability ID is " + str(new_joint_liability_id))
+
+
+    requests.post('http://localhost:5000/add-liability', json={
+        "category": "Short term",
+        "liability_type": "Overdraft",
+        "description": fake.word().title(),
+        "amount_borrowed": random.randint(1000, 10000),
+        "amount_outstanding": random.randint(1000, 10000),
+        "owner1_id": ids[0],
+        "owner2_id": ids[1],
+        "property_id": None
+    })
 
     
     # Create a set of lifestyle assets - client, partner and joint

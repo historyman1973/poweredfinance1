@@ -1,17 +1,5 @@
 from database import db, ma
 
-investment_holdings = db.Table('investment_holdings', db.Column('investment_id', db.Integer, db.ForeignKey('investment.id')),
-                               db.Column('holding_id', db.Integer, db.ForeignKey('holding.id')))
-
-
-holdings_transactions = db.Table('holdings_transactions',
-                                 db.Column('holding_id', db.Integer,
-                                           db.ForeignKey('holding.id')),
-                                 db.Column('transaction_id', db.Integer,
-                                           db.ForeignKey('transaction.id'))
-                                 )
-
-
 class Client(db.Model):
     __tablename__ = "client"
 
