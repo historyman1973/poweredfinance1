@@ -67,7 +67,10 @@ function Liabilities() {
   const [openAddLiability, setOpenAddLiability] = React.useState(false);
   const [liabilities, setLiabilities] = useState([]);
   const [totalLiabilities, setTotalLiabilities] = useState([]);
-  const [totalLiabilitiesComp, setTotalLiabilitiesComp] = useState([]);
+  const [mortgageTotal, setMortgageTotal] = useState([]);
+  const [creditCardTotal, setCreditCardTotal] = useState([]);
+  const [loanTotal, setLoanTotal] = useState([]);
+  const [miscLiabilityTotal, setMiscLiabilityTotal] = useState([]);
 
   const barData = [["Description", "Outstanding"]];
 
@@ -94,9 +97,16 @@ function Liabilities() {
       `http://127.0.0.1:5000/get-networth/` +
         window.location.pathname.split("/")[2]
     );
-    const totalLiabilities =
-      res.data.total_joint_liabilities + res.data.total_sole_liabilities;
-    setTotalLiabilitiesComp(totalLiabilities || []);
+    setMortgageTotal(
+      (res.data.liability_breakdown.buy_to_let_mortgage || 0) +
+        (res.data.liability_breakdown.main_residence_mortgage || 0) +
+        (res.data.liability_breakdown.commercial_mortgage || 0) +
+        (res.data.liability_breakdown.holiday_home_mortgage || 0) +
+        (res.data.liability_breakdown.second_residence_mortgage || 0) || []
+    );
+    setCreditCardTotal(res.data.liability_breakdown.credit_card || 0);
+    setLoanTotal(res.data.liability_breakdown.personal_loan || 0);
+    setMiscLiabilityTotal(res.data.liability_breakdown.miscellaneous || 0);
   };
 
   useEffect(() => getLiabilities(), []);
@@ -136,7 +146,10 @@ function Liabilities() {
 
   const liabilityComp = [
     ["Category", "Value"],
-    ["Liabilities", parseFloat(totalLiabilitiesComp)],
+    ["Mortgages", parseFloat(mortgageTotal)],
+    ["Personal loans", parseFloat(loanTotal)],
+    ["Credit cards", parseFloat(creditCardTotal)],
+    ["Miscellaneous", parseFloat(miscLiabilityTotal)],
   ];
 
   return (

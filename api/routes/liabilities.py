@@ -14,7 +14,7 @@ def add_liability():
 
     owner1 = None
     owner2 = None
-        
+
     category = request.json['category']
     liability_type = request.json['liability_type']
     description = request.json['description']
@@ -46,7 +46,7 @@ def add_liability():
 
     if owner1 or owner2:
         property = None
-        if property_id:
+        if property_id and property_id != "none":
             property = Property.query.get(int(property_id))
 
         new_liability = Liability(
