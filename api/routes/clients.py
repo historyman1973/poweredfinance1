@@ -333,7 +333,6 @@ def get_networth(client_id):
             liability_breakdown[keyname.replace("-", "_")] += float(
                 joint_liability.amount_outstanding) * 0.5
 
-    print(liability_breakdown)
 
     return jsonify(
         total_sole_investments=total_sole_investments,
@@ -416,7 +415,6 @@ def add_test_client():
 
     new_client_investment_id = client_investment.json()['id']
     new_client_investment = Investment.query.get(new_client_investment_id)
-    print("New client investment object is " + str(new_client_investment))
 
     partner_investment = requests.post('http://localhost:5000/add-investment', json={
         "category": "Non-retirement",
@@ -454,7 +452,7 @@ def add_test_client():
         random_instrument_id_2 = random.randint(
             1, number_of_existing_instruments)
 
-        transaction1 = requests.post('http://localhost:5000/add-transaction', json={
+        requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
             "instrument_id": random_instrument_id_1,
             "tdate": fake.iso8601(),
@@ -465,7 +463,7 @@ def add_test_client():
             "owner2_id": investment.owner2_id,
         })
 
-        transaction2 = requests.post('http://localhost:5000/add-transaction', json={
+        requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
             "instrument_id": random_instrument_id_2,
             "tdate": fake.iso8601(),
@@ -489,7 +487,6 @@ def add_test_client():
     new_client_property_id = client_property.json()['id']
 
     db.session.commit()
-    print("New property ID is " + str(new_client_property_id))
 
     partner_property = requests.post('http://localhost:5000/add-property', json={
         "property_type": "holiday-home",
@@ -504,7 +501,6 @@ def add_test_client():
     new_partner_property_id = partner_property.json()['id']
 
     db.session.commit()
-    print("New property ID is " + str(new_partner_property_id))
 
     joint_property = requests.post('http://localhost:5000/add-property', json={
         "property_type": "buy-to-let",
@@ -519,7 +515,6 @@ def add_test_client():
     new_joint_property_id = joint_property.json()['id']
 
     db.session.commit()
-    print("New property ID is " + str(new_joint_property_id))
 
 
     # Create a set of liabilities and link them to an owner
@@ -539,12 +534,11 @@ def add_test_client():
     Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
     client_property.liability = Liability.query.get(int(new_client_liability_id))
     db.session.commit()
-    print("New liability ID is " + str(new_client_liability_id))
 
 
     requests.post('http://localhost:5000/add-liability', json={
         "category": "Short term",
-        "liability_type": "Credit card",
+        "liability_type": "credit-card",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
         "amount_outstanding": random.randint(1000, 10000),
@@ -557,7 +551,6 @@ def add_test_client():
     Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
     client_property.liability = Liability.query.get(int(new_client_liability_id))
     db.session.commit()
-    print("New liability ID is " + str(new_client_liability_id))
 
 
     partner_liability_secured = requests.post('http://localhost:5000/add-liability', json={
@@ -579,7 +572,7 @@ def add_test_client():
 
     requests.post('http://localhost:5000/add-liability', json={
         "category": "Short term",
-        "liability_type": "Personal loan",
+        "liability_type": "personal-loan",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
         "amount_outstanding": random.randint(1000, 10000),
@@ -608,7 +601,7 @@ def add_test_client():
 
     requests.post('http://localhost:5000/add-liability', json={
         "category": "Short term",
-        "liability_type": "Overdraft",
+        "liability_type": "miscellaneous",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
         "amount_outstanding": random.randint(1000, 10000),
