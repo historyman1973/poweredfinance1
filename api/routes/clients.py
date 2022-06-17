@@ -1,4 +1,3 @@
-from sqlalchemy import null
 from routes.investments import delete_investment, get_investment_value, delete_transaction
 from routes.liabilities import delete_liability
 from routes.otherassets import delete_property, delete_lifestyleasset
