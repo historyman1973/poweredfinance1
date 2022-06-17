@@ -17,14 +17,6 @@ const Layout = () => {
       <Route path="/" element={<Clients />}></Route>
       <Route path="/dashboard/*" element={<Dashboard />}></Route>
       <Route
-        path="/assets/:id/property/:propertyid"
-        element={<AssetOverviewProperty />}
-      ></Route>
-      <Route
-        path="/assets/:id/lifestyleasset/:lifestyleassetid"
-        element={<AssetOverviewLifestyle />}
-      ></Route>
-      <Route
         path="/assets/:id/investment/:investmentid"
         element={<AssetOverviewInvestment />}
       ></Route>

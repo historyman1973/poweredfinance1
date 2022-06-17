@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 const initialFValues = {
   investment_type: "",
+  category: "",
   provider: "",
   investment_ref: "",
   owner1_id: window.location.pathname.split("/")[2],
@@ -78,6 +79,13 @@ export default function AddInvestmentForm() {
               value={values.investment_ref}
               onChange={handleInputChange}
               error={errors.investment_ref}
+            />
+            <Controls.Input
+              label="Category"
+              name="category"
+              value={values.category}
+              onChange={handleInputChange}
+              error={errors.category}
             />
             <FormControl>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
