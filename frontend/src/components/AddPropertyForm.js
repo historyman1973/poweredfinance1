@@ -12,7 +12,7 @@ const initialFValues = {
   value: "",
   owner1_id: window.location.pathname.split("/")[2],
   owner2_id: "",
-  mortgage_id: "",
+  liability_id: "",
 };
 
 export default function AddPropertyForm() {
@@ -133,12 +133,12 @@ export default function AddPropertyForm() {
                 Linked Mortgage
               </InputLabel>
               <Select
-                name="mortgage_id"
+                name="liability_id"
                 label="Mortgage ID"
-                value={values.mortgage_id}
+                value={values.liability_id}
                 onChange={handleInputChange}
               >
-                <MenuItem value={"none"}>None</MenuItem>
+                <MenuItem value={"0"}>None</MenuItem>
                 {mortgages.map((mortgage) => (
                   <MenuItem value={mortgage.id}>
                     {mortgage.description}
