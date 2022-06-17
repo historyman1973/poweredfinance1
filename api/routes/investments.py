@@ -3,7 +3,8 @@ from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
 from routes.marketdata import get_latest_data
-from sqlalchemy import delete
+import csv
+from io import TextIOWrapper
 
 investments_blueprint = Blueprint('investments_blueprint', __name__)
 
@@ -330,3 +331,26 @@ def get_transactions(grouping, group_id):
             return jsonify(result)
         else:
             return ("Client id " + group_id + " doesn't exist."), 404
+
+
+@investments_blueprint.route("/upload-instruments", methods=["POST"])
+def upload_instruments():
+    if request.method == 'POST':
+        csv_file = request.files['file']
+        csv_file = TextIOWrapper(csv_file, encoding='utf-8')
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            new_instrument = Instrument(
+                symbol=row[0],
+                name=row[1],
+                market_cap=row[5],
+                country=row[6],
+                ipo_year=row[7],
+                volume=row[8],
+                sector=row[9],
+                industry=row[10]
+                )
+            db.session.add(new_instrument)
+            db.session.commit()
+    
+    return "Done", 201
