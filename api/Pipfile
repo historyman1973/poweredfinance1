@@ -16,6 +16,8 @@ simplejson = "*"
 itsdangerous = "==2.0.1"
 migrate = "*"
 faker = "*"
+pdfkit = "*"
+flask-bootstrap = "*"
 
 [dev-packages]
 

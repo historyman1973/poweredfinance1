@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_bootstrap import Bootstrap
 from database import db, ma
 import os
 
@@ -8,6 +9,8 @@ app = Flask(__name__)
 
 db.init_app(app)
 ma.init_app(app)
+
+Bootstrap(app)
 
 Migrate(app, db, render_as_batch=True)
 
@@ -17,6 +20,7 @@ from routes.liabilities import liability_blueprint
 from routes.marketdata import marketdata_blueprint
 from routes.lookups import lookups_blueprint
 from routes.investments import investments_blueprint
+from routes.reports import reports_blueprint
 
 app.register_blueprint(clients_blueprint)
 app.register_blueprint(otherassets_blueprint)
@@ -24,6 +28,7 @@ app.register_blueprint(liability_blueprint)
 app.register_blueprint(marketdata_blueprint)
 app.register_blueprint(lookups_blueprint)
 app.register_blueprint(investments_blueprint)
+app.register_blueprint(reports_blueprint)
 CORS(app)
 
 app.config["SECRET_KEY"] = "mysecretkey"
