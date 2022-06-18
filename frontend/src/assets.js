@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
@@ -49,7 +40,6 @@ const style = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -57,7 +47,6 @@ const style = {
   minWidth: 400,
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function Assets() {
@@ -69,35 +58,26 @@ function Assets() {
 
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
-  const [lifestyleAssets, setLifestyleAssets] = useState([]);
+  const [otherAssets, setOtherAssets] = useState([]);
 
   const [investmentTotal, setInvestmentTotal] = useState([]);
   const [propertyTotal, setPropertyTotal] = useState([]);
-  const [lifestyleTotal, setLifestyleTotal] = useState([]);
+  const [otherTotal, setOtherTotal] = useState([]);
   const [totalAssets, setTotalAssets] = useState([]);
 
   const barData = [["Description", "Value"]];
 
-  {
-    properties.map((property) =>
-      barData.push([property.address, parseFloat(property.value)])
-    );
-  }
+  properties.map((property) =>
+    barData.push([property.address, parseFloat(property.value)])
+  );
 
-  {
-    investments.map((investment) =>
-      barData.push([investment.provider, parseFloat(investment.current_value)])
-    );
-  }
+  investments.map((investment) =>
+    barData.push([investment.provider, parseFloat(investment.current_value)])
+  );
 
-  {
-    lifestyleAssets.map((lifestyleAsset) =>
-      barData.push([
-        lifestyleAsset.description,
-        parseFloat(lifestyleAsset.value),
-      ])
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    barData.push([otherAsset.description, parseFloat(otherAsset.value)])
+  );
 
   const getTotalAssets = async () => {
     const res = await axios.get(
@@ -106,10 +86,10 @@ function Assets() {
     );
     const totalAssets =
       res.data.total_joint_investments +
-      res.data.total_joint_lifestyle_assets +
+      res.data.total_joint_other_assets +
       res.data.total_joint_properties +
       res.data.total_sole_investments +
-      res.data.total_sole_lifestyle_assets +
+      res.data.total_sole_other_assets +
       res.data.total_sole_properties;
     setTotalAssets(totalAssets || []);
     setInvestmentTotal(
@@ -118,9 +98,8 @@ function Assets() {
     setPropertyTotal(
       res.data.total_sole_properties + res.data.total_joint_properties || []
     );
-    setLifestyleTotal(
-      res.data.total_sole_lifestyle_assets +
-        res.data.total_joint_lifestyle_assets || []
+    setOtherTotal(
+      res.data.total_sole_otherassets + res.data.total_joint_otherassets || []
     );
   };
 
@@ -132,12 +111,12 @@ function Assets() {
     setProperties(res.data || []);
   };
 
-  const getLifestyleAssets = async () => {
+  const getOtherAssets = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-lifestyle-assets/` +
+      `http://127.0.0.1:5000/get-otherassets/` +
         window.location.pathname.split("/")[2]
     );
-    setLifestyleAssets(res.data || []);
+    setOtherAssets(res.data || []);
   };
 
   const getInvestments = async () => {
@@ -152,12 +131,12 @@ function Assets() {
     ["Category", "Value"],
     ["Investments", parseFloat(investmentTotal)],
     ["Properties", parseFloat(propertyTotal)],
-    ["Lifestyle Assets", parseFloat(lifestyleTotal)],
+    ["Other Assets", parseFloat(otherTotal)],
   ];
 
   useEffect(() => getProperties(), []);
   useEffect(() => getInvestments(), []);
-  useEffect(() => getLifestyleAssets(), []);
+  useEffect(() => getOtherAssets(), []);
   useEffect(() => getTotalAssets(), []);
 
   const options = {
@@ -181,20 +160,6 @@ function Assets() {
   };
 
   useEffect(() => getClient(), []);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <p className="label">{`${currencyFormat(
-            parseFloat(payload[0].value)
-          )}`}</p>
-        </div>
-      );
-    }
-
-    return null;
-  };
 
   return (
     <div>
@@ -306,7 +271,7 @@ function Assets() {
               class="padding-left-right"
               properties={properties}
               investments={investments}
-              lifestyleAssets={lifestyleAssets}
+              otherAssets={otherAssets}
             />
           </div>
         </div>

@@ -5,8 +5,7 @@ import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
-import axios from "axios";
+import AssetOverviewOther from "../AssetOverviewOther";
 import { currencyFormat } from "../components/GlobalFunctions";
 
 const Backdrop = styled("div")`
@@ -32,14 +31,13 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const styleLifestyle = {
+const styleOther = {
   p: 2,
   px: 4,
   pb: 3,
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -48,7 +46,6 @@ const styleLifestyle = {
   height: "50%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 const styleProperty = {
@@ -58,7 +55,6 @@ const styleProperty = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -67,7 +63,6 @@ const styleProperty = {
   height: "60%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 const styleInvestment = {
@@ -77,7 +72,6 @@ const styleInvestment = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -86,11 +80,10 @@ const styleInvestment = {
   height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
-function AssetTable({ properties, investments, lifestyleAssets }) {
-  const rows = Array();
+function AssetTable({ properties, investments, otherAssets }) {
+  const rows = [];
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
@@ -100,9 +93,9 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
 
-  const handleViewLifestyleClose = () => setOpenViewLifestyle(false);
-  const [openViewLifestyle, setOpenViewLifestyle] = React.useState(false);
-  const [lifestyle, setLifestyle] = React.useState(false);
+  const handleViewOtherClose = () => setOpenViewOther(false);
+  const [openViewOther, setOpenViewOther] = React.useState(false);
+  const [other, setOther] = React.useState(false);
 
   const handleClick = (category, id) => {
     if (category === "Property") {
@@ -111,44 +104,38 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
     } else if (category === "Investment") {
       setInvestment(id);
       setOpenViewInvestment(true);
-    } else if (category === "Lifestyle Asset") {
-      setLifestyle(id);
-      setOpenViewLifestyle(true);
+    } else if (category === "Other Asset") {
+      setOther(id);
+      setOpenViewOther(true);
     }
   };
 
-  {
-    properties.map((property) =>
-      rows.push({
-        description: property.address,
-        id: property.id,
-        category: "Property",
-        value: currencyFormat(parseFloat(property.value)),
-      })
-    );
-  }
+  properties.map((property) =>
+    rows.push({
+      description: property.address,
+      id: property.id,
+      category: "Property",
+      value: currencyFormat(parseFloat(property.value)),
+    })
+  );
 
-  {
-    investments.map((investment) =>
-      rows.push({
-        description: investment.provider,
-        id: investment.investment_id,
-        category: "Investment",
-        value: currencyFormat(parseFloat(investment.current_value)),
-      })
-    );
-  }
+  investments.map((investment) =>
+    rows.push({
+      description: investment.provider,
+      id: investment.investment_id,
+      category: "Investment",
+      value: currencyFormat(parseFloat(investment.current_value)),
+    })
+  );
 
-  {
-    lifestyleAssets.map((lifestyleAsset) =>
-      rows.push({
-        description: lifestyleAsset.description,
-        id: lifestyleAsset.id,
-        category: "Lifestyle Asset",
-        value: currencyFormat(parseFloat(lifestyleAsset.value)),
-      })
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    rows.push({
+      description: otherAsset.description,
+      id: otherAsset.id,
+      category: "Other Asset",
+      value: currencyFormat(parseFloat(otherAsset.value)),
+    })
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -195,12 +182,12 @@ function AssetTable({ properties, investments, lifestyleAssets }) {
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={openViewLifestyle}
-        onClose={handleViewLifestyleClose}
+        open={openViewOther}
+        onClose={handleViewOtherClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={styleLifestyle}>
-          <AssetOverviewLifestyle id={lifestyle} />
+        <Paper sx={styleOther}>
+          <AssetOverviewOther id={other} />
         </Paper>
       </StyledModal>
     </div>

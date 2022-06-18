@@ -143,7 +143,7 @@ def delete_client(client_id):
             Property.query.get(joint_property.id).owner2_id = None
             db.session.commit()
 
-    # Same for lifestyle assets
+    # Same for other assets
     if Client.query.get(client_id).isPrimary == 1:
         client_only_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id, OtherAsset.owner2_id == None)
@@ -161,10 +161,10 @@ def delete_client(client_id):
             OtherAsset.query.get(joint_otherasset.id).owner1_id = None
             db.session.commit()
     else:
-        joint_OtherAssets = OtherAsset.query.filter(
+        joint_otherAssets = OtherAsset.query.filter(
             OtherAsset.owner2_id == client_id, OtherAsset.owner1_id != None)
-        for joint_OtherAsset in joint_OtherAssets:
-            OtherAsset.query.get(joint_OtherAsset.id).owner2_id = None
+        for joint_otherAsset in joint_otherAssets:
+            OtherAsset.query.get(joint_otherAsset.id).owner2_id = None
             db.session.commit()
 
     # Finally, delete the client
@@ -207,11 +207,11 @@ def get_networth(client_id):
             Investment.owner1_id == client_id,
             Investment.owner2_id != None).all()
 
-        sole_lifestyle_assets = OtherAsset.query.filter(
+        sole_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id,
             OtherAsset.owner2_id == None).all()
 
-        joint_lifestyle_assets = OtherAsset.query.filter(
+        joint_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id,
             OtherAsset.owner2_id != None).all()
 
@@ -240,11 +240,11 @@ def get_networth(client_id):
             Investment.owner1_id != None,
             Investment.owner2_id == client_id).all()
 
-        sole_lifestyle_assets = OtherAsset.query.filter(
+        sole_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == None,
             OtherAsset.owner2_id == client_id).all()
 
-        joint_lifestyle_assets = OtherAsset.query.filter(
+        joint_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id != None,
             OtherAsset.owner2_id == client_id).all()
 
@@ -274,15 +274,15 @@ def get_networth(client_id):
         value = get_investment_value(investment.id).get_json()["total_value"]
         total_joint_investments += (value * 0.5)
 
-    total_sole_lifestyle_assets = 0
-    for lifestyle_asset in sole_lifestyle_assets:
-        value = float(lifestyle_asset.value)
-        total_sole_lifestyle_assets += value
+    total_sole_otherassets = 0
+    for otherasset in sole_otherassets:
+        value = float(otherasset.value)
+        total_sole_otherassets += value
 
-    total_joint_lifestyle_assets = 0
-    for lifestyle_asset in joint_lifestyle_assets:
-        value = float(lifestyle_asset.value)
-        total_joint_lifestyle_assets += (value * 0.5)
+    total_joint_otherassets = 0
+    for otherasset in joint_otherassets:
+        value = float(otherasset.value)
+        total_joint_otherassets += (value * 0.5)
 
     total_sole_properties = 0
     for property in sole_properties:
@@ -304,7 +304,7 @@ def get_networth(client_id):
         value = float(liability.amount_outstanding)
         total_joint_liabilities += (value * 0.5)
 
-    networth = total_sole_investments + total_joint_investments + total_sole_lifestyle_assets + total_joint_lifestyle_assets + \
+    networth = total_sole_investments + total_joint_investments + total_sole_otherassets + total_joint_otherassets + \
         total_sole_properties + total_joint_properties - \
         total_sole_liabilities - total_joint_liabilities
 
@@ -329,12 +329,11 @@ def get_networth(client_id):
             liability_breakdown[keyname.replace("-", "_")] += float(
                 joint_liability.amount_outstanding) * 0.5
 
-
     return jsonify(
         total_sole_investments=total_sole_investments,
         total_joint_investments=total_joint_investments,
-        total_sole_lifestyle_assets=total_sole_lifestyle_assets,
-        total_joint_lifestyle_assets=total_joint_lifestyle_assets,
+        total_sole_otherassets=total_sole_otherassets,
+        total_joint_otherassets=total_joint_otherassets,
         total_sole_properties=total_sole_properties,
         total_joint_properties=total_joint_properties,
         total_sole_liabilities=total_sole_liabilities,
@@ -512,7 +511,6 @@ def add_test_client():
 
     db.session.commit()
 
-
     # Create a set of liabilities and link them to an owner
 
     client_liability_secured = requests.post('http://localhost:5000/add-liability', json={
@@ -527,13 +525,14 @@ def add_test_client():
     })
 
     new_client_liability_id = client_liability_secured.json()['id']
-    Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
-    client_property.liability = Liability.query.get(int(new_client_liability_id))
+    Liability.query.get(new_client_liability_id).property = Property.query.get(
+        new_client_property_id)
+    client_property.liability = Liability.query.get(
+        int(new_client_liability_id))
     db.session.commit()
 
-
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "credit-card",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
@@ -544,13 +543,14 @@ def add_test_client():
     })
 
     new_client_liability_id = client_liability_secured.json()['id']
-    Liability.query.get(new_client_liability_id).property = Property.query.get(new_client_property_id)
-    client_property.liability = Liability.query.get(int(new_client_liability_id))
+    Liability.query.get(new_client_liability_id).property = Property.query.get(
+        new_client_property_id)
+    client_property.liability = Liability.query.get(
+        int(new_client_liability_id))
     db.session.commit()
 
-
     partner_liability_secured = requests.post('http://localhost:5000/add-liability', json={
-        "category": "Long term",
+        "category": "long-term",
         "liability_type": "holiday-home-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
@@ -561,13 +561,14 @@ def add_test_client():
     })
 
     new_partner_liability_id = partner_liability_secured.json()['id']
-    Liability.query.get(new_partner_liability_id).property = Property.query.get(new_partner_property_id)
-    partner_property.liability = Liability.query.get(int(new_partner_liability_id))
-    db.session.commit() 
-
+    Liability.query.get(new_partner_liability_id).property = Property.query.get(
+        new_partner_property_id)
+    partner_property.liability = Liability.query.get(
+        int(new_partner_liability_id))
+    db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "personal-loan",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
@@ -577,9 +578,8 @@ def add_test_client():
         "property_id": None
     })
 
-
     joint_liability_secured = requests.post('http://localhost:5000/add-liability', json={
-        "category": "Long term",
+        "category": "long-term",
         "liability_type": "buy-to-let-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
@@ -589,14 +589,14 @@ def add_test_client():
         "property_id": None
     })
 
-    new_joint_liability_id = joint_liability_secured.json()['id']    
-    Liability.query.get(new_joint_liability_id).property = Property.query.get(new_joint_property_id)
+    new_joint_liability_id = joint_liability_secured.json()['id']
+    Liability.query.get(new_joint_liability_id).property = Property.query.get(
+        new_joint_property_id)
     joint_property.liability = Liability.query.get(int(new_joint_liability_id))
     db.session.commit()
 
-
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "miscellaneous",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),

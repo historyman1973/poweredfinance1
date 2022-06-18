@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Paper } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
 import AddInvestmentForm from "./AddInvestmentForm";
-import AddLifestyleAssetForm from "./AddLifestyleAssetForm";
+import AddOtherAssetForm from "./AddOtherAssetForm";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
@@ -43,7 +43,6 @@ const style = {
   minWidth: 100,
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 export default function AddAssetForm() {
@@ -55,9 +54,9 @@ export default function AddAssetForm() {
   const handleAddInvestmentClose = () => setOpenInvestment(false);
   const [openInvestment, setOpenInvestment] = React.useState(false);
 
-  const handleAddLifestyleAssetOpen = () => setOpenLifestyleAsset(true);
-  const handleAddLifestyleAssetClose = () => setOpenLifestyleAsset(false);
-  const [openLifestyleAsset, setOpenLifestyleAsset] = React.useState(false);
+  const handleAddOtherAssetOpen = () => setOpenOtherAsset(true);
+  const handleAddOtherAssetClose = () => setOpenOtherAsset(false);
+  const [openOtherAsset, setOpenOtherAsset] = React.useState(false);
 
   return (
     <div style={{ height: "250px", margin: "10px", display: "grid" }}>
@@ -79,11 +78,11 @@ export default function AddAssetForm() {
         Investment account
       </Button>
       <Button
-        onClick={handleAddLifestyleAssetOpen}
+        onClick={handleAddOtherAssetOpen}
         variant="outlined"
         style={{ margin: 10, marginBottom: 10 }}
       >
-        Lifestyle Asset
+        Other Asset
       </Button>
       <StyledModal
         aria-labelledby="unstyled-modal-title"
@@ -110,12 +109,12 @@ export default function AddAssetForm() {
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={openLifestyleAsset}
-        onClose={handleAddLifestyleAssetClose}
+        open={openOtherAsset}
+        onClose={handleAddOtherAssetClose}
         BackdropComponent={Backdrop}
       >
         <Paper sx={style}>
-          <AddLifestyleAssetForm />
+          <AddOtherAssetForm />
         </Paper>
       </StyledModal>
     </div>

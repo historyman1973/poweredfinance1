@@ -5,7 +5,7 @@ import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import AssetOverviewOther from "../AssetOverviewOther";
 import LiabilityOverview from "./LiabilityOverview";
 import {
   formatLiabilityCategory,
@@ -36,7 +36,7 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const styleLifestyle = {
+const styleOther = {
   p: 2,
   px: 4,
   pb: 3,
@@ -107,10 +107,10 @@ const styleLiability = {
 function AssetLiabilityTable({
   properties,
   investments,
-  lifestyleAssets,
+  otherAssets,
   liabilities,
 }) {
-  const rows = Array();
+  const rows = [];
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
@@ -120,9 +120,9 @@ function AssetLiabilityTable({
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
 
-  const handleViewLifestyleClose = () => setOpenViewLifestyle(false);
-  const [openViewLifestyle, setOpenViewLifestyle] = React.useState(false);
-  const [lifestyle, setLifestyle] = React.useState(false);
+  const handleViewOtherClose = () => setOpenViewOther(false);
+  const [openViewOther, setOpenViewOther] = React.useState(false);
+  const [other, setOther] = React.useState(false);
 
   const handleViewLiabilityClose = () => setOpenViewLiability(false);
   const [openViewLiability, setOpenViewLiability] = React.useState(false);
@@ -135,55 +135,50 @@ function AssetLiabilityTable({
     } else if (category === "Investment") {
       setInvestment(id);
       setOpenViewInvestment(true);
-    } else if (category === "Lifestyle Asset") {
-      setLifestyle(id);
-      setOpenViewLifestyle(true);
+    } else if (category === "Other Asset") {
+      setOther(id);
+      setOpenViewOther(true);
+    } else if (category === "Long term" || category === "Short term") {
+      setLiability(id);
+      setOpenViewLiability(true);
     }
   };
 
-  {
-    properties.map((property) =>
-      rows.push({
-        description: property.address,
-        id: property.id,
-        category: "Property",
-        value: currencyFormat(parseFloat(property.value)),
-      })
-    );
-  }
+  properties.map((property) =>
+    rows.push({
+      description: property.address,
+      id: property.id,
+      category: "Property",
+      value: currencyFormat(parseFloat(property.value)),
+    })
+  );
 
-  {
-    investments.map((investment) =>
-      rows.push({
-        description: investment.provider,
-        id: investment.investment_id,
-        category: "Investment",
-        value: currencyFormat(parseFloat(investment.current_value)),
-      })
-    );
-  }
+  investments.map((investment) =>
+    rows.push({
+      description: investment.provider,
+      id: investment.investment_id,
+      category: "Investment",
+      value: currencyFormat(parseFloat(investment.current_value)),
+    })
+  );
 
-  {
-    lifestyleAssets.map((lifestyleAsset) =>
-      rows.push({
-        description: lifestyleAsset.description,
-        id: lifestyleAsset.id,
-        category: "Lifestyle Asset",
-        value: currencyFormat(parseFloat(lifestyleAsset.value)),
-      })
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    rows.push({
+      description: otherAsset.description,
+      id: otherAsset.id,
+      category: "Other Asset",
+      value: currencyFormat(parseFloat(otherAsset.value)),
+    })
+  );
 
-  {
-    liabilities.map((liability) =>
-      rows.push({
-        description: formatLiabilityType(liability.liability_type),
-        id: liability.id,
-        category: formatLiabilityCategory(liability.category),
-        value: currencyFormat(parseFloat(liability.amount_outstanding)),
-      })
-    );
-  }
+  liabilities.map((liability) =>
+    rows.push({
+      description: formatLiabilityType(liability.liability_type),
+      id: liability.id,
+      category: formatLiabilityCategory(liability.category),
+      value: currencyFormat(parseFloat(liability.amount_outstanding)),
+    })
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -230,12 +225,12 @@ function AssetLiabilityTable({
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={openViewLifestyle}
-        onClose={handleViewLifestyleClose}
+        open={openViewOther}
+        onClose={handleViewOtherClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={styleLifestyle}>
-          <AssetOverviewLifestyle id={lifestyle} />
+        <Paper sx={styleOther}>
+          <AssetOverviewOther id={other} />
         </Paper>
       </StyledModal>
       <StyledModal

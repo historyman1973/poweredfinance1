@@ -30,10 +30,10 @@ export default function AddLiabilityForm() {
     setErrors({
       ...temp,
     });
-    return Object.values(temp).every((x) => x == "");
+    return Object.values(temp).every((x) => x === "");
   };
 
-  const { values, setValues, handleInputChange, errors, setErrors } =
+  const { values, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
   const handleSubmit = async (e) => {
@@ -49,10 +49,7 @@ export default function AddLiabilityForm() {
 
   const addLiability = async (values) => {
     try {
-      const res = await axios.post(
-        `http://127.0.0.1:5000/add-liability`,
-        values
-      );
+      await axios.post(`http://127.0.0.1:5000/add-liability`, values);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -111,8 +108,8 @@ export default function AddLiabilityForm() {
                 value={values.category}
                 onChange={handleInputChange}
               >
-                <MenuItem value={"secured"}>Secured</MenuItem>
-                <MenuItem value={"unsecured"}>Unsecured</MenuItem>
+                <MenuItem value={"long-term"}>Long term</MenuItem>
+                <MenuItem value={"short-term"}>Short term</MenuItem>
               </Select>
             </FormControl>
             <Controls.Input

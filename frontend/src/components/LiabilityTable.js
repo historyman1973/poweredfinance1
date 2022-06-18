@@ -33,25 +33,6 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const styleLifestyle = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "50%",
-  minWidth: "50%",
-  height: "50%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-  p: 4,
-};
-
 const style = {
   p: 2,
   px: 4,
@@ -59,7 +40,6 @@ const style = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -68,11 +48,10 @@ const style = {
   height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function LiabilityTable({ liabilities }) {
-  const rows = Array();
+  const rows = [];
 
   const handleClose = () => setOpen(false);
   const [open, setOpen] = React.useState(false);
@@ -83,19 +62,17 @@ function LiabilityTable({ liabilities }) {
     setOpen(true);
   };
 
-  {
-    liabilities.map((liability) =>
-      rows.push({
-        id: liability.id,
-        category: formatLiabilityCategory(liability.category),
-        liability_type: formatLiabilityType(liability.liability_type),
-        amount_borrowed: currencyFormat(parseFloat(liability.amount_borrowed)),
-        amount_outstanding: currencyFormat(
-          parseFloat(liability.amount_outstanding)
-        ),
-      })
-    );
-  }
+  liabilities.map((liability) =>
+    rows.push({
+      id: liability.id,
+      category: formatLiabilityCategory(liability.category),
+      liability_type: formatLiabilityType(liability.liability_type),
+      amount_borrowed: currencyFormat(parseFloat(liability.amount_borrowed)),
+      amount_outstanding: currencyFormat(
+        parseFloat(liability.amount_outstanding)
+      ),
+    })
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
