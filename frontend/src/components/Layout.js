@@ -8,7 +8,7 @@ import Settings from "../settings";
 import Support from "../support";
 import SecurityDrilldown from "../securityDrilldown";
 import AssetOverviewProperty from "../AssetOverviewProperty";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import AssetOverviewOther from "../AssetOverviewOther";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 
 const Layout = () => {
@@ -16,10 +16,6 @@ const Layout = () => {
     <Routes>
       <Route path="/" element={<Clients />}></Route>
       <Route path="/dashboard/*" element={<Dashboard />}></Route>
-      <Route
-        path="/assets/:id/investment/:investmentid"
-        element={<AssetOverviewInvestment />}
-      ></Route>
       <Route path="/assets/:id" element={<Assets />}></Route>
       <Route path="/liabilities/:id" element={<Liabilities />}></Route>
       <Route path="/settings/:id" element={<Settings />}></Route>

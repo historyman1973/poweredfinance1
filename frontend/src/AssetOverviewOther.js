@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function AssetOverviewLifestyle(id) {
-  const [lifestyleAsset, setLifestyleAsset] = useState([]);
+function AssetOverviewOther(id) {
+  const [otherAsset, setOtherAsset] = useState([]);
 
-  const getLifestyleAsset = async () => {
+  const getOtherAsset = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-lifestyle-asset/` + id.id
+      `http://127.0.0.1:5000/get-otherasset/` + id.id
     );
-    setLifestyleAsset(res.data || []);
+    setOtherAsset(res.data || []);
   };
 
-  useEffect(() => getLifestyleAsset(), []);
+  useEffect(() => getOtherAsset(), []);
 
   return (
     <div>
@@ -28,14 +28,14 @@ function AssetOverviewLifestyle(id) {
             padding: 5,
           }}
         >
-          <h1>{lifestyleAsset.description}</h1>
+          <h1>{otherAsset.description}</h1>
           <hr />
-          <h3>{lifestyleAsset.value}</h3>
-          <h3>{lifestyleAsset.asset_type}</h3>
+          <h3>{otherAsset.value}</h3>
+          <h3>{otherAsset.asset_type}</h3>
         </div>
       </div>
     </div>
   );
 }
 
-export default AssetOverviewLifestyle;
+export default AssetOverviewOther;

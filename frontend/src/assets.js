@@ -69,11 +69,11 @@ function Assets() {
 
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
-  const [lifestyleAssets, setLifestyleAssets] = useState([]);
+  const [otherAssets, setOtherAssets] = useState([]);
 
   const [investmentTotal, setInvestmentTotal] = useState([]);
   const [propertyTotal, setPropertyTotal] = useState([]);
-  const [lifestyleTotal, setLifestyleTotal] = useState([]);
+  const [otherTotal, setOtherTotal] = useState([]);
   const [totalAssets, setTotalAssets] = useState([]);
 
   const barData = [["Description", "Value"]];
@@ -91,11 +91,8 @@ function Assets() {
   }
 
   {
-    lifestyleAssets.map((lifestyleAsset) =>
-      barData.push([
-        lifestyleAsset.description,
-        parseFloat(lifestyleAsset.value),
-      ])
+    otherAssets.map((otherAsset) =>
+      barData.push([otherAsset.description, parseFloat(otherAsset.value)])
     );
   }
 
@@ -106,10 +103,10 @@ function Assets() {
     );
     const totalAssets =
       res.data.total_joint_investments +
-      res.data.total_joint_lifestyle_assets +
+      res.data.total_joint_other_assets +
       res.data.total_joint_properties +
       res.data.total_sole_investments +
-      res.data.total_sole_lifestyle_assets +
+      res.data.total_sole_other_assets +
       res.data.total_sole_properties;
     setTotalAssets(totalAssets || []);
     setInvestmentTotal(
@@ -118,9 +115,8 @@ function Assets() {
     setPropertyTotal(
       res.data.total_sole_properties + res.data.total_joint_properties || []
     );
-    setLifestyleTotal(
-      res.data.total_sole_lifestyle_assets +
-        res.data.total_joint_lifestyle_assets || []
+    setOtherTotal(
+      res.data.total_sole_other_assets + res.data.total_joint_other_assets || []
     );
   };
 
@@ -132,12 +128,12 @@ function Assets() {
     setProperties(res.data || []);
   };
 
-  const getLifestyleAssets = async () => {
+  const getOtherAssets = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-lifestyle-assets/` +
+      `http://127.0.0.1:5000/get-other-assets/` +
         window.location.pathname.split("/")[2]
     );
-    setLifestyleAssets(res.data || []);
+    setOtherAssets(res.data || []);
   };
 
   const getInvestments = async () => {
@@ -152,12 +148,12 @@ function Assets() {
     ["Category", "Value"],
     ["Investments", parseFloat(investmentTotal)],
     ["Properties", parseFloat(propertyTotal)],
-    ["Lifestyle Assets", parseFloat(lifestyleTotal)],
+    ["Other Assets", parseFloat(otherTotal)],
   ];
 
   useEffect(() => getProperties(), []);
   useEffect(() => getInvestments(), []);
-  useEffect(() => getLifestyleAssets(), []);
+  useEffect(() => getOtherAssets(), []);
   useEffect(() => getTotalAssets(), []);
 
   const options = {
@@ -306,7 +302,7 @@ function Assets() {
               class="padding-left-right"
               properties={properties}
               investments={investments}
-              lifestyleAssets={lifestyleAssets}
+              otherAssets={otherAssets}
             />
           </div>
         </div>

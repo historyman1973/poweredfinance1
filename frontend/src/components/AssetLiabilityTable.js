@@ -5,7 +5,7 @@ import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
-import AssetOverviewLifestyle from "../AssetOverviewLifestyle";
+import AssetOverviewOther from "../AssetOverviewOther";
 import LiabilityOverview from "./LiabilityOverview";
 import {
   formatLiabilityCategory,
@@ -36,7 +36,7 @@ const StyledModal = styled(ModalUnstyled)`
   justify-content: center;
 `;
 
-const styleLifestyle = {
+const styleOther = {
   p: 2,
   px: 4,
   pb: 3,
@@ -107,7 +107,7 @@ const styleLiability = {
 function AssetLiabilityTable({
   properties,
   investments,
-  lifestyleAssets,
+  otherAssets,
   liabilities,
 }) {
   const rows = Array();
@@ -120,9 +120,9 @@ function AssetLiabilityTable({
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
 
-  const handleViewLifestyleClose = () => setOpenViewLifestyle(false);
-  const [openViewLifestyle, setOpenViewLifestyle] = React.useState(false);
-  const [lifestyle, setLifestyle] = React.useState(false);
+  const handleViewOtherClose = () => setOpenViewOther(false);
+  const [openViewOther, setOpenViewOther] = React.useState(false);
+  const [other, setOther] = React.useState(false);
 
   const handleViewLiabilityClose = () => setOpenViewLiability(false);
   const [openViewLiability, setOpenViewLiability] = React.useState(false);
@@ -135,9 +135,9 @@ function AssetLiabilityTable({
     } else if (category === "Investment") {
       setInvestment(id);
       setOpenViewInvestment(true);
-    } else if (category === "Lifestyle Asset") {
-      setLifestyle(id);
-      setOpenViewLifestyle(true);
+    } else if (category === "Other Asset") {
+      setOther(id);
+      setOpenViewOther(true);
     }
   };
 
@@ -164,12 +164,12 @@ function AssetLiabilityTable({
   }
 
   {
-    lifestyleAssets.map((lifestyleAsset) =>
+    otherAssets.map((otherAsset) =>
       rows.push({
-        description: lifestyleAsset.description,
-        id: lifestyleAsset.id,
-        category: "Lifestyle Asset",
-        value: currencyFormat(parseFloat(lifestyleAsset.value)),
+        description: otherAsset.description,
+        id: otherAsset.id,
+        category: "Other Asset",
+        value: currencyFormat(parseFloat(otherAsset.value)),
       })
     );
   }
@@ -230,12 +230,12 @@ function AssetLiabilityTable({
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={openViewLifestyle}
-        onClose={handleViewLifestyleClose}
+        open={openViewOther}
+        onClose={handleViewOtherClose}
         BackdropComponent={Backdrop}
       >
-        <Paper sx={styleLifestyle}>
-          <AssetOverviewLifestyle id={lifestyle} />
+        <Paper sx={styleOther}>
+          <AssetOverviewOther id={other} />
         </Paper>
       </StyledModal>
       <StyledModal

@@ -12,7 +12,7 @@ function Dashboard() {
 
   const [investmentTotal, setInvestmentTotal] = useState([]);
   const [propertyTotal, setPropertyTotal] = useState([]);
-  const [lifestyleTotal, setLifestyleTotal] = useState([]);
+  const [otherTotal, setOtherTotal] = useState([]);
   const [mortgageTotal, setMortgageTotal] = useState([]);
   const [creditCardTotal, setCreditCardTotal] = useState([]);
   const [loanTotal, setLoanTotal] = useState([]);
@@ -20,7 +20,7 @@ function Dashboard() {
 
   const [properties, setProperties] = useState([]);
   const [investments, setInvestments] = useState([]);
-  const [lifestyleAssets, setLifestyleAssets] = useState([]);
+  const [otherAssets, setOtherAssets] = useState([]);
   const [liabilities, setLiabilities] = useState([]);
 
   const getNetworth = async () => {
@@ -36,9 +36,8 @@ function Dashboard() {
     setPropertyTotal(
       res.data.total_sole_properties + res.data.total_joint_properties || []
     );
-    setLifestyleTotal(
-      res.data.total_sole_lifestyle_assets +
-        res.data.total_joint_lifestyle_assets || []
+    setOtherTotal(
+      res.data.total_sole_otherassets + res.data.total_joint_otherassets || []
     );
     setMortgageTotal(
       (res.data.liability_breakdown.buy_to_let_mortgage || 0) +
@@ -57,8 +56,8 @@ function Dashboard() {
       `http://127.0.0.1:5000/get-properties/` +
         window.location.pathname.split("/")[2]
     );
-    const lifestyleAssets = await axios.get(
-      `http://127.0.0.1:5000/get-lifestyle-assets/` +
+    const otherAssets = await axios.get(
+      `http://127.0.0.1:5000/get-otherassets/` +
         window.location.pathname.split("/")[2]
     );
     const investments = await axios.get(
@@ -70,7 +69,7 @@ function Dashboard() {
         window.location.pathname.split("/")[2]
     );
     setProperties(properties.data);
-    setLifestyleAssets(lifestyleAssets.data);
+    setOtherAssets(otherAssets.data);
     setInvestments(investments.data);
     setLiabilities(liabilities.data);
   };
@@ -104,7 +103,7 @@ function Dashboard() {
     ["Category", "Value"],
     ["Investments", parseFloat(investmentTotal)],
     ["Properties", parseFloat(propertyTotal)],
-    ["Lifestyle Assets", parseFloat(lifestyleTotal)],
+    ["Other Assets", parseFloat(otherTotal)],
     ["Liabilities", parseFloat(-mortgageTotal)],
   ];
 
@@ -112,7 +111,7 @@ function Dashboard() {
     ["Category", "Value"],
     ["Investments", parseFloat(investmentTotal)],
     ["Properties", parseFloat(propertyTotal)],
-    ["Lifestyle Assets", parseFloat(lifestyleTotal)],
+    ["Other Assets", parseFloat(otherTotal)],
   ];
 
   const liabilityComp = [
@@ -238,7 +237,7 @@ function Dashboard() {
           <AssetLiabilityTable
             properties={properties}
             investments={investments}
-            lifestyleAssets={lifestyleAssets}
+            otherAssets={otherAssets}
             liabilities={liabilities}
           />
         </div>

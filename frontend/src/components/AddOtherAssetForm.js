@@ -14,8 +14,7 @@ const initialFValues = {
   owner2_id: "",
 };
 
-export default function AddLifestyleAssetForm() {
-  const navigate = useNavigate();
+export default function AddOtherAssetForm() {
   const validate = () => {
     let temp = {};
     temp.value = values.value
@@ -38,20 +37,20 @@ export default function AddLifestyleAssetForm() {
     if (!validate()) e.preventDefault();
     else {
       e.preventDefault();
-      addLifestyleAsset(values);
+      addOtherAsset(values);
       window.location.reload(false);
     }
   };
 
-  const addLifestyleAsset = async (values) => {
+  const addOtherAsset = async (values) => {
     try {
       const res = await axios.post(
-        `http://127.0.0.1:5000/add-lifestyleasset`,
+        `http://127.0.0.1:5000/add-otherasset`,
         values
       );
       console.log(
         await axios.get(
-          `http://127.0.0.1:5000/get-lifestyle-assets/` +
+          `http://127.0.0.1:5000/get-otherassets/` +
             window.location.pathname.split("/")[2]
         )
       );
@@ -65,7 +64,7 @@ export default function AddLifestyleAssetForm() {
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
       <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Lifestyle Asset</h3>
+        <h3>Add Other Asset</h3>
       </div>
       <Form onSubmit={handleSubmit}>
         <Grid container>
