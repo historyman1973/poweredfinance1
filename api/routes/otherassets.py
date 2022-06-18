@@ -69,8 +69,8 @@ def delete_otherasset(otherasset_id):
 @otherassets_blueprint.route("/get-otherasset/<otherasset_id>", methods=["GET"])
 def get_otherasset(otherasset_id):
     otherasset = OtherAsset.query.get(otherasset_id)
-    if otherasset:
-        result = otherasset_schema.dump(otherasset_id)
+    result = otherasset_schema.dump(otherasset)
+    if result:
         return jsonify(result)
     else:
         return("Asset id " + otherasset_id + " doesn't exist."), 404
@@ -90,6 +90,7 @@ def get_otherassets(client_id):
         return otherassets_schema.jsonify(otherassets)
     else:
         return("Client " + client_id + " doesn't exist."), 404
+
 
 
 @otherassets_blueprint.route("/add-property", methods=["POST"])
