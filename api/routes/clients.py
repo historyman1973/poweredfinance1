@@ -416,7 +416,7 @@ def add_test_client():
         "investment_type": "Stocks and Shares ISA",
         "provider": fake.word().title(),
         "investment_ref": random.randint(10000000, 99999999),
-        "owner1_id": None,
+        "owner1_id": ids[0],
         "owner2_id": ids[1]
     })
 
@@ -488,7 +488,7 @@ def add_test_client():
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
         "value": random.randint(100000, 1000000),
-        "owner1_id": None,
+        "owner1_id": ids[0],
         "owner2_id": ids[1],
         "liability_id": None
     })
