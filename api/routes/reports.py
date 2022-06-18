@@ -20,7 +20,7 @@ def mi_client_list():
             "middle_names": client.middle_names,
             "surname": client.surname,
             "gender": client.gender,
-            "networth": "${:,.2f}".format(get_networth(client.id).get_json()["networth"])
+            # "networth": "${:,.2f}".format(get_networth(client.id).get_json()["networth"])
         }
 
         clients.append(new_client)
