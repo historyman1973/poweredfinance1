@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+    }
+</style>
+
+<body>
+    <img src='https://i.imgur.com/r4phEJF.png' class="img-fluid" width="150">
+    <h1>Client summary - {{ client.forename }} {{ client.surname }}</h1>
+    <div>
+        <h2>Investments held</h2>
+        <br>
+        <table class="table">
+            <thead>
+                <th scope="col" class="text-start">Category</th>
+                <th scope="col" class="text-start">Type</th>
+                <th scope="col" class="text-start">Provider</th>
+                <th scope="col">Plan reference</th>
+                <th scope="col">Ownership</th>
+            </thead>
+            <tbody>
+                {% for investment in investments %}
+                    <tr>
+                        <td>{{ investment.category }}</td>
+                        <td class="text-start">{{ investment.investment_type }}</td>
+                        <td class="text-start">{{ investment.provider }}</td>
+                        <td class="text-center">{{ investment.investment_ref }}</td>
+                        {% if client.isPrimary == 1 and investment.owner2_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% elif client.isPrimary == 0 and investment.owner1_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% else %}
+                        <td class="text-center">Jointly owned</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h2>Other assets held</h2>
+        <br>
+        <table class="table">
+            <thead>
+                <th scope="col" class="text-start">Type</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-end">Value</th>
+                <th scope="col">Ownership</th>
+            </thead>
+            <tbody>
+                {% for otherasset in otherassets %}
+                    <tr>
+                        <td>{{ otherasset.asset_type }}</td>
+                        <td class="text-start">{{ otherasset.description }}</td>
+                        <td class="text-end">{{ "${:,.2f}".format(otherasset.value) }}</td>
+                        {% if client.isPrimary == 1 and otherasset.owner2_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% elif client.isPrimary == 0 and otherasset.owner1_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% else %}
+                        <td class="text-center">Jointly owned</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h2>Properties owned</h2>
+        <br>
+        <table class="table">
+            <thead>
+                <th scope="col" class="text-start">Type</th>
+                <th scope="col" class="text-start">Address</th>
+                <th scope="col" class="text-end">Cost</th>
+                <th scope="col" class="text-end">Value</th>                
+                <th scope="col">Ownership</th>
+            </thead>
+            <tbody>
+                {% for property in properties %}
+                    <tr>
+                        <td>{{ property.property_type }}</td>
+                        <td class="text-start">{{ property.address }}</td>
+                        <td class="text-end">{{ "${:,.2f}".format(property.cost) }}</td>
+                        <td class="text-end">{{ "${:,.2f}".format(property.value) }}</td>
+                        {% if client.isPrimary == 1 and property.owner2_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% elif client.isPrimary == 0 and property.owner1_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% else %}
+                        <td class="text-center">Jointly owned</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h2>Liabilities owed</h2>
+        <br>
+        <table class="table">
+            <thead>
+                <th scope="col" class="text-start">Category</th>
+                <th scope="col" class="text-start">Type</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-end">Amount borrowed</th>
+                <th scope="col" class="text-end">Amount outstanding</th>                
+                <th scope="col">Ownership</th>
+            </thead>
+            <tbody>
+                {% for liability in liabilities %}
+                    <tr>
+                        <td>{{ liability.category }}</td>
+                        <td class="text-start">{{ liability.liability_type }}</td>
+                        <td class="text-start">{{ liability.description }}</td>
+                        <td class="text-end">{{ "${:,.2f}".format(liability.amount_borrowed) }}</td>
+                        <td class="text-end">{{ "${:,.2f}".format(liability.amount_outstanding) }}</td>
+                        {% if client.isPrimary == 1 and liability.owner2_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% elif client.isPrimary == 0 and liability.owner1_id is none %}
+                        <td class="text-center">Solely owned</td>
+                        {% else %}
+                        <td class="text-center">Jointly owned</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+{% endblock %}
