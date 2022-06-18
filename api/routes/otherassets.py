@@ -1,4 +1,4 @@
-from models import Client, LifestyleAsset, lifestyleasset_schema, lifestyleassets_schema, Property, property_schema, properties_schema, Liability
+from models import Client, OtherAsset, otherasset_schema, otherassets_schema, Property, property_schema, properties_schema, Liability
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -7,8 +7,8 @@ from flask.json import jsonify
 otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)
 
 
-@otherassets_blueprint.route("/add-lifestyleasset", methods=["POST"])
-def add_lifestyleasset():
+@otherassets_blueprint.route("/add-otherasset", methods=["POST"])
+def add_otherasset():
     # Initialise owners
 
     owner1 = None
@@ -41,7 +41,7 @@ def add_lifestyleasset():
             return("Client id " + str(owner2_id) + " doesn't exist."), 404
 
     if owner1 or owner2:
-        new_lifestyleasset = LifestyleAsset(
+        new_otherasset = OtherAsset(
             asset_type=asset_type,
             description=description,
             value=value,
@@ -49,45 +49,45 @@ def add_lifestyleasset():
             owner2_id=owner2_id
         )
 
-        db.session.add(new_lifestyleasset)
+        db.session.add(new_otherasset)
         db.session.commit()
 
-        return lifestyleasset_schema.jsonify(new_lifestyleasset), 201
+        return otherasset_schema.jsonify(new_otherasset), 201
 
 
-@otherassets_blueprint.route("/delete-lifestyleasset/<lifestyleasset_id>", methods=["DELETE"])
-def delete_lifestyleasset(lifestyleasset_id):
-    if LifestyleAsset.query.get(lifestyleasset_id):
-        db.session.delete(LifestyleAsset.query.get(lifestyleasset_id))
+@otherassets_blueprint.route("/delete-otherasset/<otherasset_id>", methods=["DELETE"])
+def delete_otherasset(otherasset_id):
+    if OtherAsset.query.get(otherasset_id):
+        db.session.delete(OtherAsset.query.get(otherasset_id))
         db.session.commit()
 
-        return("Lifestyle asset deleted"), 204
+        return("Asset deleted"), 204
     else:
-        return("Lifestyle asset doesn't exist"), 404
+        return("Asset doesn't exist"), 404
 
 
-@otherassets_blueprint.route("/get-lifestyle-asset/<lifestyle_asset_id>", methods=["GET"])
-def get_lifestyle_asset(lifestyle_asset_id):
-    lifestyleasset = LifestyleAsset.query.get(lifestyle_asset_id)
-    if lifestyleasset:
-        result = lifestyleasset_schema.dump(lifestyleasset)
+@otherassets_blueprint.route("/get-otherasset/<otherasset_id>", methods=["GET"])
+def get_otherasset(otherasset_id):
+    otherasset = OtherAsset.query.get(otherasset_id)
+    if otherasset:
+        result = otherasset_schema.dump(otherasset_id)
         return jsonify(result)
     else:
-        return("Asset id " + lifestyle_asset_id + " doesn't exist."), 404
+        return("Asset id " + otherasset_id + " doesn't exist."), 404
 
 
-@otherassets_blueprint.route("/get-lifestyle-assets/<client_id>", methods=["GET"])
-def get_lifestyleassets(client_id):
+@otherassets_blueprint.route("/get-otherassets/<client_id>", methods=["GET"])
+def get_otherassets(client_id):
     client = Client.query.get(client_id)
     if client:
         if client.isPrimary == True:
-            lifestyleassets = db.session.query(
-                LifestyleAsset).filter_by(owner1_id=client_id)
+            otherassets = db.session.query(
+                OtherAsset).filter_by(owner1_id=client_id)
         else:
-            lifestyleassets = db.session.query(
-                LifestyleAsset).filter_by(owner2_id=client_id)
+            otherassets = db.session.query(
+                OtherAsset).filter_by(owner2_id=client_id)
 
-        return lifestyleassets_schema.jsonify(lifestyleassets)
+        return otherassets_schema.jsonify(otherassets)
     else:
         return("Client " + client_id + " doesn't exist."), 404
 

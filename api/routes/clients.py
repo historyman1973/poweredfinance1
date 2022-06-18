@@ -1,7 +1,7 @@
 from routes.investments import delete_investment, get_investment_value, delete_transaction
 from routes.liabilities import delete_liability
-from routes.otherassets import delete_property, delete_lifestyleasset
-from models import Client, clients_schema, client_schema, Investment, LifestyleAsset, Property, Liability, Transaction, Holding, Instrument
+from routes.otherassets import delete_property, delete_otherasset, add_otherasset
+from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Holding, Instrument
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -9,9 +9,6 @@ from faker import Faker
 from faker.providers import BaseProvider
 import random
 import requests
-import json
-from routes.otherassets import add_lifestyleasset
-
 
 clients_blueprint = Blueprint('clients_blueprint', __name__)
 
@@ -148,26 +145,26 @@ def delete_client(client_id):
 
     # Same for lifestyle assets
     if Client.query.get(client_id).isPrimary == 1:
-        client_only_lifestyleassets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id == None)
+        client_only_otherassets = OtherAsset.query.filter(
+            OtherAsset.owner1_id == client_id, OtherAsset.owner2_id == None)
     else:
-        client_only_lifestyleassets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id == None)
-    for client_only_lifestyleasset in client_only_lifestyleassets:
-        delete_lifestyleasset(client_only_lifestyleasset.id)
+        client_only_otherassets = OtherAsset.query.filter(
+            OtherAsset.owner2_id == client_id, OtherAsset.owner1_id == None)
+    for client_only_otherasset in client_only_otherassets:
+        delete_otherasset(client_only_otherasset.id)
 
     # Update all joint properties to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
-        joint_lifestyleassets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id == client_id, LifestyleAsset.owner2_id != None)
-        for joint_lifestyleasset in joint_lifestyleassets:
-            LifestyleAsset.query.get(joint_lifestyleasset.id).owner1_id = None
+        joint_otherassets = OtherAsset.query.filter(
+            OtherAsset.owner1_id == client_id, OtherAsset.owner2_id != None)
+        for joint_otherasset in joint_otherassets:
+            OtherAsset.query.get(joint_otherasset.id).owner1_id = None
             db.session.commit()
     else:
-        joint_lifestyleassets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner2_id == client_id, LifestyleAsset.owner1_id != None)
-        for joint_lifestyleasset in joint_lifestyleassets:
-            LifestyleAsset.query.get(joint_lifestyleasset.id).owner2_id = None
+        joint_OtherAssets = OtherAsset.query.filter(
+            OtherAsset.owner2_id == client_id, OtherAsset.owner1_id != None)
+        for joint_OtherAsset in joint_OtherAssets:
+            OtherAsset.query.get(joint_OtherAsset.id).owner2_id = None
             db.session.commit()
 
     # Finally, delete the client
@@ -210,13 +207,13 @@ def get_networth(client_id):
             Investment.owner1_id == client_id,
             Investment.owner2_id != None).all()
 
-        sole_lifestyle_assets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id == client_id,
-            LifestyleAsset.owner2_id == None).all()
+        sole_lifestyle_assets = OtherAsset.query.filter(
+            OtherAsset.owner1_id == client_id,
+            OtherAsset.owner2_id == None).all()
 
-        joint_lifestyle_assets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id == client_id,
-            LifestyleAsset.owner2_id != None).all()
+        joint_lifestyle_assets = OtherAsset.query.filter(
+            OtherAsset.owner1_id == client_id,
+            OtherAsset.owner2_id != None).all()
 
         sole_properties = Property.query.filter(
             Property.owner1_id == client_id,
@@ -243,13 +240,13 @@ def get_networth(client_id):
             Investment.owner1_id != None,
             Investment.owner2_id == client_id).all()
 
-        sole_lifestyle_assets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id == None,
-            LifestyleAsset.owner2_id == client_id).all()
+        sole_lifestyle_assets = OtherAsset.query.filter(
+            OtherAsset.owner1_id == None,
+            OtherAsset.owner2_id == client_id).all()
 
-        joint_lifestyle_assets = LifestyleAsset.query.filter(
-            LifestyleAsset.owner1_id != None,
-            LifestyleAsset.owner2_id == client_id).all()
+        joint_lifestyle_assets = OtherAsset.query.filter(
+            OtherAsset.owner1_id != None,
+            OtherAsset.owner2_id == client_id).all()
 
         sole_properties = Property.query.filter(
             Property.owner1_id == None,
@@ -609,9 +606,9 @@ def add_test_client():
         "property_id": None
     })
 
-    # Create a set of lifestyle assets - client, partner and joint
+    # Create a set of non-investment assets - client, partner and joint
 
-    requests.post('http://localhost:5000/add-lifestyleasset', json={
+    requests.post('http://localhost:5000/add-otherasset', json={
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
@@ -619,7 +616,7 @@ def add_test_client():
         "owner2_id": None
     })
 
-    requests.post('http://localhost:5000/add-lifestyleasset', json={
+    requests.post('http://localhost:5000/add-otherasset', json={
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
@@ -627,7 +624,7 @@ def add_test_client():
         "owner2_id": ids[1]
     })
 
-    requests.post('http://localhost:5000/add-lifestyleasset', json={
+    requests.post('http://localhost:5000/add-otherasset', json={
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),

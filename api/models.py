@@ -186,8 +186,8 @@ liability_schema = LiabilitySchema()
 liabilities_schema = LiabilitySchema(many=True)
 
 
-class LifestyleAsset(db.Model):
-    __tablename__ = "lifestyle_asset"
+class OtherAsset(db.Model):
+    __tablename__ = "otherasset"
 
     id = db.Column(db.Integer, primary_key=True)
     asset_type = db.Column(db.String)
@@ -197,12 +197,12 @@ class LifestyleAsset(db.Model):
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 
     def __init__(self, **kwargs):
-        super(LifestyleAsset, self).__init__(**kwargs)
+        super(OtherAsset, self).__init__(**kwargs)
 
 
-class LifestyleAssetSchema(ma.Schema):
+class OtherAssetSchema(ma.Schema):
     class Meta:
-        model = LifestyleAsset
+        model = OtherAsset
         fields = (
             'id',
             'asset_type',
@@ -213,8 +213,8 @@ class LifestyleAssetSchema(ma.Schema):
         )
 
 
-lifestyleasset_schema = LifestyleAssetSchema()
-lifestyleassets_schema = LifestyleAssetSchema(many=True)
+otherasset_schema = OtherAssetSchema()
+otherassets_schema = OtherAssetSchema(many=True)
 
 
 class Property(db.Model):
