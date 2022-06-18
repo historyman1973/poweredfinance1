@@ -7,9 +7,6 @@ import Liabilities from "../liabilities";
 import Settings from "../settings";
 import Support from "../support";
 import SecurityDrilldown from "../securityDrilldown";
-import AssetOverviewProperty from "../AssetOverviewProperty";
-import AssetOverviewOther from "../AssetOverviewOther";
-import AssetOverviewInvestment from "../AssetOverviewInvestment";
 
 const Layout = () => {
   return (

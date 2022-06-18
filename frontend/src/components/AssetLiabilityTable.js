@@ -110,7 +110,7 @@ function AssetLiabilityTable({
   otherAssets,
   liabilities,
 }) {
-  const rows = Array();
+  const rows = [];
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
@@ -138,52 +138,47 @@ function AssetLiabilityTable({
     } else if (category === "Other Asset") {
       setOther(id);
       setOpenViewOther(true);
+    } else if (category === "Long term" || category === "Short term") {
+      setLiability(id);
+      setOpenViewLiability(true);
     }
   };
 
-  {
-    properties.map((property) =>
-      rows.push({
-        description: property.address,
-        id: property.id,
-        category: "Property",
-        value: currencyFormat(parseFloat(property.value)),
-      })
-    );
-  }
+  properties.map((property) =>
+    rows.push({
+      description: property.address,
+      id: property.id,
+      category: "Property",
+      value: currencyFormat(parseFloat(property.value)),
+    })
+  );
 
-  {
-    investments.map((investment) =>
-      rows.push({
-        description: investment.provider,
-        id: investment.investment_id,
-        category: "Investment",
-        value: currencyFormat(parseFloat(investment.current_value)),
-      })
-    );
-  }
+  investments.map((investment) =>
+    rows.push({
+      description: investment.provider,
+      id: investment.investment_id,
+      category: "Investment",
+      value: currencyFormat(parseFloat(investment.current_value)),
+    })
+  );
 
-  {
-    otherAssets.map((otherAsset) =>
-      rows.push({
-        description: otherAsset.description,
-        id: otherAsset.id,
-        category: "Other Asset",
-        value: currencyFormat(parseFloat(otherAsset.value)),
-      })
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    rows.push({
+      description: otherAsset.description,
+      id: otherAsset.id,
+      category: "Other Asset",
+      value: currencyFormat(parseFloat(otherAsset.value)),
+    })
+  );
 
-  {
-    liabilities.map((liability) =>
-      rows.push({
-        description: formatLiabilityType(liability.liability_type),
-        id: liability.id,
-        category: formatLiabilityCategory(liability.category),
-        value: currencyFormat(parseFloat(liability.amount_outstanding)),
-      })
-    );
-  }
+  liabilities.map((liability) =>
+    rows.push({
+      description: formatLiabilityType(liability.liability_type),
+      id: liability.id,
+      category: formatLiabilityCategory(liability.category),
+      value: currencyFormat(parseFloat(liability.amount_outstanding)),
+    })
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },

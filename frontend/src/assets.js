@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
@@ -49,7 +40,6 @@ const style = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -57,7 +47,6 @@ const style = {
   minWidth: 400,
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function Assets() {
@@ -78,23 +67,17 @@ function Assets() {
 
   const barData = [["Description", "Value"]];
 
-  {
-    properties.map((property) =>
-      barData.push([property.address, parseFloat(property.value)])
-    );
-  }
+  properties.map((property) =>
+    barData.push([property.address, parseFloat(property.value)])
+  );
 
-  {
-    investments.map((investment) =>
-      barData.push([investment.provider, parseFloat(investment.current_value)])
-    );
-  }
+  investments.map((investment) =>
+    barData.push([investment.provider, parseFloat(investment.current_value)])
+  );
 
-  {
-    otherAssets.map((otherAsset) =>
-      barData.push([otherAsset.description, parseFloat(otherAsset.value)])
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    barData.push([otherAsset.description, parseFloat(otherAsset.value)])
+  );
 
   const getTotalAssets = async () => {
     const res = await axios.get(
@@ -116,7 +99,7 @@ function Assets() {
       res.data.total_sole_properties + res.data.total_joint_properties || []
     );
     setOtherTotal(
-      res.data.total_sole_other_assets + res.data.total_joint_other_assets || []
+      res.data.total_sole_otherassets + res.data.total_joint_otherassets || []
     );
   };
 
@@ -130,7 +113,7 @@ function Assets() {
 
   const getOtherAssets = async () => {
     const res = await axios.get(
-      `http://127.0.0.1:5000/get-other-assets/` +
+      `http://127.0.0.1:5000/get-otherassets/` +
         window.location.pathname.split("/")[2]
     );
     setOtherAssets(res.data || []);
@@ -177,20 +160,6 @@ function Assets() {
   };
 
   useEffect(() => getClient(), []);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="custom-tooltip">
-          <p className="label">{`${currencyFormat(
-            parseFloat(payload[0].value)
-          )}`}</p>
-        </div>
-      );
-    }
-
-    return null;
-  };
 
   return (
     <div>

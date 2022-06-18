@@ -43,10 +43,10 @@ export default function AddTransactionForm(investment_id) {
     setErrors({
       ...temp,
     });
-    return Object.values(temp).every((x) => x == "");
+    return Object.values(temp).every((x) => x === "");
   };
 
-  const { values, setValues, handleInputChange, errors, setErrors } =
+  const { values, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
   const handleSubmit = async (e) => {
@@ -61,10 +61,7 @@ export default function AddTransactionForm(investment_id) {
 
   const addTransaction = async (values) => {
     try {
-      const res = await axios.post(
-        `http://127.0.0.1:5000/add-transaction`,
-        values
-      );
+      await axios.post(`http://127.0.0.1:5000/add-transaction`, values);
       // setLoading(false);
     } catch (error) {
       console.log(error);

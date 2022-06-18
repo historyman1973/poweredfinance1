@@ -4,7 +4,6 @@ import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   asset_type: "",
@@ -27,10 +26,10 @@ export default function AddOtherAssetForm() {
     setErrors({
       ...temp,
     });
-    return Object.values(temp).every((x) => x == "");
+    return Object.values(temp).every((x) => x === "");
   };
 
-  const { values, setValues, handleInputChange, errors, setErrors } =
+  const { values, handleInputChange, errors, setErrors } =
     useForm(initialFValues);
 
   const handleSubmit = async (e) => {
@@ -44,17 +43,7 @@ export default function AddOtherAssetForm() {
 
   const addOtherAsset = async (values) => {
     try {
-      const res = await axios.post(
-        `http://127.0.0.1:5000/add-otherasset`,
-        values
-      );
-      console.log(
-        await axios.get(
-          `http://127.0.0.1:5000/get-otherassets/` +
-            window.location.pathname.split("/")[2]
-        )
-      );
-      // setLoading(false);
+      await axios.post(`http://127.0.0.1:5000/add-otherasset`, values);
     } catch (error) {
       console.log(error);
       toast.error(error.message);

@@ -6,7 +6,6 @@ import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewOther from "../AssetOverviewOther";
-import axios from "axios";
 import { currencyFormat } from "../components/GlobalFunctions";
 
 const Backdrop = styled("div")`
@@ -39,7 +38,6 @@ const styleOther = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -48,7 +46,6 @@ const styleOther = {
   height: "50%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 const styleProperty = {
@@ -58,7 +55,6 @@ const styleProperty = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -67,7 +63,6 @@ const styleProperty = {
   height: "60%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 const styleInvestment = {
@@ -77,7 +72,6 @@ const styleInvestment = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -86,11 +80,10 @@ const styleInvestment = {
   height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function AssetTable({ properties, investments, otherAssets }) {
-  const rows = Array();
+  const rows = [];
 
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
@@ -117,38 +110,32 @@ function AssetTable({ properties, investments, otherAssets }) {
     }
   };
 
-  {
-    properties.map((property) =>
-      rows.push({
-        description: property.address,
-        id: property.id,
-        category: "Property",
-        value: currencyFormat(parseFloat(property.value)),
-      })
-    );
-  }
+  properties.map((property) =>
+    rows.push({
+      description: property.address,
+      id: property.id,
+      category: "Property",
+      value: currencyFormat(parseFloat(property.value)),
+    })
+  );
 
-  {
-    investments.map((investment) =>
-      rows.push({
-        description: investment.provider,
-        id: investment.investment_id,
-        category: "Investment",
-        value: currencyFormat(parseFloat(investment.current_value)),
-      })
-    );
-  }
+  investments.map((investment) =>
+    rows.push({
+      description: investment.provider,
+      id: investment.investment_id,
+      category: "Investment",
+      value: currencyFormat(parseFloat(investment.current_value)),
+    })
+  );
 
-  {
-    otherAssets.map((otherAsset) =>
-      rows.push({
-        description: otherAsset.description,
-        id: otherAsset.id,
-        category: "Other Asset",
-        value: currencyFormat(parseFloat(otherAsset.value)),
-      })
-    );
-  }
+  otherAssets.map((otherAsset) =>
+    rows.push({
+      description: otherAsset.description,
+      id: otherAsset.id,
+      category: "Other Asset",
+      value: currencyFormat(parseFloat(otherAsset.value)),
+    })
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },

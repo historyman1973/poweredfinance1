@@ -532,7 +532,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "credit-card",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
@@ -550,7 +550,7 @@ def add_test_client():
     db.session.commit()
 
     partner_liability_secured = requests.post('http://localhost:5000/add-liability', json={
-        "category": "Long term",
+        "category": "long-term",
         "liability_type": "holiday-home-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
@@ -568,7 +568,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "personal-loan",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
@@ -579,7 +579,7 @@ def add_test_client():
     })
 
     joint_liability_secured = requests.post('http://localhost:5000/add-liability', json={
-        "category": "Long term",
+        "category": "long-term",
         "liability_type": "buy-to-let-mortgage",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(100000, 1000000),
@@ -596,7 +596,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
-        "category": "Short term",
+        "category": "short-term",
         "liability_type": "miscellaneous",
         "description": fake.word().title(),
         "amount_borrowed": random.randint(1000, 10000),
