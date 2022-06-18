@@ -6,3 +6,5 @@
 Powered Finance is a comprehensive tool to track and measure your net worth by providing simple yet valuable insight into what you own and what you owe.
 
 It's based on React (frontend) and Python Flask (backend). 
+
+![pF logo long](https://i.imgur.com/5upfeud.png)
