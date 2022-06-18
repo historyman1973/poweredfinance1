@@ -4,14 +4,15 @@ import axios from "axios";
 function AssetOverviewOther(id) {
   const [otherAsset, setOtherAsset] = useState([]);
 
-  useEffect((id) => {
-    const getOtherAsset = async () => {
+  useEffect(() => {
+    const getOtherAsset = async (id) => {
       const res = await axios.get(
         `http://127.0.0.1:5000/get-otherasset/` + id.id
       );
       setOtherAsset(res.data || []);
+      console.log(res.data);
     };
-    getOtherAsset();
+    getOtherAsset(id);
   }, []);
 
   return (

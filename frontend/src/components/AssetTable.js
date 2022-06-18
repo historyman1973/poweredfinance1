@@ -58,9 +58,9 @@ const styleProperty = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: "60%",
-  minWidth: "60%",
-  height: "60%",
+  maxWidth: "80%",
+  minWidth: "80%",
+  height: "80%",
   bgcolor: "#ffffff",
   boxShadow: 24,
 };
@@ -114,6 +114,7 @@ function AssetTable({ properties, investments, otherAssets }) {
     rows.push({
       description: property.address,
       id: rows.length + 1,
+      assetId: property.id,
       category: "Property",
       value: currencyFormat(parseFloat(property.value)),
     })
@@ -123,6 +124,7 @@ function AssetTable({ properties, investments, otherAssets }) {
     rows.push({
       description: investment.provider,
       id: rows.length + 1,
+      assetId: investment.investment_id,
       category: "Investment",
       value: currencyFormat(parseFloat(investment.current_value)),
     })
@@ -132,13 +134,15 @@ function AssetTable({ properties, investments, otherAssets }) {
     rows.push({
       description: otherAsset.description,
       id: rows.length + 1,
+      assetId: otherAsset.id,
       category: "Other Asset",
       value: currencyFormat(parseFloat(otherAsset.value)),
     })
   );
 
   const columns = [
-    { field: "id", headerName: "ID", width: 100 },
+    { field: "id", headerName: "Table ID", width: 100 },
+    { field: "assetId", headerName: "ID", width: 100 },
     { field: "description", headerName: "Description", width: 300 },
     { field: "category", headerName: "Category", width: 130 },
     { field: "value", headerName: "Value", width: 130 },
@@ -147,7 +151,9 @@ function AssetTable({ properties, investments, otherAssets }) {
       headerName: "View",
       width: 150,
       renderCell: (params) => (
-        <Button onClick={() => handleClick(params.row.category, params.row.id)}>
+        <Button
+          onClick={() => handleClick(params.row.category, params.row.assetId)}
+        >
           View
         </Button>
       ),

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
+import Chart from "react-google-charts";
 
 function AssetOverviewProperty(id) {
   const [property, setProperty] = useState([]);
@@ -26,42 +27,84 @@ function AssetOverviewProperty(id) {
     }
   };
 
+  const barData = [["A", "Amount"]];
+  barData.push(["Cost", parseFloat(property.cost)]);
+  barData.push(["Value", parseFloat(property.value)]);
+
+  const options = {
+    legend: "none",
+    chartArea: { width: "90%", height: "90%" },
+    pieHole: 0.4,
+    colors: ["ffa6ff", "ff54ff", "ff00ff", "ba00ba", "730073"],
+  };
+
+  const returnValueChange = (change) => {
+    if (change > 0) {
+      return (
+        <CurrencyFormat
+          value={property.value - property.cost}
+          displayType={"text"}
+          thousandSeparator={true}
+          prefix={"(+£"}
+          suffix={")"}
+          decimalScale="2"
+          fixedDecimalScale="true"
+        />
+      );
+    } else {
+      return (
+        <CurrencyFormat
+          value={property.value - property.cost}
+          displayType={"text"}
+          thousandSeparator={true}
+          prefix={"(-£"}
+          suffix={")"}
+          decimalScale="2"
+          fixedDecimalScale="true"
+        />
+      );
+    }
+  };
+
   return (
-    <div>
+    <div style={{ margin: "auto" }}>
       <div
-        class="main-container"
-        style={{ width: "80%", margin: "auto", marginTop: 25 }}
+        style={{
+          height: "auto",
+          marginLeft: "10%",
+          marginRight: "10%",
+          marginTop: 20,
+          padding: 5,
+        }}
       >
-        <div
-          style={{
-            height: "auto",
-            marginLeft: "10%",
-            marginRight: "10%",
-            marginTop: 20,
-            padding: 5,
-          }}
-        >
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
           <h1>{property.address}</h1>
-          <hr />
+        </div>
+        <hr />
+        <div style={{ textAlign: "center", marginTop: "5px" }}>
           <h3>{getReadableType(property.property_type)}</h3>
-          Value:
-          <CurrencyFormat
-            value={property.value}
-            displayType={"text"}
-            thousandSeparator={true}
-            prefix={" £"}
-            decimalScale="2"
-            fixedDecimalScale="true"
-          />
-          <br />
-          Cost:
-          <CurrencyFormat
-            value={property.cost}
-            displayType={"text"}
-            thousandSeparator={true}
-            prefix={" £"}
-            decimalScale="2"
-            fixedDecimalScale="true"
+        </div>
+        <h4>
+          <div style={{ marginTop: "30px", textAlign: "center" }}>
+            Value:
+            <CurrencyFormat
+              value={property.value}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={" £"}
+              decimalScale="2"
+              fixedDecimalScale="true"
+            />{" "}
+            {returnValueChange(property.value - property.cost)}
+          </div>
+        </h4>
+        <div style={{ marginTop: "20px" }}>
+          <Chart
+            chartType="BarChart"
+            width="100%"
+            height="400px"
+            data={barData}
+            options={options}
           />
         </div>
       </div>
