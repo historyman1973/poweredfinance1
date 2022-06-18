@@ -26,10 +26,11 @@ export default function AddTransactionForm(investment_id) {
   };
 
   const [datePicked, setDatePicked] = React.useState(
-    new Date("2022-01-01T10:00:00")
+    new Date("2014-08-18T21:11:54")
   );
-  const handleDateChange = (newDate) => {
-    setDatePicked(newDate);
+
+  const handleDateChange = (newDatePicked) => {
+    setDatePicked(newDatePicked);
   };
 
   const validate = () => {
