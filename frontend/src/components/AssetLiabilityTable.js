@@ -147,7 +147,7 @@ function AssetLiabilityTable({
   properties.map((property) =>
     rows.push({
       description: property.address,
-      id: property.id,
+      id: rows.length + 1,
       category: "Property",
       value: currencyFormat(parseFloat(property.value)),
     })
@@ -156,7 +156,7 @@ function AssetLiabilityTable({
   investments.map((investment) =>
     rows.push({
       description: investment.provider,
-      id: investment.investment_id,
+      id: rows.length + 1,
       category: "Investment",
       value: currencyFormat(parseFloat(investment.current_value)),
     })
@@ -165,7 +165,7 @@ function AssetLiabilityTable({
   otherAssets.map((otherAsset) =>
     rows.push({
       description: otherAsset.description,
-      id: otherAsset.id,
+      id: rows.length + 1,
       category: "Other Asset",
       value: currencyFormat(parseFloat(otherAsset.value)),
     })
@@ -174,7 +174,7 @@ function AssetLiabilityTable({
   liabilities.map((liability) =>
     rows.push({
       description: formatLiabilityType(liability.liability_type),
-      id: liability.id,
+      id: rows.length + 1,
       category: formatLiabilityCategory(liability.category),
       value: currencyFormat(parseFloat(liability.amount_outstanding)),
     })

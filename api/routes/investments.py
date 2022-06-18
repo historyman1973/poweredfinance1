@@ -1,3 +1,6 @@
+from models import Client, Investment, investment_schema, investments_schema, \
+    Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
+    instrument_schema
 from multiprocessing import synchronize
 from database import db
 from flask import Blueprint, request
@@ -7,10 +10,6 @@ import csv
 from io import TextIOWrapper
 
 investments_blueprint = Blueprint('investments_blueprint', __name__)
-
-from models import Client, Investment, investment_schema, investments_schema, \
-    Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
-        instrument_schema
 
 
 @investments_blueprint.route("/get-holding-data/<investment_id>", methods=["GET"])
@@ -24,12 +23,12 @@ def get_holding_data(investment_id):
 
         data.append(
             {"holding_id": holding.id,
-            "instrument_id": instrument.id,
-            "instrument_name": instrument.name,
-            "current_units": holding.units,
-            "holding_ticker": instrument.symbol,
-            "current_value": current_value}
-            )
+             "instrument_id": instrument.id,
+             "instrument_name": instrument.name,
+             "current_units": holding.units,
+             "holding_ticker": instrument.symbol,
+             "current_value": current_value}
+        )
 
     return jsonify(data)
 
@@ -55,7 +54,6 @@ def get_instrument(instrument_id):
         return("Instrument id " + instrument_id + " doesn't exist."), 404
 
 
-
 @investments_blueprint.route("/add-investment", methods=["POST"])
 def add_investment():
     # Initialise Owners
@@ -69,7 +67,6 @@ def add_investment():
     owner1_id = request.json['owner1_id']
     owner2_id = request.json['owner2_id']
 
-
     # Check if there's a value for owner1 in the request
     if owner1_id:
         # If there is an owner1 then check it exists in the database
@@ -79,7 +76,7 @@ def add_investment():
             owner1 = check_owner1
         else:
             return("Client id " + str(owner1_id) + " doesn't exist."), 404
-    
+
     # Check if there's a value for owner2 in the request
     if owner2_id:
         # If there is an owner2 then check it exists in the database
@@ -103,6 +100,8 @@ def add_investment():
         db.session.add(new_investment)
         db.session.commit()
 
+        print(new_investment.owner1_id)
+
         return investment_schema.jsonify(new_investment), 201
 
 
@@ -113,27 +112,28 @@ def delete_investment(investment_id):
     for linked_holding in linked_holdings:
         linked_holdings_ids.append(linked_holding.id)
     print(linked_holdings_ids)
-    
-    
-    db.session.query(HoldingHistory).filter(HoldingHistory.holding_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+
+    db.session.query(HoldingHistory).filter(HoldingHistory.holding_id.in_(
+        linked_holdings_ids)).delete(synchronize_session=False)
     db.session.commit()
     # HoldingHistory.query.filter_by(HoldingHistory.holding_id.in_(linked_holdings_ids).delete())
 
     print("Moving onto transactions now")
 
-    db.session.query(Transaction).filter(Transaction.holding_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
-    db.session.commit()    
+    db.session.query(Transaction).filter(Transaction.holding_id.in_(
+        linked_holdings_ids)).delete(synchronize_session=False)
+    db.session.commit()
     # Transaction.query.filter_by(Transaction.holding_id.in_(linked_holdings_ids).delete())
 
     print("Moving onto holdings now")
 
-    db.session.query(Holding).filter(Holding.id.in_(linked_holdings_ids)).delete(synchronize_session=False)
+    db.session.query(Holding).filter(Holding.id.in_(
+        linked_holdings_ids)).delete(synchronize_session=False)
     db.session.commit()
     # Holding.query.filter_by(Holding.id.in_(linked_holdings_ids).delete())
 
     # db.session.query(investment_holdings).filter(investment_holdings.investment_id.in_(linked_holdings_ids)).delete(synchronize_session=False)
     # db.session.commit()
-
 
     db.session.delete(Investment.query.get(investment_id))
     db.session.commit()
@@ -155,15 +155,16 @@ def get_investment(investment_id):
 def get_investment_value(investment_id):
     # Given an investment ID, return it's total value across all holdings
     investment = Investment.query.get(investment_id)
-    
+
     total_value = 0
     for holding in investment.holdings:
         units = holding.units
         instrument = Instrument.query.get(holding.instrument_id)
-        current_unit_price = get_latest_data(instrument.symbol).get_json()[0]["close"]
+        current_unit_price = get_latest_data(
+            instrument.symbol).get_json()[0]["close"]
         holding_current_value = units*current_unit_price
         total_value += holding_current_value
-    
+
     return jsonify(total_value=total_value)
 
 
@@ -181,14 +182,15 @@ def get_investments(client_id):
 
     for investment in investments:
         current_investment = Investment.query.get(investment.id)
-        current_value = get_investment_value(current_investment.id).get_json()["total_value"]
+        current_value = get_investment_value(
+            current_investment.id).get_json()["total_value"]
 
         data.append(
             {"investment_id": investment.id,
-            "investment_type": investment.investment_type,
-            "provider": investment.provider,
-            "investment_ref": investment.investment_ref,
-            "current_value": current_value}
+             "investment_type": investment.investment_type,
+             "provider": investment.provider,
+             "investment_ref": investment.investment_ref,
+             "current_value": current_value}
         )
 
     return jsonify(data)
@@ -212,15 +214,16 @@ def add_transaction():
         owner2_id = request.json['owner2_id']
 
         holding = Holding.query.filter(
-                Holding.investment_id == investment_id,
-                Holding.instrument_id == instrument_id).scalar()
+            Holding.investment_id == investment_id,
+            Holding.instrument_id == instrument_id).scalar()
 
         if holding:
             # If there's already a holding, add the units to it
             holding.units = holding.units + float(units)
         else:
             # Create the holding and link it to the investment
-            holding = Holding(investment_id = investment_id, instrument_id = instrument_id, units = units)
+            holding = Holding(investment_id=investment_id,
+                              instrument_id=instrument_id, units=units)
             db.session.add(holding)
             db.session.commit()
             db.session.flush()
@@ -229,7 +232,8 @@ def add_transaction():
             db.session.commit()
 
         # Add the new transaction
-        new_transaction = Transaction(ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
+        new_transaction = Transaction(
+            ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
 
         # Link the transaction to its holding
         new_transaction.holding_id = holding.id
@@ -242,10 +246,11 @@ def add_transaction():
         db.session.commit()
 
         # Update the holding history table
-        history_update = HoldingHistory(holding_id=holding.id, units=holding.units, updated_date=tdate, transaction_id=new_transaction.id)
+        history_update = HoldingHistory(
+            holding_id=holding.id, units=holding.units, updated_date=tdate, transaction_id=new_transaction.id)
         db.session.add(history_update)
         db.session.commit()
-        db.session.flush()    
+        db.session.flush()
 
         transaction_result = transaction_schema.dump(new_transaction)
 
@@ -263,14 +268,16 @@ def delete_transaction(transaction_id):
     transaction_to_delete = Transaction.query.get(transaction_id)
     if transaction_to_delete:
         print(transaction_to_delete)
-        
+
         # Now adjust the current holdings by the number of units for the transaction
-        holding_to_amend = Holding.query.filter(Holding.id == transaction_to_delete.holding_id).scalar()
+        holding_to_amend = Holding.query.filter(
+            Holding.id == transaction_to_delete.holding_id).scalar()
         if holding_to_amend:
             holding_to_amend.units -= transaction_to_delete.units
 
         # Delete the HoldingHistory record to remove the units from the transaction from the history
-        holdinghistory_to_delete = HoldingHistory.query.filter(HoldingHistory.transaction_id == transaction_to_delete.id).scalar()
+        holdinghistory_to_delete = HoldingHistory.query.filter(
+            HoldingHistory.transaction_id == transaction_to_delete.id).scalar()
         if holdinghistory_to_delete:
             db.session.delete(holdinghistory_to_delete)
             db.session.commit()
@@ -302,8 +309,9 @@ def get_transactions(grouping, group_id):
             for holding in holdings:
                 target_holdings.append(holding.id)
 
-            transactions = Transaction.query.filter(Transaction.holding_id.in_(target_holdings)).order_by(Transaction.tdate).all()
-            
+            transactions = Transaction.query.filter(Transaction.holding_id.in_(
+                target_holdings)).order_by(Transaction.tdate).all()
+
             result = transactions_schema.dump(transactions)
             return jsonify(result)
         else:
@@ -312,7 +320,8 @@ def get_transactions(grouping, group_id):
     elif grouping == "holding":
         holding = Holding.query.get(group_id)
         if holding:
-            transactions = Transaction.query.filter(Transaction.holding_id == group_id).order_by(Transaction.tdate).all()
+            transactions = Transaction.query.filter(
+                Transaction.holding_id == group_id).order_by(Transaction.tdate).all()
 
             result = transactions_schema.dump(transactions)
             return jsonify(result)
@@ -323,10 +332,12 @@ def get_transactions(grouping, group_id):
         client = Client.query.get(group_id)
         if client:
             if client.isPrimary == True:
-                transactions = Transaction.query.filter(Transaction.owner1_id == group_id).order_by(Transaction.tdate).all()
+                transactions = Transaction.query.filter(
+                    Transaction.owner1_id == group_id).order_by(Transaction.tdate).all()
             elif client.isPrimary == False:
-                transactions = Transaction.query.filter(Transaction.owner2_id == group_id).order_by(Transaction.tdate).all()
-            
+                transactions = Transaction.query.filter(
+                    Transaction.owner2_id == group_id).order_by(Transaction.tdate).all()
+
             result = transactions_schema.dump(transactions)
             return jsonify(result)
         else:
@@ -349,8 +360,8 @@ def upload_instruments():
                 volume=row[8],
                 sector=row[9],
                 industry=row[10]
-                )
+            )
             db.session.add(new_instrument)
             db.session.commit()
-    
+
     return "Done", 201

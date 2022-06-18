@@ -86,10 +86,10 @@ function Assets() {
     );
     const totalAssets =
       res.data.total_joint_investments +
-      res.data.total_joint_other_assets +
+      res.data.total_joint_otherassets +
       res.data.total_joint_properties +
       res.data.total_sole_investments +
-      res.data.total_sole_other_assets +
+      res.data.total_sole_otherassets +
       res.data.total_sole_properties;
     setTotalAssets(totalAssets || []);
     setInvestmentTotal(

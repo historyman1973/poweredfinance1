@@ -64,7 +64,7 @@ function LiabilityTable({ liabilities }) {
 
   liabilities.map((liability) =>
     rows.push({
-      id: liability.id,
+      id: rows.length + 1,
       category: formatLiabilityCategory(liability.category),
       liability_type: formatLiabilityType(liability.liability_type),
       amount_borrowed: currencyFormat(parseFloat(liability.amount_borrowed)),

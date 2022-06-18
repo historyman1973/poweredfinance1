@@ -58,6 +58,8 @@ export default function AddInvestmentForm() {
     }
   };
 
+  console.log(values);
+
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
       <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
