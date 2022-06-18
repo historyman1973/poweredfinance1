@@ -59,7 +59,7 @@ def client_summary(client_id):
 
     response = make_response(pdf)
     response.headers["Content-Type"] = 'application/pdf'
-    response.headers["Content-Disposition"] = 'attachment; filename=' + filename
+    response.headers["Content-Disposition"] = 'inline; filename=' + filename
     response.headers["Content-Orientation"] = 'portrait'
 
     return response
