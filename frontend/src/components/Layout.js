@@ -5,7 +5,7 @@ import Dashboard from "../dashboard";
 import Assets from "../assets";
 import Liabilities from "../liabilities";
 import Settings from "../settings";
-import Support from "../support";
+import Reports from "../reports";
 import SecurityDrilldown from "../securityDrilldown";
 
 const Layout = () => {
@@ -16,7 +16,7 @@ const Layout = () => {
       <Route path="/assets/:id" element={<Assets />}></Route>
       <Route path="/liabilities/:id" element={<Liabilities />}></Route>
       <Route path="/settings/:id" element={<Settings />}></Route>
-      <Route path="/support/:id" element={<Support />}></Route>
+      <Route path="/reports/:id" element={<Reports />}></Route>
       <Route path="/security/:ticker" element={<SecurityDrilldown />}></Route>
     </Routes>
   );

@@ -33,8 +33,8 @@ function makeNavBar(title, viewingId) {
           <Button variant="text" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="text" href={"/support/" + viewingId}>
-            Support
+          <Button variant="text" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>
@@ -61,8 +61,8 @@ function makeNavBar(title, viewingId) {
           <Button variant="text" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="text" href={"/support/" + viewingId}>
-            Support
+          <Button variant="text" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>
@@ -89,8 +89,8 @@ function makeNavBar(title, viewingId) {
           <Button variant="text" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="text" href={"/support/" + viewingId}>
-            Support
+          <Button variant="text" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>
@@ -117,13 +117,13 @@ function makeNavBar(title, viewingId) {
           <Button variant="outlined" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="text" href={"/support/" + viewingId}>
-            Support
+          <Button variant="text" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>
     );
-  } else if ("support" === title) {
+  } else if ("reports" === title) {
     return (
       <div class="menu-items">
         <Stack
@@ -145,8 +145,8 @@ function makeNavBar(title, viewingId) {
           <Button variant="text" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="outlined" href={"/support/" + viewingId}>
-            Support
+          <Button variant="outlined" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>
@@ -173,8 +173,8 @@ function makeNavBar(title, viewingId) {
           <Button variant="text" href={"/settings/" + viewingId}>
             Settings
           </Button>
-          <Button variant="text" href={"/support/" + viewingId}>
-            Support
+          <Button variant="text" href={"/reports/" + viewingId}>
+            Reports
           </Button>
         </Stack>
       </div>

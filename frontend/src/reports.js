@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import Header from "./components/Header";
 import Container from "@mui/material/Container";
 
-class Support extends Component {
+class Reports extends Component {
   render() {
     return (
       <div>
         <Header
-          title={"support"}
+          title={"reports"}
           viewingId={window.location.pathname.split("/")[2]}
         />
         <br />
@@ -20,4 +20,4 @@ class Support extends Component {
   }
 }
 
-export default Support;
+export default Reports;
