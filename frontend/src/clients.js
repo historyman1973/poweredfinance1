@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./components/Header";
-import { Button, Paper } from "@mui/material";
+import { Button, Divider, Paper, Stack } from "@mui/material";
 import AddClientForm from "./components/AddClientForm";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
@@ -58,6 +58,8 @@ function Clients() {
 
   const [loadingTestClient, setLoadingTestClient] = useState(false);
   const [loadingDeleteClients, setLoadingDeleteClients] = useState(false);
+  const [loadingClientSummaryReport, setLoadingClientSummaryReport] =
+    useState(false);
 
   const [open, setOpen] = React.useState(false);
 
@@ -65,6 +67,26 @@ function Clients() {
     try {
       const res = await axios.get(`http://127.0.0.1:5000/client-list`);
       setClientList(res.data || []);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const exportClientSummaryReport = async () => {
+    try {
+      setLoadingClientSummaryReport(true);
+      const res = await axios
+        .get(`http://127.0.0.1:5000/mi-client-list`, {
+          responseType: "blob",
+        })
+        .then((response) => {
+          const file = new Blob([response.data], { type: "application/pdf" });
+          const fileURL = URL.createObjectURL(file);
+          const pdfWindow = window.open();
+          pdfWindow.location.href = fileURL;
+        });
+      setLoadingClientSummaryReport(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -98,15 +120,38 @@ function Clients() {
   return (
     <div>
       <Header title={"clients"} />
-      <div class="add-client-btn">
-        <Button
-          onClick={handleAddClientModalOpen}
-          variant="outlined"
-          size="large"
+      <div
+        style={{
+          justifyContent: "right",
+          float: "right",
+          marginRight: "50px",
+        }}
+      >
+        <Stack
+          spacing={2}
+          direction="row"
+          divider={
+            <Divider orientation="vertical" flexItem alignItems="right" />
+          }
         >
-          Add client
-        </Button>
+          <Button
+            onClick={handleAddClientModalOpen}
+            variant="outlined"
+            size="large"
+          >
+            Add client
+          </Button>
+          <LoadingButton
+            onClick={exportClientSummaryReport}
+            variant="outlined"
+            size="large"
+            loading={loadingTestClient}
+          >
+            Export client summary report
+          </LoadingButton>
+        </Stack>
       </div>
+      <br />
       <br />
       <br />
       <StyledModal
@@ -120,7 +165,7 @@ function Clients() {
           <AddClientForm />
         </Paper>
       </StyledModal>
-      <ClientTable class="padding-left-right" clients={clientList} />
+      <ClientTable clients={clientList} />
       <hr />
       <div style={{ marginTop: "40px", marginLeft: "40px" }}>
         <h4>Test tools</h4>

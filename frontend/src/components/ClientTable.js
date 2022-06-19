@@ -35,7 +35,14 @@ function ClientTable({ clients }) {
   ];
 
   return (
-    <div style={{ height: "600px", margin: "50px" }}>
+    <div
+      style={{
+        height: "600px",
+        marginLeft: "50px",
+        marginRight: "50px",
+        marginBottom: "50px",
+      }}
+    >
       <DataGrid rows={rows} columns={columns} />
     </div>
   );
