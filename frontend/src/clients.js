@@ -58,8 +58,7 @@ function Clients() {
 
   const [loadingTestClient, setLoadingTestClient] = useState(false);
   const [loadingDeleteClients, setLoadingDeleteClients] = useState(false);
-  const [loadingClientSummaryReport, setLoadingClientSummaryReport] =
-    useState(false);
+  const [loadingClientListReport, setLoadingClientListReport] = useState(false);
 
   const [open, setOpen] = React.useState(false);
 
@@ -73,9 +72,9 @@ function Clients() {
     }
   };
 
-  const exportClientSummaryReport = async () => {
+  const exportClientListReport = async () => {
     try {
-      setLoadingClientSummaryReport(true);
+      setLoadingClientListReport(true);
       const res = await axios
         .get(`http://127.0.0.1:5000/mi-client-list`, {
           responseType: "blob",
@@ -86,7 +85,7 @@ function Clients() {
           const pdfWindow = window.open();
           pdfWindow.location.href = fileURL;
         });
-      setLoadingClientSummaryReport(false);
+      setLoadingClientListReport(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -142,12 +141,12 @@ function Clients() {
             Add client
           </Button>
           <LoadingButton
-            onClick={exportClientSummaryReport}
+            onClick={exportClientListReport}
             variant="outlined"
             size="large"
-            loading={loadingTestClient}
+            loading={loadingClientListReport}
           >
-            Export client summary report
+            Export client list report
           </LoadingButton>
         </Stack>
       </div>
