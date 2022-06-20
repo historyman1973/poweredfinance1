@@ -9,6 +9,21 @@ import {
   formatLiabilityType,
   currencyFormat,
 } from "./GlobalFunctions";
+import Dialog from "@mui/material/Dialog";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -97,17 +112,29 @@ function LiabilityTable({ liabilities }) {
   return (
     <div style={{ height: "600px", margin: "50px" }}>
       <DataGrid rows={rows} columns={columns} />
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+      <Dialog
+        fullScreen
         open={open}
         onClose={handleClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={style}>
-          <LiabilityOverview id={liability} />
-        </Paper>
-      </StyledModal>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Viewing liability
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleClose}>
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <LiabilityOverview id={liability} />
+      </Dialog>
     </div>
   );
 }

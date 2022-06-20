@@ -2,11 +2,26 @@ import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
-import { Button, Paper } from "@mui/material";
+import { Button, createTheme, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewOther from "../AssetOverviewOther";
 import { currencyFormat } from "../components/GlobalFunctions";
+import Dialog from "@mui/material/Dialog";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Backdrop = styled("div")`
   z-index: -1;
@@ -46,6 +61,7 @@ const styleOther = {
   height: "50%",
   bgcolor: "#ffffff",
   boxShadow: 24,
+  justifyContent: "center",
 };
 
 const styleProperty = {
@@ -58,11 +74,12 @@ const styleProperty = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: "80%",
-  minWidth: "80%",
-  height: "80%",
+  maxWidth: "90%",
+  minWidth: "90%",
+  height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
+  justifyContent: "center",
 };
 
 const styleInvestment = {
@@ -80,6 +97,7 @@ const styleInvestment = {
   height: "90%",
   bgcolor: "#ffffff",
   boxShadow: 24,
+  justifyContent: "center",
 };
 
 function AssetTable({ properties, investments, otherAssets }) {
@@ -163,39 +181,83 @@ function AssetTable({ properties, investments, otherAssets }) {
   return (
     <div style={{ height: "600px", margin: "50px" }}>
       <DataGrid rows={rows} columns={columns} />
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+      <Dialog
+        fullScreen
         open={openViewProperty}
         onClose={handleViewPropertyClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={styleProperty}>
-          <AssetOverviewProperty id={property} />
-        </Paper>
-      </StyledModal>
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Viewing property
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleViewPropertyClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <AssetOverviewProperty id={property} />
+      </Dialog>
+      <Dialog
+        fullScreen
         open={openViewInvestment}
         onClose={handleViewInvestmentClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={styleInvestment}>
-          <AssetOverviewInvestment id={investment} />
-        </Paper>
-      </StyledModal>
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Viewing investment
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleViewInvestmentClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <AssetOverviewInvestment id={investment} />
+      </Dialog>
+      <Dialog
+        fullScreen
         open={openViewOther}
         onClose={handleViewOtherClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={styleOther}>
-          <AssetOverviewOther id={other} />
-        </Paper>
-      </StyledModal>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar>
+              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                Viewing other asset
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleViewOtherClose}>
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <AssetOverviewOther id={other} />
+      </Dialog>
     </div>
   );
 }
