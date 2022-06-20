@@ -90,21 +90,26 @@ function AssetOverviewInvestment(id) {
         <div style={{ textAlign: "center", marginTop: "5px" }}>
           <h3>{investment.investment_type}</h3>
         </div>
-        <Stack
-          spacing={2}
-          direction="row"
-          divider={
-            <Divider orientation="vertical" flexItem alignItems="right" />
-          }
+        <div
+          class="row"
+          style={{ float: "right", marginRight: "5px", marginTop: "20px" }}
         >
-          <Button
-            onClick={handleAddTransactionOpen}
-            variant="outlined"
-            size="large"
+          <Stack
+            spacing={2}
+            direction="row"
+            divider={
+              <Divider orientation="vertical" flexItem alignItems="right" />
+            }
           >
-            Add transaction
-          </Button>
-        </Stack>
+            <Button
+              onClick={handleAddTransactionOpen}
+              variant="outlined"
+              size="large"
+            >
+              Add transaction
+            </Button>
+          </Stack>
+        </div>
         <StyledModal
           aria-labelledby="unstyled-modal-title"
           aria-describedby="unstyled-modal-description"
@@ -116,7 +121,17 @@ function AssetOverviewInvestment(id) {
             <AddTransactionForm investmentId={id.id} />
           </Paper>
         </StyledModal>
-        <HoldingTable holdings={holdings} />
+        <div
+          class="row"
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            float: "center",
+            margin: "auto",
+          }}
+        >
+          <HoldingTable holdings={holdings} />
+        </div>
       </div>
     </div>
   );
