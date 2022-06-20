@@ -40,7 +40,6 @@ const style = {
   borderRadius: 5,
   position: "fixed",
   overflowY: "auto",
-  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -48,7 +47,6 @@ const style = {
   minWidth: 400,
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function Clients() {
@@ -75,7 +73,7 @@ function Clients() {
   const exportClientListReport = async () => {
     try {
       setLoadingClientListReport(true);
-      const res = await axios
+      await axios
         .get(`http://127.0.0.1:5000/mi-client-list`, {
           responseType: "blob",
         })

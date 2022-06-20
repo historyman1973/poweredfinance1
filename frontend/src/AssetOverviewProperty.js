@@ -39,10 +39,10 @@ function AssetOverviewProperty(id) {
   };
 
   const returnValueChange = (change) => {
-    if (change > 0) {
+    if (change >= 0) {
       return (
         <CurrencyFormat
-          value={property.value - property.cost}
+          value={change}
           displayType={"text"}
           thousandSeparator={true}
           prefix={"(+£"}
@@ -54,7 +54,7 @@ function AssetOverviewProperty(id) {
     } else {
       return (
         <CurrencyFormat
-          value={property.value - property.cost}
+          value={-change}
           displayType={"text"}
           thousandSeparator={true}
           prefix={"(-£"}
@@ -77,7 +77,7 @@ function AssetOverviewProperty(id) {
           padding: 5,
         }}
       >
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <div style={{ textAlign: "center" }}>
           <h1>{property.address}</h1>
         </div>
         <hr />

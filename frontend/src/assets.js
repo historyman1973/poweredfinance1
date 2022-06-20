@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import AssetTable from "./components/AssetTable";
 import { currencyFormat } from "./components/GlobalFunctions";
 import { Chart } from "react-google-charts";
+import Dialog from "@mui/material/Dialog";
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
