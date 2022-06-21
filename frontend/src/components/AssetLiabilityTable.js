@@ -6,7 +6,7 @@ import { Button, Paper } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewOther from "../AssetOverviewOther";
-import LiabilityOverview from "./LiabilityOverview";
+import LiabilityOverview from "../LiabilityOverview";
 import {
   formatLiabilityCategory,
   formatLiabilityType,

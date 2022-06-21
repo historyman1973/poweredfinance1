@@ -85,7 +85,14 @@ function HoldingTable({ holdings }) {
   };
 
   return (
-    <div style={{ height: "600px", width: "100%", margin: "50px" }}>
+    <div
+      style={{
+        height: "600px",
+        width: "100%",
+        margin: "50px",
+        marginTop: "20px",
+      }}
+    >
       {returnTable()}
     </div>
   );

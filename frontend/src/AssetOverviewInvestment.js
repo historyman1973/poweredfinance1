@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import HoldingTable from "./components/HoldingTable";
-import { Button, ModalUnstyled, Paper } from "@mui/material";
+import { Button, Divider, ModalUnstyled, Paper, Stack } from "@mui/material";
 import { styled } from "@mui/styles";
 import AddTransactionForm from "./components/AddTransactionForm";
 
@@ -73,42 +73,63 @@ function AssetOverviewInvestment(id) {
   return (
     <div>
       <div
-        class="main-container"
-        style={{ width: "80%", margin: "auto", marginTop: 25 }}
+        style={{
+          height: "auto",
+          marginLeft: "10%",
+          marginRight: "10%",
+          marginTop: 20,
+          padding: 5,
+        }}
       >
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <h1>
+            {investment.provider}, ref. {investment.investment_ref}
+          </h1>
+        </div>
+        <hr />
+        <div style={{ textAlign: "center", marginTop: "5px" }}>
+          <h3>{investment.investment_type}</h3>
+        </div>
         <div
+          class="row"
+          style={{ float: "right", marginRight: "5px", marginTop: "20px" }}
+        >
+          <Stack
+            spacing={2}
+            direction="row"
+            divider={
+              <Divider orientation="vertical" flexItem alignItems="right" />
+            }
+          >
+            <Button
+              onClick={handleAddTransactionOpen}
+              variant="outlined"
+              size="large"
+            >
+              Add transaction
+            </Button>
+          </Stack>
+        </div>
+        <StyledModal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={open}
+          onClose={handleAddTransactionClose}
+          BackdropComponent={Backdrop}
+        >
+          <Paper sx={style}>
+            <AddTransactionForm investmentId={id.id} />
+          </Paper>
+        </StyledModal>
+        <div
+          class="row"
           style={{
-            height: "auto",
-            marginLeft: "10%",
-            marginRight: "10%",
-            marginTop: 20,
-            padding: 5,
+            width: "100%",
+            justifyContent: "center",
+            float: "center",
+            margin: "auto",
           }}
         >
-          <h1>{investment.provider}</h1>
-          <hr />
-          <h3>{investment.investment_type}</h3>
-          {investment.investment_ref}
-          <br />
-          <Button
-            onClick={handleAddTransactionOpen}
-            variant="outlined"
-            size="large"
-            style={{ marginTop: "30px" }}
-          >
-            Add transaction
-          </Button>
-          <StyledModal
-            aria-labelledby="unstyled-modal-title"
-            aria-describedby="unstyled-modal-description"
-            open={open}
-            onClose={handleAddTransactionClose}
-            BackdropComponent={Backdrop}
-          >
-            <Paper sx={style}>
-              <AddTransactionForm investmentId={id.id} />
-            </Paper>
-          </StyledModal>
           <HoldingTable holdings={holdings} />
         </div>
       </div>

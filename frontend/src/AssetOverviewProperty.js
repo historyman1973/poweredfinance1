@@ -67,7 +67,7 @@ function AssetOverviewProperty(id) {
   };
 
   return (
-    <div style={{ margin: "auto" }}>
+    <div>
       <div
         style={{
           height: "auto",
@@ -77,7 +77,7 @@ function AssetOverviewProperty(id) {
           padding: 5,
         }}
       >
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
           <h1>{property.address}</h1>
         </div>
         <hr />

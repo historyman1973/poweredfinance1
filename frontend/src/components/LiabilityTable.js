@@ -3,7 +3,7 @@ import React from "react";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Button, Paper } from "@mui/material";
-import LiabilityOverview from "./LiabilityOverview";
+import LiabilityOverview from "../LiabilityOverview";
 import {
   formatLiabilityCategory,
   formatLiabilityType,
