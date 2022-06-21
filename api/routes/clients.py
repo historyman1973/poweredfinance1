@@ -3,7 +3,7 @@ from routes.liabilities import delete_liability
 from routes.otherassets import delete_property, delete_otherasset, add_otherasset
 from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Holding, Instrument
 from database import db
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
 from flask.json import jsonify
 from faker import Faker
 from faker.providers import BaseProvider
@@ -172,6 +172,15 @@ def delete_client(client_id):
     db.session.commit()
 
     return("Client deleted"), 204
+
+
+@clients_blueprint.route("/edit-client/<client_id>", methods=["PATCH"])
+def edit_client(client_id):
+    Client.query.filter_by(id=client_id).update(request.get_json())
+    db.session.commit()
+
+    return client_schema.jsonify(client_updated=client_id), 204
+
 
 
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
