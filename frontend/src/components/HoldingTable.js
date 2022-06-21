@@ -1,51 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
 import { Link } from "@mui/material";
 import { currencyFormat } from "../components/GlobalFunctions";
-
-const Backdrop = styled("div")`
-  z-index: -1;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const StyledModal = styled(ModalUnstyled)`
-  position: fixed;
-  z-index: 1300;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const style = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "50%",
-  minWidth: "50%",
-  height: "50%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-  p: 4,
-};
 
 function HoldingTable({ holdings }) {
   const columns = [
@@ -69,7 +25,7 @@ function HoldingTable({ holdings }) {
   ];
 
   const returnTable = () => {
-    const rows = Array();
+    const rows = [];
     console.log(holdings);
     holdings.map((holding) =>
       rows.push({

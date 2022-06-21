@@ -43,7 +43,6 @@ const style = {
   minWidth: 100,
   bgcolor: "#ffffff",
   boxShadow: 24,
-  p: 4,
 };
 
 function AssetOverviewInvestment(id) {

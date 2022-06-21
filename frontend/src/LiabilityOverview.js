@@ -7,11 +7,13 @@ import {
 } from "./components/GlobalFunctions";
 
 function LiabilityOverview(id) {
+  console.log(id);
   const [liability, setLiability] = useState([]);
 
   const getLiability = async () => {
     const res = await axios.get(`http://127.0.0.1:5000/get-liability/` + id.id);
     setLiability(res.data || []);
+    console.log(res.data);
   };
 
   const returnPropertyID = (id) => {
