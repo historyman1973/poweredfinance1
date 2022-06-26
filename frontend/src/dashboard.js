@@ -29,7 +29,6 @@ function Dashboard() {
         window.location.pathname.split("/")[2]
     );
     setNetworth(res.data.networth || []);
-    console.log(res.data);
     setInvestmentTotal(
       res.data.total_sole_investments + res.data.total_joint_investments || []
     );

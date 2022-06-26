@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormControl, Grid, TextField } from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
 import { toast } from "react-toastify";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DateAdapter from "@mui/lab/AdapterDateFns";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
+function BasicDateTimePicker() {
+  const [value, setValue] = React.useState(new Date());
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateTimePicker
+        renderInput={(props) => <TextField {...props} />}
+        label="DateTimePicker"
+        value={value}
+        onChange={(newValue) => {
+          setValue(newValue);
+        }}
+      />
+    </LocalizationProvider>
+  );
+}
 
 export default function AddTransactionForm(investment_id) {
   const ttypeOptions = [
@@ -23,14 +40,6 @@ export default function AddTransactionForm(investment_id) {
     units: "",
     owner1_id: window.location.pathname.split("/")[2],
     owner2_id: 1,
-  };
-
-  const [datePicked, setDatePicked] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
-  const handleDateChange = (newDatePicked) => {
-    setDatePicked(newDatePicked);
   };
 
   const validate = () => {
@@ -92,15 +101,7 @@ export default function AddTransactionForm(investment_id) {
               onChange={handleInputChange}
               error={errors.units}
             />
-            <LocalizationProvider dateAdapter={DateAdapter}>
-              <DesktopDatePicker
-                label="Date"
-                inputFormat="MM/dd/yyyy"
-                value={datePicked}
-                onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+            <BasicDateTimePicker />
             <FormControl>
               <Controls.RadioGroup
                 name="ttype"

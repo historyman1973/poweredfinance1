@@ -182,7 +182,6 @@ def edit_client(client_id):
     return client_schema.jsonify(client_updated=client_id), 204
 
 
-
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
 def get_client(client_id):
     client = Client.query.get(client_id)
@@ -460,7 +459,7 @@ def add_test_client():
             "investment_id": investment.id,
             "instrument_id": random_instrument_id_1,
             "tdate": fake.iso8601(),
-            "ttype": "Purchase",
+            "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),
             "price": random.uniform(1.0, 2000.0),
             "owner1_id": investment.owner1_id,
@@ -471,7 +470,7 @@ def add_test_client():
             "investment_id": investment.id,
             "instrument_id": random_instrument_id_2,
             "tdate": fake.iso8601(),
-            "ttype": "Purchase",
+            "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),
             "price": random.uniform(1.0, 2000.0),
             "owner1_id": investment.owner1_id,
