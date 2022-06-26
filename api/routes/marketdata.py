@@ -68,6 +68,16 @@ def get_latest_data(symbol):
 
     data = result.json()
 
+    ###### Use below if you want to avoid the market data API call, or use above if you want real prices.
+    
+    # data = {
+    #     "data": [
+    #         {
+    #             "close": 1
+    #         }
+    #     ]
+    # }
+
     return jsonify(data["data"])
 
 

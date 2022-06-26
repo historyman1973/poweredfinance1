@@ -18,6 +18,8 @@ migrate = "*"
 faker = "*"
 pdfkit = "*"
 flask-bootstrap = "*"
+flask-googlecharts = "*"
+seaborn = "*"
 
 [dev-packages]
 

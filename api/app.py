@@ -5,6 +5,7 @@ from flask_bootstrap import Bootstrap
 from database import db, ma
 import os
 
+
 app = Flask(__name__)
 
 db.init_app(app)
