@@ -1,3 +1,4 @@
+import datetime
 import json
 import simplejson as json
 from sqlalchemy import desc
@@ -7,6 +8,8 @@ from flask.json import jsonify
 import requests
 from dotenv import load_dotenv
 import os
+import pandas_market_calendars as mcal
+import pandas as pd
 
 
 marketdata_blueprint = Blueprint('marketdata_blueprint', __name__)
@@ -94,8 +97,58 @@ def get_ticker(symbol):
     return jsonify(data["data"])
 
 
-@marketdata_blueprint.route("/get-value-as-at-date", methods=["GET"])
-def get_value_as_at_date():
+@marketdata_blueprint.route("/get-price-as-at-date/<symbols>", methods=["GET"])
+def price_as_at_date(symbols):
+
+    ###############################################################
+
+    # This section uses the MarketStack external API so comment it out to save credits.
+
+    nyse = mcal.get_calendar('NYSE')
+
+    transaction_date = pd.to_datetime(request.json["transaction_date"])
+
+
+    def next_trading_day(start_day):
+        temp_day = start_day.date()
+        next_day_found = False
+        while next_day_found == False:
+            if temp_day.weekday() in [5,6]:
+                temp_day += datetime.timedelta(days=1)
+            else:
+                next_day_found = True
+        return temp_day
+    
+    params = {
+        'access_key': MY_ACCESS_KEY,
+        'symbols': symbols,
+        'date_from': next_trading_day(transaction_date),
+        'date_to': next_trading_day(transaction_date + datetime.timedelta(days=1))
+    }
+
+    result = requests.get('http://api.marketstack.com/v1/eod', params)
+
+    data = result.json()
+
+    ###############################################################
+
+    # Uncommenting this section will bypass the API where you want to limit the calls
+
+    # data = {
+    #     "data": [
+    #         {
+    #             "close": 1
+    #         }
+    #     ]
+    # }
+
+    ###############################################################
+
+    return jsonify(data['data'])
+
+
+@marketdata_blueprint.route("/get-units-as-at-date", methods=["GET"])
+def units_as_at_date():
     investment_id = request.json['investment_id']
     as_at_date = request.json['as_at_date']
 

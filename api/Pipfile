@@ -20,6 +20,7 @@ pdfkit = "*"
 flask-bootstrap = "*"
 flask-googlecharts = "*"
 seaborn = "*"
+pandas-market-calendars = "*"
 
 [dev-packages]
 

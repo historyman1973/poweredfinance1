@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7af48a8e00fa0b09318f6e20f1c489d621956cc0c2321088a17c85665614209d"
+            "sha256": "df10501dc61d8a10691209ef716d50c828cdc495160deb87f4bd63481dc9a402"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -71,6 +71,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.6.0"
+        },
+        "exchange-calendars": {
+            "hashes": [
+                "sha256:9b466d71fb4d146ef27d4d0fa7fa3e0a80fba2c5205f34ad3ee139a4ffea3777",
+                "sha256:a246366cfde9b81891027f040917a7d123de292ca7ae912844e24ab9067d92c3"
+            ],
+            "markers": "python_version ~= '3.8'",
+            "version": "==4.0.2"
         },
         "faker": {
             "hashes": [
@@ -277,6 +285,13 @@
             "markers": "python_version >= '3.7'",
             "version": "==1.4.3"
         },
+        "korean-lunar-calendar": {
+            "hashes": [
+                "sha256:12ce54b1392ed45a82dc6cea85ee5f7e33630556e82488f57e37a22482c8275d",
+                "sha256:a619ea88610129019267467b85cc9faf0fab6e1694b2e782d1aeb610cdd382d5"
+            ],
+            "version": "==0.2.1"
+        },
         "mako": {
             "hashes": [
                 "sha256:23aab11fdbbb0f1051b93793a58323ff937e98e34aece1c4219675122e57e4ba",
@@ -458,6 +473,14 @@
             "markers": "python_version >= '3.8'",
             "version": "==1.4.3"
         },
+        "pandas-market-calendars": {
+            "hashes": [
+                "sha256:17194d04ee515224ad70845541425f12276041e1579d69a47361fb49a47c8d6b",
+                "sha256:57c5a61230d7a8d6c29f84d8b97a23fe0f10a6d67b2df05197957022436c369e"
+            ],
+            "index": "pypi",
+            "version": "==3.5"
+        },
         "pdfkit": {
             "hashes": [
                 "sha256:992f821e1e18fc8a0e701ecae24b51a2d598296a180caee0a24c0af181da02a9",
@@ -510,6 +533,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==9.1.1"
+        },
+        "pyluach": {
+            "hashes": [
+                "sha256:2086047312e47a1f7bfa560ee908b3659a5656aac7be8b6da7dfc0170fc50210",
+                "sha256:e3f3625fc00a6e5db5ee296e92bcffa24a0c0b53c2feba74ceeb35af5a0f19c3"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==2.0.0"
         },
         "pyparsing": {
             "hashes": [
@@ -703,6 +734,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
             "version": "==1.4.39"
+        },
+        "toolz": {
+            "hashes": [
+                "sha256:6b312d5e15138552f1bda8a4e66c30e236c831b612b2bf0005f8a1df10a4bc33",
+                "sha256:a5700ce83414c64514d82d60bcda8aabfde092d1c1a8663f9200c07fdcc6da8f"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==0.11.2"
         },
         "urllib3": {
             "hashes": [
