@@ -112,6 +112,48 @@ instrument_schema = InstrumentSchema()
 instruments_schema = InstrumentSchema(many=True)
 
 
+class Insurance(db.Model):
+    __tablename__ = "insurance"
+
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String)
+    insurance_type = db.Column(db.String)
+    provider = db.Column(db.String)
+    policy_ref = db.Column(db.String)
+    sum_assured = db.Column(db.Integer)
+    monthly_premium = db.Column(db.Float)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    lifeassured1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    lifeassured2_id = db.Column(db.Integer, db.ForeignKey('client.id'))    
+
+    def __init__(self, **kwargs):
+        super(Insurance, self).__init__(**kwargs)
+
+
+class InsuranceSchema(ma.Schema):
+    class Meta:
+        model = Insurance
+        fields = (
+            'id',
+            'category',
+            'insurance_type',
+            'provider',
+            'policy_ref',
+            'sum_assured',
+            'monthly_premium',
+            'owner1_id',
+            'owner2_id',
+            'lifeassured1_id',
+            'lifeassured2_id'
+        )
+
+
+insurance_schema = InsuranceSchema()
+insurances_schema = InsuranceSchema(many=True)
+
+
+
 class Investment(db.Model):
     __tablename__ = "investment"
 

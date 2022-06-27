@@ -1,7 +1,6 @@
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
     instrument_schema
-from multiprocessing import synchronize
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify

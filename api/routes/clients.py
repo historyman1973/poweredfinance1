@@ -1,7 +1,8 @@
 from routes.investments import delete_investment, get_investment_value, delete_transaction
 from routes.liabilities import delete_liability
-from routes.otherassets import delete_property, delete_otherasset, add_otherasset
-from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Holding, Instrument
+from routes.otherassets import delete_property, delete_otherasset
+from routes.insurance import delete_insurance
+from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Insurance, Holding, Instrument
 from database import db
 from flask import Blueprint, request, make_response
 from flask.json import jsonify
@@ -153,7 +154,7 @@ def delete_client(client_id):
     for client_only_otherasset in client_only_otherassets:
         delete_otherasset(client_only_otherasset.id)
 
-    # Update all joint properties to show they are only owned by the partner
+    # Update all joint other assets to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
         joint_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id, OtherAsset.owner2_id != None)
@@ -166,6 +167,40 @@ def delete_client(client_id):
         for joint_otherAsset in joint_otherAssets:
             OtherAsset.query.get(joint_otherAsset.id).owner2_id = None
             db.session.commit()
+
+
+    # Same for insurances owned by the client to be deleted
+    if Client.query.get(client_id).isPrimary == 1:
+        client_only_insurances = Insurance.query.filter(
+            Insurance.owner1_id == client_id, Insurance.owner2_id == None)
+    else:
+        client_only_insurances = Insurance.query.filter(
+            Insurance.owner2_id == client_id, Insurance.owner1_id == None)
+    for client_only_insurance in client_only_insurances:
+        delete_insurance(client_only_insurance.id)    
+
+    # Same for insurances which have some element of cover for the client to be deleted
+    if Client.query.get(client_id).isPrimary == 1:
+        client_life_assureds = Insurance.query.filter(Insurance.lifeassured1_id == client_id)
+    else:
+        client_life_assureds = Insurance.query.filter(Insurance.lifeassured2_id == client_id)
+    for client_life_assured in client_life_assureds:
+        delete_insurance(client_life_assured.id)   
+
+    # Update all joint insurances to show they are only owned by the partner
+    if Client.query.get(client_id).isPrimary == 1:
+        joint_insurances = Insurance.query.filter(
+            Insurance.owner1_id == client_id, Insurance.owner2_id != None)
+        for joint_insurance in joint_insurances:
+            Insurance.query.get(joint_insurances.id).owner1_id = None
+            db.session.commit()
+    else:
+        joint_insurances = Insurance.query.filter(
+            Insurance.owner2_id == client_id, Insurance.owner1_id != None)
+        for joint_insurance in joint_insurances:
+            Insurance.query.get(joint_insurance.id).owner2_id = None
+            db.session.commit()
+
 
     # Finally, delete the client
     db.session.delete(Client.query.get(client_id))
@@ -639,6 +674,48 @@ def add_test_client():
         "owner1_id": ids[0],
         "owner2_id": ids[1]
     })
+
+    requests.post('http://localhost:5000/add-insurance', json={
+            "category": "Life",
+            "insurance_type": "Level Term",
+            "provider": "Aegon",
+            "policy_ref": "123654/8A",
+            "sum_assured": 250000,
+            "monthly_premium": 64.98,
+            "owner1_id": ids[0],
+            "owner2_id": None,
+            "lifeassured1_id": ids[0],
+            "lifeassured2_id": ids[1]  
+    })
+
+    requests.post('http://localhost:5000/add-insurance', json={
+            "category": "Life",
+            "insurance_type": "Decreasing Term",
+            "provider": "AIG",
+            "policy_ref": "125254/9X",
+            "sum_assured": 200000,
+            "monthly_premium": 53.88,
+            "owner1_id": None,
+            "owner2_id": ids[1],
+            "lifeassured1_id": ids[0],
+            "lifeassured2_id": ids[1]  
+    })
+
+    requests.post('http://localhost:5000/add-insurance', json={
+            "category": "General",
+            "insurance_type": "Buildings Insurance",
+            "provider": "Direct Line",
+            "policy_ref": "98123156",
+            "sum_assured": 1000000,
+            "monthly_premium": 23.74,
+            "owner1_id": ids[0],
+            "owner2_id": ids[1],
+            "lifeassured1_id": ids[0],
+            "lifeassured2_id": ids[1]  
+    })
+
+
+
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201
 
