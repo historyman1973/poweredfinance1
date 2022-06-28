@@ -1,22 +1,34 @@
 import { Link } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 function ClientTable({ clients }) {
   const rows = Array();
 
-  {
-    clients.map((client) =>
-      rows.push({
-        id: client.id,
-        forename: client.forename,
-        middlename: client.middle_names,
-        surname: client.surname,
-        gender: client.gender,
-        view: client.id,
-      })
-    );
-  }
+  clients.map((client) =>
+    rows.push({
+      id: client.id,
+      forename: client.forename,
+      middlename: client.middle_names,
+      surname: client.surname,
+      gender: client.gender,
+      view: client.id,
+    })
+  );
+
+  const deleteClient = React.useCallback(
+    (id) => async () => {
+      try {
+        await axios.delete(`http://127.0.0.1:5000/delete-client/` + id);
+        console.log("done");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    []
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -31,6 +43,18 @@ function ClientTable({ clients }) {
       renderCell: (params) => (
         <Link href={`dashboard/${params.value}`}>View</Link>
       ),
+    },
+    {
+      field: "actions",
+      type: "actions",
+      width: 80,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={deleteClient(params.id)}
+        />,
+      ],
     },
   ];
 
