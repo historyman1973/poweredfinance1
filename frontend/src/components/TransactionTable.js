@@ -13,7 +13,6 @@ import { Button } from "@mui/material";
 import Moment from "moment";
 
 function TransactionTable({ transactions }) {
-  console.log(transactions);
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "holdingId", headerName: "Holding ID", width: 100 },
@@ -39,7 +38,7 @@ function TransactionTable({ transactions }) {
         price: currencyFormat(parseFloat(transaction.price)),
       })
     );
-    return <DataGrid rows={rows} columns={columns} />;
+    return <DataGrid rows={rows} columns={columns} disableColumnMenu />;
   };
 
   return (

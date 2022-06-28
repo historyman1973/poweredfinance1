@@ -26,6 +26,7 @@ function BasicDateTimePicker() {
 }
 
 export default function AddTransactionForm(investment_id) {
+  const [pricePerUnit, setPricePerUnit] = useState([]);
   const ttypeOptions = [
     { id: "buy", title: "Buy" },
     { id: "sell", title: "Sell" },
@@ -36,7 +37,7 @@ export default function AddTransactionForm(investment_id) {
     instrument_id: "",
     ttype: "",
     tdate: new Date("2022-01-01T10:00:00"),
-    price: "0",
+    price: "",
     units: "",
     owner1_id: window.location.pathname.split("/")[2],
     owner2_id: 1,
@@ -86,6 +87,7 @@ export default function AddTransactionForm(investment_id) {
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
+            Price: {pricePerUnit}
             <Controls.Input
               label="Instrument ID"
               name="instrument_id"

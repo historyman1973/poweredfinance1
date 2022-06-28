@@ -43,7 +43,7 @@ function ClientTable({ clients }) {
         marginBottom: "50px",
       }}
     >
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid rows={rows} columns={columns} disableColumnMenu />
     </div>
   );
 }

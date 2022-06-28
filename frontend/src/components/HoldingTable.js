@@ -71,7 +71,7 @@ function HoldingTable({ holdings }) {
         viewTransactions: holding.holding_id,
       })
     );
-    return <DataGrid rows={rows} columns={columns} />;
+    return <DataGrid rows={rows} columns={columns} disableColumnMenu />;
   };
 
   return (

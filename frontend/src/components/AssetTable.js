@@ -103,7 +103,7 @@ function AssetTable({ properties, investments, otherAssets }) {
 
   return (
     <div style={{ height: "600px", margin: "50px" }}>
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid rows={rows} columns={columns} disableColumnMenu />
       <Dialog
         fullScreen
         open={openViewProperty}
