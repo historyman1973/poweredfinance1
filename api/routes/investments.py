@@ -1,7 +1,6 @@
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
     instrument_schema
-from multiprocessing import synchronize
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -157,13 +156,33 @@ def get_investment_value(investment_id):
     investment = Investment.query.get(investment_id)
 
     total_value = 0
+
+    # Prepare a string which concatenates the relevant symbols into a comma separated string 
+    instruments = ""
+    number_of_instruments = len(investment.holdings)
     for holding in investment.holdings:
-        units = holding.units
         instrument = Instrument.query.get(holding.instrument_id)
-        current_unit_price = get_latest_data(
-            instrument.symbol).get_json()[0]["close"]
-        holding_current_value = units*current_unit_price
+        if len(instruments) < number_of_instruments:
+            instruments += instrument.symbol + ","
+        else:
+            instruments += instrument.symbol
+
+    # Make the external API call for all of the symbols at once
+    current_unit_prices = get_latest_data(instruments).get_json()
+
+    # From a jsonified version of the API response, create a simple dictionary with the symbol as the key and the price as the value
+    lookup = {}
+    for entry in current_unit_prices:
+        lookup[entry["symbol"]] = entry["close"]
+
+
+    # Iterate through the values in the simple dictionary, grab the correct price (based on the symbol) and multiply it by the units held
+    i = 0
+    for holding in investment.holdings:
+        instrument = Instrument.query.get(holding.instrument_id)
+        holding_current_value = holding.units*lookup[instrument.symbol]
         total_value += holding_current_value
+        i +=1
 
     return jsonify(total_value=total_value)
 
