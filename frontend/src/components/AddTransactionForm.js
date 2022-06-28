@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 function BasicDateTimePicker() {
-  const [value, setValue] = React.useState(new Date());
+  const [value, setValue] = React.useState(new Date("2022-01-01T10:00:00"));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>

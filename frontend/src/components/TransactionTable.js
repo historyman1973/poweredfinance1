@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import { currencyFormat } from "../components/GlobalFunctions";
 import { Button } from "@mui/material";
+import Moment from "moment";
 
 function TransactionTable({ transactions }) {
+  console.log(transactions);
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "holdingId", headerName: "Holding ID", width: 100 },
@@ -30,9 +32,9 @@ function TransactionTable({ transactions }) {
     transactions.map((transaction) =>
       rows.push({
         id: rows.length + 1,
-        holdingId: transaction.id,
+        holdingId: transaction.holding_id,
         ttype: transaction.ttype,
-        tdate: transaction.date,
+        tdate: Moment(transaction.tdate).format("DD-MM-YYYY"),
         units: transaction.units,
         price: currencyFormat(parseFloat(transaction.price)),
       })
