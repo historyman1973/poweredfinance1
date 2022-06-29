@@ -45,7 +45,7 @@ function LiabilityTable({ liabilities }) {
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "category", headerName: "Category", width: 300 },
-    { field: "liability_type", headerName: "Type", width: 130 },
+    { field: "liability_type", headerName: "Type", flex: 1, width: 130 },
     { field: "amount_borrowed", headerName: "Amount Borrowed", width: 130 },
     {
       field: "amount_outstanding",

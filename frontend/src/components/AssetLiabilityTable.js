@@ -13,13 +13,8 @@ import {
   currencyFormat,
 } from "./GlobalFunctions";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { ThemeProvider } from "@mui/styles";
@@ -27,97 +22,6 @@ import { ThemeProvider } from "@mui/styles";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const Backdrop = styled("div")`
-  z-index: -1;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const StyledModal = styled(ModalUnstyled)`
-  position: fixed;
-  z-index: 1300;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const styleOther = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "50%",
-  minWidth: "50%",
-  height: "50%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
-
-const styleProperty = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "60%",
-  minWidth: "60%",
-  height: "60%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
-
-const styleInvestment = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "90%",
-  minWidth: "90%",
-  height: "90%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
-
-const styleLiability = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "50%",
-  minWidth: "50%",
-  height: "50%",
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
 
 function AssetLiabilityTable({
   properties,
@@ -201,7 +105,7 @@ function AssetLiabilityTable({
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
-    { field: "description", headerName: "Description", width: 300 },
+    { field: "description", headerName: "Description", flex: 1, width: 300 },
     { field: "category", headerName: "Category", width: 130 },
     { field: "value", headerName: "Value", width: 130 },
     {

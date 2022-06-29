@@ -10,12 +10,16 @@ import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { ThemeProvider } from "@mui/styles";
 import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import { useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function ClientTable({ clients }) {
+  const navigate = useNavigate();
   const rows = Array();
 
   const handleCloseDeleteClient = () => setOpenDeleteClient(false);
@@ -49,9 +53,15 @@ function ClientTable({ clients }) {
     }
   };
 
-  const handleClick = (id) => {
-    setClientDeleteID(id);
-    setOpenDeleteClient(true);
+  const handleClick = (id, method) => {
+    if (method == "delete") {
+      setClientDeleteID(id);
+      setOpenDeleteClient(true);
+    } else if (method == "edit") {
+      console.log("To be added soon...");
+    } else if (method == "view") {
+      navigate("/dashboard/" + id);
+    }
   };
 
   const columns = [
@@ -61,14 +71,6 @@ function ClientTable({ clients }) {
     { field: "surname", headerName: "Surname", flex: 1, minWidth: 150 },
     { field: "gender", headerName: "Gender", width: 150 },
     {
-      field: "view",
-      headerName: "View",
-      width: 150,
-      renderCell: (params) => (
-        <Link href={`dashboard/${params.value}`}>View</Link>
-      ),
-    },
-    {
       field: "actions",
       type: "actions",
       width: 80,
@@ -76,7 +78,20 @@ function ClientTable({ clients }) {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => handleClick(params.id)}
+          onClick={() => handleClick(params.id, "delete")}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() => handleClick(params.id, "edit")}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<PersonSearchIcon />}
+          label="View"
+          onClick={() => handleClick(params.id, "view")}
+          showInMenu
         />,
       ],
     },

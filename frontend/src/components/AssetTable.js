@@ -84,7 +84,7 @@ function AssetTable({ properties, investments, otherAssets }) {
   const columns = [
     { field: "id", headerName: "Table ID", width: 100 },
     { field: "assetId", headerName: "ID", width: 100 },
-    { field: "description", headerName: "Description", width: 300 },
+    { field: "description", headerName: "Description", flex: 1, width: 300 },
     { field: "category", headerName: "Category", width: 130 },
     { field: "value", headerName: "Value", width: 130 },
     {
