@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { currencyFormat } from "../components/GlobalFunctions";
 import { Button } from "@mui/material";
+import Moment from "moment";
 
 function TransactionTable({ transactions }) {
   const columns = [
@@ -30,14 +31,14 @@ function TransactionTable({ transactions }) {
     transactions.map((transaction) =>
       rows.push({
         id: rows.length + 1,
-        holdingId: transaction.id,
+        holdingId: transaction.holding_id,
         ttype: transaction.ttype,
-        tdate: transaction.date,
+        tdate: Moment(transaction.tdate).format("DD-MM-YYYY"),
         units: transaction.units,
         price: currencyFormat(parseFloat(transaction.price)),
       })
     );
-    return <DataGrid rows={rows} columns={columns} />;
+    return <DataGrid rows={rows} columns={columns} disableColumnMenu />;
   };
 
   return (
