@@ -93,7 +93,7 @@ def delete_client(client_id):
         joint_transactions = Transaction.query.filter(
             Transaction.owner2_id == client_id, Transaction.owner1_id != None)
         for joint_transaction in joint_transactions:
-            Transaction.query.get(joint_investment.id).owner2_id = None
+            Transaction.query.get(joint_transaction.id).owner2_id = None
             db.session.commit()
 
     # Delete all liabilities where the client is the only owner
