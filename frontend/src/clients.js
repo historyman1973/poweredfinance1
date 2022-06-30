@@ -122,6 +122,9 @@ function Clients() {
         open={open}
         onClose={handleAddClientModalClose}
         TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
       >
         <ThemeProvider>
           <AppBar

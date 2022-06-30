@@ -216,6 +216,9 @@ function Assets() {
             open={openAddAsset}
             onClose={handleAddAssetClose}
             TransitionComponent={Transition}
+            PaperProps={{
+              style: { borderRadius: 15 },
+            }}
           >
             <ThemeProvider>
               <AppBar

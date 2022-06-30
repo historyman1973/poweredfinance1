@@ -95,6 +95,9 @@ export default function AddAssetForm() {
         open={openProperty}
         onClose={handleAddPropertyClose}
         TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 15 },
+        }}
       >
         <ThemeProvider>
           <AppBar
@@ -129,6 +132,9 @@ export default function AddAssetForm() {
         open={openInvestment}
         onClose={handleAddInvestmentClose}
         TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 15 },
+        }}
       >
         <ThemeProvider>
           <AppBar
@@ -163,6 +169,9 @@ export default function AddAssetForm() {
         open={openOtherAsset}
         onClose={handleAddOtherAssetClose}
         TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 15 },
+        }}
       >
         <ThemeProvider>
           <AppBar

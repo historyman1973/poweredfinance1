@@ -196,6 +196,9 @@ function Liabilities() {
             open={openAddLiability}
             onClose={handleAddLiabilityClose}
             TransitionComponent={Transition}
+            PaperProps={{
+              style: { borderRadius: 15 },
+            }}
           >
             <ThemeProvider>
               <AppBar
