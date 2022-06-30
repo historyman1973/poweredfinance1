@@ -3,9 +3,7 @@ import Header from "./components/Header";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LiabilityTable from "./components/LiabilityTable";
-import { Button, Paper } from "@mui/material";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
+import { Button } from "@mui/material";
 import AddLiabilityForm from "./components/AddLiabilityForm";
 import { currencyFormat } from "./components/GlobalFunctions";
 import Dialog from "@mui/material/Dialog";
@@ -73,14 +71,12 @@ function Liabilities() {
   useEffect(() => getTotalLiabilities(), []);
   useEffect(() => getLiabilityComp(), []);
 
-  {
-    liabilities.map((liability) =>
-      barData.push([
-        liability.description,
-        parseFloat(liability.amount_outstanding),
-      ])
-    );
-  }
+  liabilities.map((liability) =>
+    barData.push([
+      liability.description,
+      parseFloat(liability.amount_outstanding),
+    ])
+  );
 
   const getClient = async () => {
     try {

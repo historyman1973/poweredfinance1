@@ -1,10 +1,8 @@
 import React from "react";
-import { Button, Paper } from "@mui/material";
+import { Button } from "@mui/material";
 import AddPropertyForm from "./AddPropertyForm";
 import AddInvestmentForm from "./AddInvestmentForm";
 import AddOtherAssetForm from "./AddOtherAssetForm";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,45 +13,6 @@ import { ThemeProvider } from "@mui/styles";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const StyledModal = styled(ModalUnstyled)`
-  position: fixed;
-  z-index: 1300;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Backdrop = styled("div")`
-  z-index: -1;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const style = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "40%",
-  minWidth: 100,
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
 
 export default function AddAssetForm() {
   const handleAddPropertyOpen = () => setOpenProperty(true);

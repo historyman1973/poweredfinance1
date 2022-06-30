@@ -72,7 +72,6 @@ export default function AddTransactionForm(investment_id) {
   const addTransaction = async (values) => {
     try {
       await axios.post(`http://127.0.0.1:5000/add-transaction`, values);
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -80,10 +79,14 @@ export default function AddTransactionForm(investment_id) {
   };
 
   return (
-    <div style={{ height: "auto", width: "auto", display: "grid" }}>
-      <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Transaction</h3>
-      </div>
+    <div
+      style={{
+        height: "auto",
+        width: "auto",
+        display: "grid",
+        margin: "20px",
+      }}
+    >
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
@@ -120,6 +123,7 @@ export default function AddTransactionForm(investment_id) {
                 style={{ float: "right", display: "grid", marginTop: "20px" }}
                 text="Submit"
                 type="submit"
+                variant="text"
               />
             </div>
           </Grid>

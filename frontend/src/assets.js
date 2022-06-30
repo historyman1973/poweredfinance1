@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
-import { Button, Paper } from "@mui/material";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
+import { Button } from "@mui/material";
 import AddAssetForm from "./components/AddAssetForm";
 import axios from "axios";
 import { toast } from "react-toastify";

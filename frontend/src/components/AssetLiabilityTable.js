@@ -1,8 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
-import { Button, Paper } from "@mui/material";
+import { Button } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
 import AssetOverviewInvestment from "../AssetOverviewInvestment";
 import AssetOverviewOther from "../AssetOverviewOther";

@@ -12,7 +12,6 @@ import { currencyFormat } from "../components/GlobalFunctions";
 import { Button } from "@mui/material";
 import { ThemeProvider } from "@mui/styles";
 import TransactionOverview from "../TransactionOverview";
-import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

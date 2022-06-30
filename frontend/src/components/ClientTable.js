@@ -1,4 +1,3 @@
-import { Link } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,7 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function ClientTable({ clients }) {
   const navigate = useNavigate();
-  const rows = Array();
+  const rows = [];
 
   const handleCloseDeleteClient = () => setOpenDeleteClient(false);
   const [openDeleteClient, setOpenDeleteClient] = React.useState(false);
@@ -54,12 +53,12 @@ function ClientTable({ clients }) {
   };
 
   const handleClick = (id, method) => {
-    if (method == "delete") {
+    if (method === "delete") {
       setClientDeleteID(id);
       setOpenDeleteClient(true);
-    } else if (method == "edit") {
+    } else if (method === "edit") {
       console.log("To be added soon...");
-    } else if (method == "view") {
+    } else if (method === "view") {
       navigate("/dashboard/" + id);
     }
   };
