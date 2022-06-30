@@ -10,45 +10,15 @@ import AssetTable from "./components/AssetTable";
 import { currencyFormat } from "./components/GlobalFunctions";
 import { Chart } from "react-google-charts";
 import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
 
-const StyledModal = styled(ModalUnstyled)`
-  position: fixed;
-  z-index: 1300;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Backdrop = styled("div")`
-  z-index: -1;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const style = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "40%",
-  minWidth: 400,
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Assets() {
   const handleAddAssetOpen = () => setOpenAddAsset(true);
@@ -242,17 +212,44 @@ function Assets() {
             display: "grid",
           }}
         >
-          <StyledModal
-            aria-labelledby="unstyled-modal-title"
-            aria-describedby="unstyled-modal-description"
+          <Dialog
             open={openAddAsset}
             onClose={handleAddAssetClose}
-            BackdropComponent={Backdrop}
+            TransitionComponent={Transition}
           >
-            <Paper sx={style}>
+            <ThemeProvider>
+              <AppBar
+                sx={{ position: "relative" }}
+                style={{ background: "#ff00ff" }}
+              >
+                <Toolbar variant="dense">
+                  <Typography
+                    sx={{ ml: 3, flex: 1 }}
+                    variant="h6"
+                    component="div"
+                  >
+                    Add asset
+                  </Typography>
+                  <Button
+                    autoFocus
+                    color="inherit"
+                    onClick={handleAddAssetClose}
+                  >
+                    Close
+                  </Button>
+                </Toolbar>
+              </AppBar>
+            </ThemeProvider>
+            <div
+              style={{
+                margin: "20px",
+                marginLeft: "80px",
+                marginRight: "80px",
+              }}
+            >
               <AddAssetForm />
-            </Paper>
-          </StyledModal>
+            </div>
+          </Dialog>
           <div class="paddingBottom">
             <div class="row" style={{ marginTop: "20px", marginLeft: "50px" }}>
               <div class="column">

@@ -5,6 +5,16 @@ import AddInvestmentForm from "./AddInvestmentForm";
 import AddOtherAssetForm from "./AddOtherAssetForm";
 import { styled } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -60,9 +70,6 @@ export default function AddAssetForm() {
 
   return (
     <div style={{ height: "250px", margin: "10px", display: "grid" }}>
-      <div style={{ margin: "auto" }}>
-        <h2>Add Asset</h2>
-      </div>
       <Button
         onClick={handleAddPropertyOpen}
         variant="outlined"
@@ -84,39 +91,108 @@ export default function AddAssetForm() {
       >
         Other Asset
       </Button>
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+      <Dialog
         open={openProperty}
         onClose={handleAddPropertyClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={style}>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Add property
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleAddPropertyClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            margin: "20px",
+            marginLeft: "80px",
+            marginRight: "80px",
+          }}
+        >
           <AddPropertyForm />
-        </Paper>
-      </StyledModal>
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+        </div>
+      </Dialog>
+      <Dialog
         open={openInvestment}
         onClose={handleAddInvestmentClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={style}>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Add investment
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleAddInvestmentClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            margin: "20px",
+            marginLeft: "80px",
+            marginRight: "80px",
+          }}
+        >
           <AddInvestmentForm />
-        </Paper>
-      </StyledModal>
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+        </div>
+      </Dialog>
+      <Dialog
         open={openOtherAsset}
         onClose={handleAddOtherAssetClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
       >
-        <Paper sx={style}>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Add other asset
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleAddOtherAssetClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            margin: "20px",
+            marginLeft: "80px",
+            marginRight: "80px",
+          }}
+        >
           <AddOtherAssetForm />
-        </Paper>
-      </StyledModal>
+        </div>
+      </Dialog>
     </div>
   );
 }

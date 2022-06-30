@@ -123,7 +123,7 @@ function AssetLiabilityTable({
   ];
 
   return (
-    <div style={{ height: "600px", margin: "50px" }}>
+    <div style={{ height: "600px", margin: "50px", width: "100%" }}>
       <DataGrid rows={rows} columns={columns} disableColumnMenu />
       <Dialog
         fullScreen
