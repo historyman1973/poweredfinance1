@@ -116,8 +116,8 @@ function ClientTable({ clients }) {
             sx={{ position: "relative" }}
             style={{ background: "#ff00ff" }}
           >
-            <Toolbar>
-              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
                 Delete client
               </Typography>
               <Button
@@ -132,22 +132,36 @@ function ClientTable({ clients }) {
         </ThemeProvider>
         <div
           style={{
-            height: "150px",
-            width: "400px",
-            justifyContent: "center",
-            marginTop: "10%",
-            textAlign: "center",
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
           }}
         >
-          <h4>Are you sure?</h4>
-          <div style={{ marginTop: "20px" }}>
-            <Button
-              onClick={() => {
-                deleteClient();
-              }}
-            >
-              I want to delete client ID {clientDeleteID}
-            </Button>
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete client ID {clientDeleteID}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div>
+              <Button
+                onClick={() => {
+                  deleteClient();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </div>
       </Dialog>

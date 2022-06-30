@@ -98,6 +98,11 @@ h1 {
   color: purple;
 }
 
+.row{
+  margin-left: 0px;
+  margin-right: 0px;
+ }
+
 .menu-items {
   float: right;
   padding: 15px;
