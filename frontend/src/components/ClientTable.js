@@ -152,8 +152,9 @@ function ClientTable({ clients }) {
               marginBottom: "20px",
             }}
           >
-            <div>
+            <div style={{ padding: "0px" }}>
               <Button
+                style={{ float: "right" }}
                 onClick={() => {
                   deleteClient();
                 }}
