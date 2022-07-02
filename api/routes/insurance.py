@@ -12,6 +12,7 @@ def add_insurance():
     owner1 = None
     owner2 = None
 
+    status=request.json['status']
     category=request.json['category']
     insurance_type=request.json['insurance_type']
     provider=request.json['provider']
@@ -45,6 +46,7 @@ def add_insurance():
 
     if owner1 or owner2:
         new_insurance = Insurance(
+            status=status,
             category=category,
             insurance_type=insurance_type,
             provider=provider,

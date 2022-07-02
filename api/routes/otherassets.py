@@ -14,6 +14,7 @@ def add_otherasset():
     owner1 = None
     owner2 = None
 
+    status=request.json['status']
     asset_type = request.json['asset_type']
     description = request.json['description']
     value = request.json['value']
@@ -42,6 +43,7 @@ def add_otherasset():
 
     if owner1 or owner2:
         new_otherasset = OtherAsset(
+            status=status,
             asset_type=asset_type,
             description=description,
             value=value,
@@ -100,6 +102,7 @@ def add_property():
     owner1 = None
     owner2 = None
 
+    status=request.json['status']
     property_type = request.json['property_type']
     address = request.json['address']
     cost = request.json['cost']
@@ -134,6 +137,7 @@ def add_property():
             liability = Liability.query.get(int(liability_id))
 
         new_property = Property(
+            status=status,
             property_type=property_type,
             address=address,
             cost=cost,

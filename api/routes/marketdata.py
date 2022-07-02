@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import os
 import pandas_market_calendars as mcal
 import pandas as pd
+import random
 
 
 marketdata_blueprint = Blueprint('marketdata_blueprint', __name__)
@@ -69,7 +70,18 @@ def get_latest_data(symbol):
     }
     result = requests.get('http://api.marketstack.com/v1/eod/latest', params)
 
-    data = result.json()
+    data = {"data": []}
+    if result:
+        data = result.json()
+    else:
+        symbollist = symbol.split(',')
+        
+        for symbol in symbollist:
+            entry = {"symbol": symbol, "close": random.uniform(1.0, 2000.0)}
+            data["data"].append(entry)
+        
+        print(data)
+
 
     ###### Use below if you want to avoid the market data API call, or use above if you want real prices.
     

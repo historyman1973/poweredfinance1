@@ -244,68 +244,84 @@ def get_networth(client_id):
     if client_type == "Client":
         sole_investments = Investment.query.filter(
             Investment.owner1_id == client_id,
-            Investment.owner2_id == None).all()
+            Investment.owner2_id == None,
+            Investment.status == "Active").all()
 
         joint_investments = Investment.query.filter(
             Investment.owner1_id == client_id,
-            Investment.owner2_id != None).all()
+            Investment.owner2_id != None,
+            Investment.status == "Active").all()
 
         sole_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id,
-            OtherAsset.owner2_id == None).all()
+            OtherAsset.owner2_id == None,
+            OtherAsset.status == "Active").all()
 
         joint_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == client_id,
-            OtherAsset.owner2_id != None).all()
+            OtherAsset.owner2_id != None,
+            OtherAsset.status == "Active").all()
 
         sole_properties = Property.query.filter(
             Property.owner1_id == client_id,
-            Property.owner2_id == None).all()
+            Property.owner2_id == None,
+            Property.status == "Active").all()
 
         joint_properties = Property.query.filter(
             Property.owner1_id == client_id,
-            Property.owner2_id != None).all()
+            Property.owner2_id != None,
+            Property.status == "Active").all()
 
         sole_liabilities = Liability.query.filter(
             Liability.owner1_id == client_id,
-            Liability.owner2_id == None).all()
+            Liability.owner2_id == None,
+            Liability.status == "Active").all()
 
         joint_liabilities = Liability.query.filter(
             Liability.owner1_id == client_id,
-            Liability.owner2_id != None).all()
+            Liability.owner2_id != None,
+            Liability.status == "Active").all()
 
     elif client_type == "Partner":
         sole_investments = Investment.query.filter(
             Investment.owner1_id == None,
-            Investment.owner2_id == client_id).all()
+            Investment.owner2_id == client_id,
+            Investment.status == "Active").all()
 
         joint_investments = Investment.query.filter(
             Investment.owner1_id != None,
-            Investment.owner2_id == client_id).all()
+            Investment.owner2_id == client_id,
+            Investment.status == "Active").all()
 
         sole_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id == None,
-            OtherAsset.owner2_id == client_id).all()
+            OtherAsset.owner2_id == client_id,
+            OtherAsset.status == "Active").all()
 
         joint_otherassets = OtherAsset.query.filter(
             OtherAsset.owner1_id != None,
-            OtherAsset.owner2_id == client_id).all()
+            OtherAsset.owner2_id == client_id,
+            OtherAsset.status == "Active").all()
 
         sole_properties = Property.query.filter(
             Property.owner1_id == None,
-            Property.owner2_id == client_id).all()
+            Property.owner2_id == client_id,
+            Property.status == "Active").all()
 
         joint_properties = Property.query.filter(
             Property.owner1_id != None,
-            Property.owner2_id == client_id).all()
+            Property.owner2_id == client_id,
+            Property.status == "Active").all()
 
         sole_liabilities = Liability.query.filter(
             Liability.owner1_id == None,
-            Liability.owner2_id == client_id).all()
+            Liability.owner2_id == client_id,
+            Liability.status == "Active").all()
 
         joint_liabilities = Liability.query.filter(
             Liability.owner1_id != None,
-            Liability.owner2_id == client_id).all()
+            Liability.owner2_id == client_id,
+            Liability.status == "Active").all()
 
     total_sole_investments = 0
     for investment in sole_investments:
@@ -443,6 +459,7 @@ def add_test_client():
     # Create a set of investments - client, partner and joint owned
 
     client_investment = requests.post('http://localhost:5000/add-investment', json={
+        "status": "Active",
         "category": "Retirement",
         "investment_type": "Stakeholder pension",
         "provider": fake.word().title(),
@@ -455,6 +472,7 @@ def add_test_client():
     new_client_investment = Investment.query.get(new_client_investment_id)
 
     partner_investment = requests.post('http://localhost:5000/add-investment', json={
+        "status": "Active",
         "category": "Non-retirement",
         "investment_type": "Stocks and Shares ISA",
         "provider": fake.word().title(),
@@ -467,6 +485,7 @@ def add_test_client():
     new_partner_investment = Investment.query.get(new_partner_investment_id)
 
     joint_investment = requests.post('http://localhost:5000/add-investment', json={
+        "status": "Active",
         "category": "Non-retirement",
         "investment_type": "General Investment Account",
         "provider": fake.word().title(),
@@ -513,6 +532,7 @@ def add_test_client():
         })
 
     client_property = requests.post('http://localhost:5000/add-property', json={
+        "status": "Active",        
         "property_type": "main-residence",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
@@ -527,6 +547,7 @@ def add_test_client():
     db.session.commit()
 
     partner_property = requests.post('http://localhost:5000/add-property', json={
+        "status": "Active",
         "property_type": "holiday-home",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
@@ -541,6 +562,7 @@ def add_test_client():
     db.session.commit()
 
     joint_property = requests.post('http://localhost:5000/add-property', json={
+        "status": "Active",
         "property_type": "buy-to-let",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
@@ -557,6 +579,7 @@ def add_test_client():
     # Create a set of liabilities and link them to an owner
 
     client_liability_secured = requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "Long term",
         "liability_type": "main-residence-mortgage",
         "description": fake.word().title(),
@@ -575,6 +598,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "short-term",
         "liability_type": "credit-card",
         "description": fake.word().title(),
@@ -593,6 +617,7 @@ def add_test_client():
     db.session.commit()
 
     partner_liability_secured = requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "long-term",
         "liability_type": "holiday-home-mortgage",
         "description": fake.word().title(),
@@ -611,6 +636,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "short-term",
         "liability_type": "personal-loan",
         "description": fake.word().title(),
@@ -622,6 +648,7 @@ def add_test_client():
     })
 
     joint_liability_secured = requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "long-term",
         "liability_type": "buy-to-let-mortgage",
         "description": fake.word().title(),
@@ -639,6 +666,7 @@ def add_test_client():
     db.session.commit()
 
     requests.post('http://localhost:5000/add-liability', json={
+        "status": "Active",
         "category": "short-term",
         "liability_type": "miscellaneous",
         "description": fake.word().title(),
@@ -652,6 +680,7 @@ def add_test_client():
     # Create a set of non-investment assets - client, partner and joint
 
     requests.post('http://localhost:5000/add-otherasset', json={
+        "status": "Active",
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
@@ -660,6 +689,7 @@ def add_test_client():
     })
 
     requests.post('http://localhost:5000/add-otherasset', json={
+        "status": "Active",
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
@@ -668,6 +698,7 @@ def add_test_client():
     })
 
     requests.post('http://localhost:5000/add-otherasset', json={
+        "status": "Active",
         "asset_type": "Lifestyle",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
@@ -676,42 +707,45 @@ def add_test_client():
     })
 
     requests.post('http://localhost:5000/add-insurance', json={
-            "category": "Life",
-            "insurance_type": "Level Term",
-            "provider": "Aegon",
-            "policy_ref": "123654/8A",
-            "sum_assured": 250000,
-            "monthly_premium": 64.98,
-            "owner1_id": ids[0],
-            "owner2_id": None,
-            "lifeassured1_id": ids[0],
-            "lifeassured2_id": ids[1]  
+        "status": "Active",
+        "category": "Life",
+        "insurance_type": "Level Term",
+        "provider": "Aegon",
+        "policy_ref": "123654/8A",
+        "sum_assured": 250000,
+        "monthly_premium": 64.98,
+        "owner1_id": ids[0],
+        "owner2_id": None,
+        "lifeassured1_id": ids[0],
+        "lifeassured2_id": ids[1]  
     })
 
     requests.post('http://localhost:5000/add-insurance', json={
-            "category": "Life",
-            "insurance_type": "Decreasing Term",
-            "provider": "AIG",
-            "policy_ref": "125254/9X",
-            "sum_assured": 200000,
-            "monthly_premium": 53.88,
-            "owner1_id": None,
-            "owner2_id": ids[1],
-            "lifeassured1_id": ids[0],
-            "lifeassured2_id": ids[1]  
+        "status": "Active",
+        "category": "Life",
+        "insurance_type": "Decreasing Term",
+        "provider": "AIG",
+        "policy_ref": "125254/9X",
+        "sum_assured": 200000,
+        "monthly_premium": 53.88,
+        "owner1_id": None,
+        "owner2_id": ids[1],
+        "lifeassured1_id": ids[0],
+        "lifeassured2_id": ids[1]  
     })
 
     requests.post('http://localhost:5000/add-insurance', json={
-            "category": "General",
-            "insurance_type": "Buildings Insurance",
-            "provider": "Direct Line",
-            "policy_ref": "98123156",
-            "sum_assured": 1000000,
-            "monthly_premium": 23.74,
-            "owner1_id": ids[0],
-            "owner2_id": ids[1],
-            "lifeassured1_id": ids[0],
-            "lifeassured2_id": ids[1]  
+        "status": "Active",
+        "category": "General",
+        "insurance_type": "Buildings Insurance",
+        "provider": "Direct Line",
+        "policy_ref": "98123156",
+        "sum_assured": 1000000,
+        "monthly_premium": 23.74,
+        "owner1_id": ids[0],
+        "owner2_id": ids[1],
+        "lifeassured1_id": ids[0],
+        "lifeassured2_id": ids[1]  
     })
 
 

@@ -1,4 +1,6 @@
+from email.policy import default
 from database import db, ma
+from sqlalchemy import Enum
 
 class Client(db.Model):
     __tablename__ = "client"
@@ -116,6 +118,7 @@ class Insurance(db.Model):
     __tablename__ = "insurance"
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(Enum('Active', 'Lapsed', 'Cancelled', 'Recommended', name='policy_status'))
     category = db.Column(db.String)
     insurance_type = db.Column(db.String)
     provider = db.Column(db.String)
@@ -136,6 +139,7 @@ class InsuranceSchema(ma.Schema):
         model = Insurance
         fields = (
             'id',
+            'status',
             'category',
             'insurance_type',
             'provider',
@@ -158,6 +162,7 @@ class Investment(db.Model):
     __tablename__ = "investment"
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(Enum('Active', 'Transferred out', 'Matured', 'Recommended', name='policy_status'))
     category = db.Column(db.String)
     investment_type = db.Column(db.String)
     provider = db.Column(db.String)
@@ -176,6 +181,7 @@ class InvestmentSchema(ma.Schema):
         model = Investment
         fields = (
             'id',
+            'status',
             'category',
             'investment_type',
             'provider',
@@ -193,6 +199,7 @@ class Liability(db.Model):
     __tablename__ = "liability"
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(Enum('Active', 'Redeemed', 'Recommended', name='policy_status'))
     category = db.Column(db.String)
     liability_type = db.Column(db.String)
     description = db.Column(db.String)
@@ -213,6 +220,7 @@ class LiabilitySchema(ma.Schema):
         model = Liability
         fields = (
             'id',
+            'status',
             'category',
             'liability_type',
             'description',
@@ -232,6 +240,7 @@ class OtherAsset(db.Model):
     __tablename__ = "otherasset"
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(Enum('Active', 'Sold', 'Recommended', name='policy_status'))
     asset_type = db.Column(db.String)
     description = db.Column(db.String)
     value = db.Column(db.Numeric)
@@ -247,6 +256,7 @@ class OtherAssetSchema(ma.Schema):
         model = OtherAsset
         fields = (
             'id',
+            'status',
             'asset_type',
             'description',
             'value',
@@ -263,6 +273,7 @@ class Property(db.Model):
     __tablename__ = "property"
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(Enum('Active', 'Sold', name='policy_status'))
     property_type = db.Column(db.String)
     address = db.Column(db.String)
     cost = db.Column(db.Numeric)
@@ -282,6 +293,7 @@ class PropertySchema(ma.Schema):
         model = Property
         fields = (
             'id',
+            'status',
             'property_type',
             'address',
             'cost',

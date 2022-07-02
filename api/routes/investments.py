@@ -59,6 +59,7 @@ def add_investment():
     owner1 = None
     owner2 = None
 
+    status = request.json['status']
     category = request.json['category']
     investment_type = request.json['investment_type']
     provider = request.json['provider']
@@ -88,6 +89,7 @@ def add_investment():
 
     if owner1 or owner2:
         new_investment = Investment(
+            status=status,
             category=category,
             investment_type=investment_type,
             provider=provider,
