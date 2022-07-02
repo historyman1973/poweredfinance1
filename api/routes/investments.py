@@ -315,6 +315,13 @@ def delete_transaction(transaction_id):
         # Delete the transaction
         db.session.delete(transaction_to_delete)
         db.session.commit()
+        db.session.flush()
+
+        print(holding_to_amend)
+        print(holding_to_amend.transactions.count())
+        if holding_to_amend.transactions.count() == 0:
+            db.session.delete(holding_to_amend)
+            db.session.commit()
 
         return("Transaction deleted"), 204
     else:
