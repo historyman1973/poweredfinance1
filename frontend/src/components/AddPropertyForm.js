@@ -81,14 +81,10 @@ export default function AddPropertyForm() {
       }
     });
     setMortgages(res.data);
-    console.log(mortgages);
   };
 
   return (
-    <div style={{ height: "auto", width: "auto", display: "grid" }}>
-      <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Property</h3>
-      </div>
+    <div style={{ height: "auto", width: "100%", display: "grid" }}>
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
@@ -150,9 +146,10 @@ export default function AddPropertyForm() {
           <Grid item xs={12}>
             <div>
               <Controls.Button
-                style={{ float: "right", display: "grid", marginTop: "20px" }}
+                style={{ float: "right", display: "grid" }}
                 text="Submit"
                 type="submit"
+                variant="text"
               />
             </div>
           </Grid>

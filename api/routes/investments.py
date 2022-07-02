@@ -157,7 +157,7 @@ def get_investment_value(investment_id):
 
     total_value = 0
 
-    # Prepare a string which concatenates the relevant symbols into a comma separated string 
+    # Prepare a string which concatenates the relevant symbols into a comma separated string
     instruments = ""
     number_of_instruments = len(investment.holdings)
     for holding in investment.holdings:
@@ -175,14 +175,13 @@ def get_investment_value(investment_id):
     for entry in current_unit_prices:
         lookup[entry["symbol"]] = entry["close"]
 
-
     # Iterate through the values in the simple dictionary, grab the correct price (based on the symbol) and multiply it by the units held
     i = 0
     for holding in investment.holdings:
         instrument = Instrument.query.get(holding.instrument_id)
         holding_current_value = holding.units*lookup[instrument.symbol]
         total_value += holding_current_value
-        i +=1
+        i += 1
 
     return jsonify(total_value=total_value)
 
@@ -204,13 +203,13 @@ def get_investments(client_id):
         current_value = get_investment_value(
             current_investment.id).get_json()["total_value"]
 
-        data.append(
-            {"investment_id": investment.id,
-             "investment_type": investment.investment_type,
-             "provider": investment.provider,
-             "investment_ref": investment.investment_ref,
-             "current_value": current_value}
-        )
+    data.append(
+        {"investment_id": investment.id,
+            "investment_type": investment.investment_type,
+            "provider": investment.provider,
+            "investment_ref": investment.investment_ref,
+            "current_value": current_value}
+    )
 
     return jsonify(data)
 

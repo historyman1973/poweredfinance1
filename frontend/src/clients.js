@@ -4,50 +4,17 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "./components/Header";
-import { Button, Divider, Paper, Stack } from "@mui/material";
+import { Button, Dialog, Divider, Stack, Toolbar } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
 import AddClientForm from "./components/AddClientForm";
-import { styled } from "@mui/system";
-import ModalUnstyled from "@mui/base/ModalUnstyled";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
 
-const StyledModal = styled(ModalUnstyled)`
-  position: fixed;
-  z-index: 1300;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Backdrop = styled("div")`
-  z-index: -1;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const style = {
-  p: 2,
-  px: 4,
-  pb: 3,
-  borderRadius: 5,
-  position: "fixed",
-  overflowY: "auto",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: "40%",
-  minWidth: 400,
-  bgcolor: "#ffffff",
-  boxShadow: 24,
-};
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function Clients() {
   const handleAddClientModalOpen = () => setOpen(true);
@@ -151,17 +118,37 @@ function Clients() {
       <br />
       <br />
       <br />
-      <StyledModal
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
+      <Dialog
         open={open}
         onClose={handleAddClientModalClose}
-        BackdropComponent={Backdrop}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
       >
-        <Paper sx={style}>
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Add client
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleAddClientModalClose}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
           <AddClientForm />
-        </Paper>
-      </StyledModal>
+        </div>
+      </Dialog>
       <ClientTable clients={clientList} />
       <hr />
       <div style={{ marginTop: "40px", marginLeft: "40px" }}>

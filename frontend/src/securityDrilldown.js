@@ -17,7 +17,6 @@ function SecurityDrilldown() {
   const [latestData, setLatestData] = useState([]);
   const [eodTS, setEodTS] = useState([]);
   const [securityInfo, setSecurityInfo] = useState([]);
-  // const [loading, setLoading] = useState(true)
 
   const getSecurityInfo = async () => {
     try {
@@ -46,13 +45,11 @@ function SecurityDrilldown() {
   useEffect(() => getSecurityInfo(), []);
 
   function makeTSData(eodTS) {
-    const ts = Array();
+    const ts = [];
 
-    {
-      eodTS.map((item) =>
-        ts.push({ date: item.date.substring(0, 10), price: item.adj_close })
-      );
-    }
+    eodTS.map((item) =>
+      ts.push({ date: item.date.substring(0, 10), price: item.adj_close })
+    );
 
     ts.reverse();
 

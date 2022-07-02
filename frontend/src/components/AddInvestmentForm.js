@@ -51,20 +51,14 @@ export default function AddInvestmentForm() {
             window.location.pathname.split("/")[2]
         )
       );
-      // setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
 
-  console.log(values);
-
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
-      <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Investment Account</h3>
-      </div>
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
@@ -108,6 +102,7 @@ export default function AddInvestmentForm() {
                 style={{ float: "right", display: "grid", marginTop: "20px" }}
                 text="Submit"
                 type="submit"
+                variant="text"
               />
             </div>
           </Grid>

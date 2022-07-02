@@ -1,4 +1,3 @@
-import { Link } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -10,13 +9,17 @@ import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { ThemeProvider } from "@mui/styles";
 import { Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import { useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function ClientTable({ clients }) {
-  const rows = Array();
+  const navigate = useNavigate();
+  const rows = [];
 
   const handleCloseDeleteClient = () => setOpenDeleteClient(false);
   const [openDeleteClient, setOpenDeleteClient] = React.useState(false);
@@ -49,9 +52,15 @@ function ClientTable({ clients }) {
     }
   };
 
-  const handleClick = (id) => {
-    setClientDeleteID(id);
-    setOpenDeleteClient(true);
+  const handleClick = (id, method) => {
+    if (method === "delete") {
+      setClientDeleteID(id);
+      setOpenDeleteClient(true);
+    } else if (method === "edit") {
+      console.log("To be added soon...");
+    } else if (method === "view") {
+      navigate("/dashboard/" + id);
+    }
   };
 
   const columns = [
@@ -61,14 +70,6 @@ function ClientTable({ clients }) {
     { field: "surname", headerName: "Surname", flex: 1, minWidth: 150 },
     { field: "gender", headerName: "Gender", width: 150 },
     {
-      field: "view",
-      headerName: "View",
-      width: 150,
-      renderCell: (params) => (
-        <Link href={`dashboard/${params.value}`}>View</Link>
-      ),
-    },
-    {
       field: "actions",
       type: "actions",
       width: 80,
@@ -76,7 +77,20 @@ function ClientTable({ clients }) {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => handleClick(params.id)}
+          onClick={() => handleClick(params.id, "delete")}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() => handleClick(params.id, "edit")}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<PersonSearchIcon />}
+          label="View"
+          onClick={() => handleClick(params.id, "view")}
+          showInMenu
         />,
       ],
     },
@@ -101,8 +115,8 @@ function ClientTable({ clients }) {
             sx={{ position: "relative" }}
             style={{ background: "#ff00ff" }}
           >
-            <Toolbar>
-              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
                 Delete client
               </Typography>
               <Button
@@ -117,22 +131,37 @@ function ClientTable({ clients }) {
         </ThemeProvider>
         <div
           style={{
-            height: "150px",
-            width: "400px",
-            justifyContent: "center",
-            marginTop: "10%",
-            textAlign: "center",
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
           }}
         >
-          <h4>Are you sure?</h4>
-          <div style={{ marginTop: "20px" }}>
-            <Button
-              onClick={() => {
-                deleteClient();
-              }}
-            >
-              I want to delete client ID {clientDeleteID}
-            </Button>
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete client ID {clientDeleteID}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteClient();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </div>
       </Dialog>

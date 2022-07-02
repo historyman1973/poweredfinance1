@@ -52,9 +52,6 @@ export default function AddOtherAssetForm() {
 
   return (
     <div style={{ height: "auto", width: "auto", display: "grid" }}>
-      <div style={{ margin: "auto", marginBottom: "4%", display: "grid" }}>
-        <h3>Add Other Asset</h3>
-      </div>
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
@@ -91,6 +88,7 @@ export default function AddOtherAssetForm() {
                 style={{ float: "right", display: "grid", marginTop: "20px" }}
                 text="Submit"
                 type="submit"
+                variant="text"
               />
             </div>
           </Grid>

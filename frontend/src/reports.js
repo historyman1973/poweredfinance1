@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { currencyFormat } from "./components/GlobalFunctions";
 import Header from "./components/Header";
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -27,7 +26,7 @@ function Reports() {
   const exportClientSummaryReport = async () => {
     try {
       setLoadingClientSummaryReport(true);
-      const res = await axios
+      await axios
         .get(
           `http://127.0.0.1:5000/client-summary/` +
             window.location.pathname.split("/")[2],

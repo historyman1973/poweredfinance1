@@ -99,10 +99,10 @@ export default function AddClientForm() {
           />
           <div>
             <Controls.Button
-              style={{ float: "right", marginRight: "2%", marginTop: "3%" }}
+              style={{ float: "right", marginTop: "20px" }}
               text="Submit"
               type="submit"
-              variant="outlined"
+              variant="text"
             />
           </div>
         </Grid>
