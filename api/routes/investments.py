@@ -311,6 +311,14 @@ def delete_transaction(transaction_id):
         return("Transaction doesn't exist"), 404
 
 
+@investments_blueprint.route("/edit-transaction/<transaction_id>", methods=["PATCH"])
+def edit_transaction(transaction_id):
+    transaction = Transaction.query.filter_by(id=transaction_id).update(request.get_json())
+    db.session.commit()
+
+    return transaction_schema.jsonify(transaction), 204
+
+
 @investments_blueprint.route("/get-transaction/<transaction_id>", methods=["GET"])
 def get_transaction(transaction_id):
     transaction = Transaction.query.get(transaction_id)

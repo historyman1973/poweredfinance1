@@ -211,10 +211,10 @@ def delete_client(client_id):
 
 @clients_blueprint.route("/edit-client/<client_id>", methods=["PATCH"])
 def edit_client(client_id):
-    Client.query.filter_by(id=client_id).update(request.get_json())
+    client = Client.query.filter_by(id=client_id).update(request.get_json())
     db.session.commit()
 
-    return client_schema.jsonify(client_updated=client_id), 204
+    return client_schema.jsonify(client), 204
 
 
 @clients_blueprint.route("/get-client/<client_id>", methods=["GET"])
