@@ -77,7 +77,7 @@ def get_latest_data(symbol):
         symbollist = symbol.split(',')
         
         for symbol in symbollist:
-            entry = {"symbol": symbol, "close": random.uniform(1.0, 2000.0)}
+            entry = {"symbol": symbol, "close": random.uniform(1.0, 50.0)}
             data["data"].append(entry)
         
     return jsonify(data["data"])
