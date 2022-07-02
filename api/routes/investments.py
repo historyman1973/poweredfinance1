@@ -1,6 +1,6 @@
 from models import Client, Investment, investment_schema, investments_schema, \
     Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
-    instrument_schema
+    instrument_schema, instruments_schema
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
@@ -41,6 +41,16 @@ def get_holdings(investment_id):
         return jsonify(result)
     else:
         return("Investment id " + investment_id + " doesn't exist."), 404
+
+
+
+@investments_blueprint.route("/get-all-instruments", methods=["GET"])
+def get_all_instruments():
+    instruments = Instrument.query.all()
+    
+    result = instruments_schema.dump(instruments)
+
+    return jsonify(result)
 
 
 @investments_blueprint.route("/get-instrument/<instrument_id>", methods=["GET"])
