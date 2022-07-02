@@ -65,8 +65,6 @@ def add_liability():
         db.session.add(new_liability)
         db.session.commit()
 
-        print(new_liability.property)
-
         return liability_schema.jsonify(new_liability), 201
 
 
