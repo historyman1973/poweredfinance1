@@ -122,21 +122,16 @@ def delete_investment(investment_id):
     linked_holdings_ids = []
     for linked_holding in linked_holdings:
         linked_holdings_ids.append(linked_holding.id)
-    print(linked_holdings_ids)
 
     db.session.query(HoldingHistory).filter(HoldingHistory.holding_id.in_(
         linked_holdings_ids)).delete(synchronize_session=False)
     db.session.commit()
     # HoldingHistory.query.filter_by(HoldingHistory.holding_id.in_(linked_holdings_ids).delete())
 
-    print("Moving onto transactions now")
-
     db.session.query(Transaction).filter(Transaction.holding_id.in_(
         linked_holdings_ids)).delete(synchronize_session=False)
     db.session.commit()
     # Transaction.query.filter_by(Transaction.holding_id.in_(linked_holdings_ids).delete())
-
-    print("Moving onto holdings now")
 
     db.session.query(Holding).filter(Holding.id.in_(
         linked_holdings_ids)).delete(synchronize_session=False)
@@ -297,7 +292,6 @@ def add_transaction():
 def delete_transaction(transaction_id):
     transaction_to_delete = Transaction.query.get(transaction_id)
     if transaction_to_delete:
-        print(transaction_to_delete)
 
         # Now adjust the current holdings by the number of units for the transaction
         holding_to_amend = Holding.query.filter(
@@ -317,8 +311,6 @@ def delete_transaction(transaction_id):
         db.session.commit()
         db.session.flush()
 
-        print(holding_to_amend)
-        print(holding_to_amend.transactions.count())
         if holding_to_amend.transactions.count() == 0:
             db.session.delete(holding_to_amend)
             db.session.commit()

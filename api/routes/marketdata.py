@@ -80,19 +80,6 @@ def get_latest_data(symbol):
             entry = {"symbol": symbol, "close": random.uniform(1.0, 2000.0)}
             data["data"].append(entry)
         
-        print(data)
-
-
-    ###### Use below if you want to avoid the market data API call, or use above if you want real prices.
-    
-    # data = {
-    #     "data": [
-    #         {
-    #             "close": 1
-    #         }
-    #     ]
-    # }
-
     return jsonify(data["data"])
 
 

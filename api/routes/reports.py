@@ -108,9 +108,6 @@ def asset_chart(client_id):
         assets_by_type[d['asset_type']] += int(float(d['value']))
 
     data = dict(assets_by_type)
-    print(data)
-    print(type(data))
-
 
     labels = [item for item in data]
     colours = ColourPalette(len(data))

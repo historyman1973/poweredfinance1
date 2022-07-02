@@ -150,8 +150,6 @@ def add_property():
         db.session.add(new_property)
         db.session.commit()
 
-        print(new_property.liability)
-
         return property_schema.jsonify(new_property), 201
 
 
