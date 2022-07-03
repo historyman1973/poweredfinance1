@@ -210,13 +210,13 @@ def get_investments(client_id):
         current_value = get_investment_value(
             current_investment.id).get_json()["total_value"]
 
-    data.append(
-        {"investment_id": investment.id,
-            "investment_type": investment.investment_type,
-            "provider": investment.provider,
-            "investment_ref": investment.investment_ref,
-            "current_value": current_value}
-    )
+        data.append(
+            {"investment_id": investment.id,
+                "investment_type": investment.investment_type,
+                "provider": investment.provider,
+                "investment_ref": investment.investment_ref,
+                "current_value": current_value}
+        )
 
     return jsonify(data)
 
