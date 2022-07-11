@@ -80,7 +80,7 @@ def get_otherasset(otherasset_id):
 
 
 @otherassets_blueprint.route("/get-otherassets/<client_id>", methods=["GET"])
-@auth.login_required
+# @auth.login_required
 def get_otherassets(client_id):
     client = Client.query.get(client_id)
     if client:
