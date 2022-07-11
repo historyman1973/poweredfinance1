@@ -1,21 +1,86 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
 import { currencyFormat } from "../components/GlobalFunctions";
 import Moment from "moment";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Slide from "@mui/material/Slide";
+import { ThemeProvider } from "@mui/styles";
+import { Button } from "@mui/material";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function TransactionTable({ transactions }) {
+  const [transaction, setTransaction] = React.useState(false);
+  const handleCloseDeleteTransaction = () => setOpenDeleteTransaction(false);
+  const [openDeleteTransaction, setOpenDeleteTransaction] =
+    React.useState(false);
+
+  const deleteTransaction = async () => {
+    try {
+      try {
+        await axios.delete(
+          `http://127.0.0.1:5000/delete-transaction/` + transaction
+        );
+        console.log("Deleted transaction " + transaction);
+        window.location.reload(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "holdingId", headerName: "Holding ID", width: 100 },
-    { field: "ttype", headerName: "Type", width: 100 },
+    { field: "transactionId", headerName: "Transaction ID", width: 100 },
+    { field: "ttype", headerName: "Type", width: 100, flex: 1 },
     {
       field: "tdate",
       headerName: "Date",
       width: 250,
+      flex: 1,
     },
-    { field: "units", headerName: "Units", width: 130 },
-    { field: "price", headerName: "Price", width: 180 },
+    { field: "units", headerName: "Units", width: 130, flex: 1 },
+    { field: "price", headerName: "Price", width: 180, flex: 1 },
+    {
+      field: "actions",
+      type: "actions",
+      width: 80,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => handleClick(params.row.transactionId, "delete")}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() => handleClick(params.row.transactionId, "edit")}
+          showInMenu
+        />,
+      ],
+    },
   ];
+
+  const handleClick = (id, method) => {
+    if (method === "edit") {
+      console.log("Coming soon...");
+    } else if (method === "delete") {
+      setTransaction(id);
+      setOpenDeleteTransaction(true);
+    }
+  };
 
   const returnTable = () => {
     const rows = [];
@@ -23,6 +88,7 @@ function TransactionTable({ transactions }) {
       rows.push({
         id: rows.length + 1,
         holdingId: transaction.holding_id,
+        transactionId: transaction.id,
         ttype: transaction.ttype,
         tdate: Moment(transaction.tdate).format("DD-MM-YYYY"),
         units: transaction.units,
@@ -33,15 +99,77 @@ function TransactionTable({ transactions }) {
   };
 
   return (
-    <div
-      style={{
-        height: "600px",
-        width: "100%",
-        margin: "50px",
-        marginTop: "20px",
-      }}
-    >
-      {returnTable()}
+    <div>
+      <div
+        style={{
+          height: "600px",
+          width: "100%",
+          margin: "50px",
+          marginTop: "20px",
+        }}
+      >
+        {returnTable()}
+      </div>
+      <Dialog
+        open={openDeleteTransaction}
+        onClose={handleCloseDeleteTransaction}
+        TransitionComponent={Transition}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Delete transaction
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseDeleteTransaction}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete transaction ID {transaction.id}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteTransaction();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
