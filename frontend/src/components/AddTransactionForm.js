@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FormControl, Grid, TextField } from "@mui/material";
+import {
+  FormControl,
+  Grid,
+  TextField,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import axios from "axios";
@@ -7,6 +14,15 @@ import { toast } from "react-toastify";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 48 * 4.5 + 8,
+      width: 250,
+    },
+  },
+};
 
 function BasicDateTimePicker() {
   const [value, setValue] = React.useState(new Date("2022-01-01T10:00:00"));
@@ -25,15 +41,14 @@ function BasicDateTimePicker() {
   );
 }
 
-export default function AddTransactionForm(investment_id) {
-  const [pricePerUnit, setPricePerUnit] = useState([]);
+export default function AddTransactionForm({ allInstruments }) {
   const ttypeOptions = [
     { id: "buy", title: "Buy" },
     { id: "sell", title: "Sell" },
   ];
 
   const initialFValues = {
-    investment_id: investment_id.investmentId,
+    investment_id: 3,
     instrument_id: "",
     ttype: "",
     tdate: new Date("2022-01-01T10:00:00"),
@@ -50,6 +65,7 @@ export default function AddTransactionForm(investment_id) {
       : "Please enter the instrument ID.";
     temp.ttype = values.ttype ? "" : "Required field.";
     temp.units = values.units ? "" : "Required field.";
+    temp.price = values.price ? "" : "Required field.";
     setErrors({
       ...temp,
     });
@@ -90,32 +106,55 @@ export default function AddTransactionForm(investment_id) {
       <Form onSubmit={handleSubmit}>
         <Grid container>
           <Grid container xs={12} alignItems="center" justifyContent="center">
-            Price: {pricePerUnit}
-            <Controls.Input
-              label="Instrument ID"
-              name="instrument_id"
-              value={values.instrument_id}
-              onChange={handleInputChange}
-              error={errors.instrument_id}
-            />
-            <Controls.Input
-              type="number"
-              label="Units"
-              name="units"
-              value={values.units}
-              onChange={handleInputChange}
-              error={errors.units}
-            />
-            <BasicDateTimePicker />
-            <FormControl>
-              <Controls.RadioGroup
-                name="ttype"
-                label="Type"
-                value={values.ttype}
+            <Grid container xs={8} alignItems="center" justifyContent="center">
+              <FormControl>
+                <InputLabel id="demo-simple-select-label">
+                  Instrument
+                </InputLabel>
+                <Select
+                  name="instrument_id"
+                  label="Instrument"
+                  value={values.instrument_id}
+                  onChange={handleInputChange}
+                  error={errors.instrument_id}
+                  MenuProps={MenuProps}
+                >
+                  {allInstruments.map((instrument) => (
+                    <MenuItem value={instrument.id}>
+                      {instrument.symbol} - {instrument.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Controls.Input
+                type="number"
+                label="Units"
+                name="units"
+                value={values.units}
                 onChange={handleInputChange}
-                items={ttypeOptions}
+                error={errors.units}
               />
-            </FormControl>
+              <Controls.Input
+                type="number"
+                label="Price each"
+                name="price"
+                value={values.price}
+                onChange={handleInputChange}
+                error={errors.price}
+              />
+              <BasicDateTimePicker />
+            </Grid>
+            <Grid container xs={4} alignItems="center" justifyContent="center">
+              <FormControl>
+                <Controls.RadioGroup
+                  name="ttype"
+                  label="Type"
+                  value={values.ttype}
+                  onChange={handleInputChange}
+                  items={ttypeOptions}
+                />
+              </FormControl>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <div>

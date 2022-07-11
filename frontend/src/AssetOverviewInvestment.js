@@ -16,6 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function AssetOverviewInvestment(id) {
   const [investment, setInvestment] = useState([]);
+  const [allInstruments, setAllInstruments] = useState([]);
   const handleAddTransactionOpen = () => setOpen(true);
   const handleAddTransactionClose = () => setOpen(false);
   const [open, setOpen] = React.useState(false);
@@ -28,6 +29,11 @@ function AssetOverviewInvestment(id) {
     setInvestment(res.data || []);
   };
 
+  const getAllInstruments = async () => {
+    const res = await axios.get(`http://127.0.0.1:5000/get-all-instruments`);
+    setAllInstruments(res.data || []);
+  };
+
   const getHoldingsForInvestment = async () => {
     const res = await axios.get(
       `http://127.0.0.1:5000/get-holding-data/` + id.id
@@ -37,6 +43,7 @@ function AssetOverviewInvestment(id) {
 
   useEffect(() => getInvestment(), []);
   useEffect(() => getHoldingsForInvestment(), []);
+  useEffect(() => getAllInstruments(), []);
 
   return (
     <div>
@@ -117,7 +124,7 @@ function AssetOverviewInvestment(id) {
               marginTop: "20px",
             }}
           >
-            <AddTransactionForm investmentId={id.id} />
+            <AddTransactionForm allInstruments={allInstruments} />
           </div>
         </Dialog>
         <div
