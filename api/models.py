@@ -327,7 +327,7 @@ class Transaction(db.Model):
 class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
-        fields = ('ttype', 'tdate', 'units', 'price',
+        fields = ('id', 'ttype', 'tdate', 'units', 'price',
                   'owner1_id', 'owner2_id', 'holding_id')
 
 
