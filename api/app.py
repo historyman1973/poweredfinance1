@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+from flask_babelex import Babel
 from database import db, ma
 import os
 
@@ -18,6 +19,8 @@ db.init_app(app)
 ma.init_app(app)
 
 Bootstrap(app)
+
+Babel(app)
 
 Migrate(app, db, render_as_batch=True)
 
