@@ -79,13 +79,13 @@ def add_user():
 def verify_password(username_or_token, password):
     # first try to authenticate by token
     user = User.verify_auth_token(username_or_token)
-    if not user:
-        # # try to authenticate with username/password
-        # user = User.query.filter_by(username=username_or_token).first()
-        # if not user or not user.verify_password(password):
-        #     return False
-        return False    
     g.user = user
+    if not user:
+        # try to authenticate with username/password
+        user = User.query.filter_by(username=username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False  
+        g.user = user
     print(g.user)
     return True
 
@@ -97,7 +97,7 @@ def get_token():
     return jsonify({'token': token, 'duration': 600})
 
 
-@authentication_blueprint.route("/testlogin", methods=["POST"])
+@authentication_blueprint.route("/testlogin", methods=["GET"])
 @auth.login_required
 def test_login():
     print(auth.current_user())
