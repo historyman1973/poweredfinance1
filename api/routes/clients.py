@@ -168,7 +168,6 @@ def delete_client(client_id):
             OtherAsset.query.get(joint_otherAsset.id).owner2_id = None
             db.session.commit()
 
-
     # Same for insurances owned by the client to be deleted
     if Client.query.get(client_id).isPrimary == 1:
         client_only_insurances = Insurance.query.filter(
@@ -177,15 +176,17 @@ def delete_client(client_id):
         client_only_insurances = Insurance.query.filter(
             Insurance.owner2_id == client_id, Insurance.owner1_id == None)
     for client_only_insurance in client_only_insurances:
-        delete_insurance(client_only_insurance.id)    
+        delete_insurance(client_only_insurance.id)
 
     # Same for insurances which have some element of cover for the client to be deleted
     if Client.query.get(client_id).isPrimary == 1:
-        client_life_assureds = Insurance.query.filter(Insurance.lifeassured1_id == client_id)
+        client_life_assureds = Insurance.query.filter(
+            Insurance.lifeassured1_id == client_id)
     else:
-        client_life_assureds = Insurance.query.filter(Insurance.lifeassured2_id == client_id)
+        client_life_assureds = Insurance.query.filter(
+            Insurance.lifeassured2_id == client_id)
     for client_life_assured in client_life_assureds:
-        delete_insurance(client_life_assured.id)   
+        delete_insurance(client_life_assured.id)
 
     # Update all joint insurances to show they are only owned by the partner
     if Client.query.get(client_id).isPrimary == 1:
@@ -200,7 +201,6 @@ def delete_client(client_id):
         for joint_insurance in joint_insurances:
             Insurance.query.get(joint_insurance.id).owner2_id = None
             db.session.commit()
-
 
     # Finally, delete the client
     db.session.delete(Client.query.get(client_id))
@@ -414,9 +414,9 @@ def add_test_client():
         def gender(self):
             result = random.randint(0, 1)
             if result == 0:
-                gender = "Male"
+                gender = "male"
             else:
-                gender = "Female"
+                gender = "female"
 
             return gender
 
@@ -532,7 +532,7 @@ def add_test_client():
         })
 
     client_property = requests.post('http://localhost:5000/add-property', json={
-        "status": "Active",        
+        "status": "Active",
         "property_type": "main-residence",
         "address": fake.address(),
         "cost": random.randint(100000, 1000000),
@@ -717,7 +717,7 @@ def add_test_client():
         "owner1_id": ids[0],
         "owner2_id": None,
         "lifeassured1_id": ids[0],
-        "lifeassured2_id": ids[1]  
+        "lifeassured2_id": ids[1]
     })
 
     requests.post('http://localhost:5000/add-insurance', json={
@@ -731,7 +731,7 @@ def add_test_client():
         "owner1_id": None,
         "owner2_id": ids[1],
         "lifeassured1_id": ids[0],
-        "lifeassured2_id": ids[1]  
+        "lifeassured2_id": ids[1]
     })
 
     requests.post('http://localhost:5000/add-insurance', json={
@@ -745,11 +745,8 @@ def add_test_client():
         "owner1_id": ids[0],
         "owner2_id": ids[1],
         "lifeassured1_id": ids[0],
-        "lifeassured2_id": ids[1]  
+        "lifeassured2_id": ids[1]
     })
-
-
-
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201
 

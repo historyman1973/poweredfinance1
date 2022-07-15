@@ -12,6 +12,7 @@ import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import { useNavigate } from "react-router-dom";
+import EditClientForm from "./EditClientForm";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -25,11 +26,16 @@ function ClientTable({ clients }) {
   const [openDeleteClient, setOpenDeleteClient] = React.useState(false);
   const [clientDeleteID, setClientDeleteID] = React.useState(false);
 
+  const handleCloseEditClient = () => setOpenEditClient(false);
+  const [openEditClient, setOpenEditClient] = React.useState(false);
+  const [clientEdit, setClientEdit] = React.useState(false);
+
   clients.map((client) =>
     rows.push({
       id: client.id,
       forename: client.forename,
-      middlename: client.middle_names,
+      middle_names: client.middle_names,
+      preferred_name: client.preferred_name,
       surname: client.surname,
       gender: client.gender,
       view: client.id,
@@ -52,12 +58,18 @@ function ClientTable({ clients }) {
     }
   };
 
-  const handleClick = (id, method) => {
+  const handleClick = async (id, method) => {
     if (method === "delete") {
       setClientDeleteID(id);
       setOpenDeleteClient(true);
     } else if (method === "edit") {
-      console.log("To be added soon...");
+      try {
+        const res = await axios.get(`http://127.0.0.1:5000/get-client/` + id);
+        setClientEdit(res.data);
+        setOpenEditClient(true);
+      } catch (error) {
+        console.log(error);
+      }
     } else if (method === "view") {
       navigate("/dashboard/" + id);
     }
@@ -66,7 +78,18 @@ function ClientTable({ clients }) {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "forename", headerName: "Forename", flex: 1, minWidth: 150 },
-    { field: "middlename", headerName: "Middle names", flex: 1, minWidth: 150 },
+    {
+      field: "middle_names",
+      headerName: "Middle names",
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      field: "preferred_name",
+      headerName: "Preferred name",
+      flex: 1,
+      minWidth: 150,
+    },
     { field: "surname", headerName: "Surname", flex: 1, minWidth: 150 },
     { field: "gender", headerName: "Gender", width: 150 },
     {
@@ -163,6 +186,33 @@ function ClientTable({ clients }) {
               </Button>
             </div>
           </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditClient}
+        onClose={handleCloseEditClient}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit client
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleCloseEditClient}>
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditClientForm client={clientEdit} />
         </div>
       </Dialog>
       <DataGrid rows={rows} columns={columns} disableColumnMenu />
