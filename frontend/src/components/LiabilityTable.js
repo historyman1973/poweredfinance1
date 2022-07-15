@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import axios from "axios";
+import EditLiabilityForm from "./EditLiabilityForm";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -30,6 +31,9 @@ function LiabilityTable({ liabilities }) {
   const [liability, setLiability] = React.useState(false);
   const handleCloseDeleteLiability = () => setOpenDeleteLiability(false);
   const [openDeleteLiability, setOpenDeleteLiability] = React.useState(false);
+  const handleCloseEditLiability = () => setOpenEditLiability(false);
+  const [openEditLiability, setOpenEditLiability] = React.useState(false);
+  const [liabilityEdit, setLiabilityEdit] = React.useState(false);
 
   const deleteLiability = async () => {
     try {
@@ -47,12 +51,20 @@ function LiabilityTable({ liabilities }) {
     }
   };
 
-  const handleClick = (id, method) => {
+  const handleClick = async (id, method) => {
     if (method === "delete") {
       setLiability(id);
       setOpenDeleteLiability(true);
     } else if (method === "edit") {
-      console.log("To be added soon...");
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:5000/get-liability/` + id
+        );
+        setLiabilityEdit(res.data);
+        setOpenEditLiability(true);
+      } catch (error) {
+        console.log(error);
+      }
     } else if (method === "view") {
       setLiability(id);
       setOpenViewLiability(true);
@@ -198,6 +210,37 @@ function LiabilityTable({ liabilities }) {
               </Button>
             </div>
           </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditLiability}
+        onClose={handleCloseEditLiability}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit liability
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseEditLiability}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditLiabilityForm liability={liabilityEdit} />
         </div>
       </Dialog>
     </div>
