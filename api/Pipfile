@@ -21,9 +21,8 @@ flask-bootstrap = "*"
 flask-googlecharts = "*"
 seaborn = "*"
 pandas-market-calendars = "*"
-flask-httpauth = "*"
 flask-babelex = "*"
-flask-user = "*"
+flask-login = "*"
 
 [dev-packages]
 
