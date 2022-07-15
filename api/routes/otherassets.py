@@ -2,7 +2,7 @@ from models import Client, OtherAsset, otherasset_schema, otherassets_schema, Pr
 from database import db
 from flask import Blueprint, request
 from flask.json import jsonify
-from routes.authentication import auth
+# from routes.authentication import auth
 
 
 otherassets_blueprint = Blueprint('otherassets_blueprint', __name__)

@@ -21,7 +21,7 @@ class ClientSchema(ma.Schema):
     class Meta:
         model = Client
         fields = ('id', 'forename', 'middle_names',
-                  'surname', 'gender', 'isPrimary')
+                  'preferred_name', 'surname', 'gender', 'isPrimary')
 
 
 client_schema = ClientSchema()

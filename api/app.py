@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_babelex import Babel
+from flask_login import LoginManager
 from database import db, ma
 import os
 
@@ -44,6 +45,18 @@ app.register_blueprint(insurance_blueprint)
 app.register_blueprint(reports_blueprint)
 app.register_blueprint(authentication_blueprint)
 CORS(app)
+
+
+from routes.authentication import User
+
+login_manager = LoginManager()
+# login_manager.login_view = 'authenticate.login'
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 with app.app_context():
