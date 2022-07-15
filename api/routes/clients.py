@@ -2,7 +2,8 @@ from routes.investments import delete_investment, get_investment_value, delete_t
 from routes.liabilities import delete_liability
 from routes.otherassets import delete_property, delete_otherasset
 from routes.insurance import delete_insurance
-from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Insurance, Holding, Instrument
+from routes.cashflow import delete_income, delete_expense
+from models import Client, clients_schema, client_schema, Investment, OtherAsset, Property, Liability, Transaction, Insurance, Holding, Instrument, Income, Expense
 from database import db
 from flask import Blueprint, request, make_response
 from flask.json import jsonify
@@ -10,6 +11,7 @@ from faker import Faker
 from faker.providers import BaseProvider
 import random
 import requests
+import datetime
 
 clients_blueprint = Blueprint('clients_blueprint', __name__)
 
@@ -167,6 +169,57 @@ def delete_client(client_id):
         for joint_otherAsset in joint_otherAssets:
             OtherAsset.query.get(joint_otherAsset.id).owner2_id = None
             db.session.commit()
+
+
+    # Same for incomes
+    if Client.query.get(client_id).isPrimary == 1:
+        client_only_incomes = Income.query.filter(
+            Income.owner1_id == client_id, Income.owner2_id == None)
+    else:
+        client_only_incomes = Income.query.filter(
+            Income.owner2_id == client_id, Income.owner1_id == None)
+    for client_only_income in client_only_incomes:
+        delete_income(client_only_income.id)
+
+    # Update all joint incomes to show they are only owned by the partner
+    if Client.query.get(client_id).isPrimary == 1:
+        joint_incomes = Income.query.filter(
+            Income.owner1_id == client_id, Income.owner2_id != None)
+        for joint_income in joint_incomes:
+            Income.query.get(joint_income.id).owner1_id = None
+            db.session.commit()
+    else:
+        joint_incomes = Income.query.filter(
+            Income.owner2_id == client_id, Income.owner1_id != None)
+        for joint_income in joint_incomes:
+            Income.query.get(joint_income.id).owner2_id = None
+            db.session.commit()
+
+
+    # Same for expenses
+    if Client.query.get(client_id).isPrimary == 1:
+        client_only_expenses = Expense.query.filter(
+            Expense.owner1_id == client_id, Expense.owner2_id == None)
+    else:
+        client_only_expenses = Expense.query.filter(
+            Expense.owner2_id == client_id, Expense.owner1_id == None)
+    for client_only_expense in client_only_expenses:
+        delete_expense(client_only_expense.id)
+
+    # Update all joint expenses to show they are only owned by the partner
+    if Client.query.get(client_id).isPrimary == 1:
+        joint_expenses = Expense.query.filter(
+            Expense.owner1_id == client_id, Expense.owner2_id != None)
+        for joint_expense in joint_expenses:
+            Expense.query.get(joint_expense.id).owner1_id = None
+            db.session.commit()
+    else:
+        joint_expenses = Expense.query.filter(
+            Expense.owner2_id == client_id, Expense.owner1_id != None)
+        for joint_expense in joint_expenses:
+            Expense.query.get(joint_expense.id).owner2_id = None
+            db.session.commit()
+
 
     # Same for insurances owned by the client to be deleted
     if Client.query.get(client_id).isPrimary == 1:
@@ -746,6 +799,77 @@ def add_test_client():
         "owner2_id": ids[1],
         "lifeassured1_id": ids[0],
         "lifeassured2_id": ids[1]
+    })
+
+    # Create a set of incomes
+
+    requests.post('http://localhost:5000/add-income', json={
+        "fixed_or_variable": "Fixed",
+        "income_type": "Salary",
+        "amount": 27580,
+        "frequency": 1,
+        "start_date": "2019-11-30",
+        "end_date": None,
+        "owner1_id": ids[0],
+        "owner2_id": None
+    })
+
+    requests.post('http://localhost:5000/add-income', json={
+        "fixed_or_variable": "Fixed",
+        "income_type": "Salary",
+        "amount": 49780,
+        "frequency": 1,
+        "start_date": "2009-10-17",
+        "end_date": None,
+        "owner1_id": None,
+        "owner2_id": ids[1]
+    })
+
+    requests.post('http://localhost:5000/add-income', json={
+        "fixed_or_variable": "Variable",
+        "income_type": "Rental income",
+        "amount": 6500,
+        "frequency": 1,
+        "start_date": "2012-05-08",
+        "end_date": "2017-09-23",
+        "owner1_id": ids[0],
+        "owner2_id": ids[1]
+    })
+
+
+   # Create a set of expenses
+
+    requests.post('http://localhost:5000/add-expense', json={
+        "fixed_or_variable": "Variable",
+        "expense_type": "Gas",
+        "amount": 125.64,
+        "frequency": 12,
+        "start_date": "1997-06-02",
+        "end_date": None,
+        "owner1_id": ids[0],
+        "owner2_id": None
+    })
+
+    requests.post('http://localhost:5000/add-expense', json={
+        "fixed_or_variable": "Fixed",
+        "expense_type": "Electricity",
+        "amount": 138.33,
+        "frequency": 12,
+        "start_date": "2001-11-03",
+        "end_date": None,
+        "owner1_id": None,
+        "owner2_id": ids[1]
+    })
+
+    requests.post('http://localhost:5000/add-expense', json={
+        "fixed_or_variable": "Variable",
+        "expense_type": "Water",
+        "amount": 259.66,
+        "frequency": 4,
+        "start_date": "2019-02-28",
+        "end_date": None,
+        "owner1_id": ids[0],
+        "owner2_id": ids[1]
     })
 
     return("Clients " + str(random_name_client) + " (" + str(ids[0]) + ") and " + str(random_name_partner) + " (" + str(ids[1]) + ") and sample data created."), 201

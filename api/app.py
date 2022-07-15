@@ -34,6 +34,8 @@ from routes.investments import investments_blueprint
 from routes.insurance import insurance_blueprint
 from routes.reports import reports_blueprint
 from routes.authentication import authentication_blueprint
+from routes.cashflow import cashflow_blueprint
+
 
 app.register_blueprint(clients_blueprint)
 app.register_blueprint(otherassets_blueprint)
@@ -44,6 +46,7 @@ app.register_blueprint(investments_blueprint)
 app.register_blueprint(insurance_blueprint)
 app.register_blueprint(reports_blueprint)
 app.register_blueprint(authentication_blueprint)
+app.register_blueprint(cashflow_blueprint)
 CORS(app)
 
 

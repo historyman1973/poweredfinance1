@@ -29,6 +29,42 @@ client_schema = ClientSchema()
 clients_schema = ClientSchema(many=True)
 
 
+class Expense(db.Model):
+    __tablename__ = "expense"
+
+    id = db.Column(db.Integer, primary_key=True)
+    fixed_or_variable = db.Column(db.String)
+    expense_type = db.Column(db.String)
+    amount = db.Column(db.Float)
+    frequency = db.Column(db.Integer)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    def __init__(self, **kwargs):
+        super(Expense, self).__init__(**kwargs)
+
+class ExpenseSchema(ma.Schema):
+    class Meta:
+        model = Expense
+        fields = (
+            'id',
+            'fixed_or_variable',
+            'expense_type',
+            'amount',
+            'frequency',
+            'start_date',
+            'end_date',
+            'owner1_id',
+            'owner2_id'
+        )
+
+expense_schema = ExpenseSchema()
+expenses_schema = ExpenseSchema(many=True)
+
+
+
 class Holding(db.Model):
     __tablename__ = "holding"
 
@@ -81,6 +117,41 @@ class HoldingHistorySchema(ma.Schema):
 
 holdinghistory_schema = HoldingHistorySchema()
 holdinghistories_schema = HoldingHistorySchema(many=True)
+
+
+class Income(db.Model):
+    __tablename__ = "income"
+
+    id = db.Column(db.Integer, primary_key=True)
+    fixed_or_variable = db.Column(db.String)
+    income_type = db.Column(db.String)
+    amount = db.Column(db.Float)
+    frequency = db.Column(db.Integer)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+
+    def __init__(self, **kwargs):
+        super(Income, self).__init__(**kwargs)
+
+class IncomeSchema(ma.Schema):
+    class Meta:
+        model = Income
+        fields = (
+            'id',
+            'fixed_or_variable',
+            'income_type',
+            'amount',
+            'frequency',
+            'start_date',
+            'end_date',
+            'owner1_id',
+            'owner2_id'
+        )
+
+income_schema = IncomeSchema()
+incomes_schema = IncomeSchema(many=True)
 
 
 class Instrument(db.Model):
