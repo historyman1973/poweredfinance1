@@ -513,8 +513,8 @@ def add_test_client():
 
     client_investment = requests.post('http://localhost:5000/add-investment', json={
         "status": "Active",
-        "category": "Retirement",
-        "investment_type": "Stakeholder pension",
+        "category": "Stakeholder pension",
+        "investment_type": "retirement",
         "provider": fake.word().title(),
         "investment_ref": random.randint(10000000, 99999999),
         "owner1_id": ids[0],
@@ -526,8 +526,8 @@ def add_test_client():
 
     partner_investment = requests.post('http://localhost:5000/add-investment', json={
         "status": "Active",
-        "category": "Non-retirement",
-        "investment_type": "Stocks and Shares ISA",
+        "category": "Stocks and Shares ISA",
+        "investment_type": "non-retirement",
         "provider": fake.word().title(),
         "investment_ref": random.randint(10000000, 99999999),
         "owner1_id": None,
@@ -539,8 +539,8 @@ def add_test_client():
 
     joint_investment = requests.post('http://localhost:5000/add-investment', json={
         "status": "Active",
-        "category": "Non-retirement",
-        "investment_type": "General Investment Account",
+        "category": "General Investment Account",
+        "investment_type": "non-retirement",
         "provider": fake.word().title(),
         "investment_ref": random.randint(10000000, 99999999),
         "owner1_id": ids[0],
@@ -734,7 +734,7 @@ def add_test_client():
 
     requests.post('http://localhost:5000/add-otherasset', json={
         "status": "Active",
-        "asset_type": "Lifestyle",
+        "asset_type": "retirement",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
         "owner1_id": ids[0],
@@ -743,7 +743,7 @@ def add_test_client():
 
     requests.post('http://localhost:5000/add-otherasset', json={
         "status": "Active",
-        "asset_type": "Lifestyle",
+        "asset_type": "retirement",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
         "owner1_id": None,
@@ -752,7 +752,7 @@ def add_test_client():
 
     requests.post('http://localhost:5000/add-otherasset', json={
         "status": "Active",
-        "asset_type": "Lifestyle",
+        "asset_type": "non-retirement",
         "description": fake.word().title(),
         "value": random.randint(100000, 1000000),
         "owner1_id": ids[0],
