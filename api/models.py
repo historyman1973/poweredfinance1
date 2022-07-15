@@ -2,6 +2,7 @@ from email.policy import default
 from database import db, ma
 from sqlalchemy import Enum
 
+
 class Client(db.Model):
     __tablename__ = "client"
 
@@ -36,7 +37,8 @@ class Holding(db.Model):
     instrument_id = db.Column(db.Integer, db.ForeignKey('instrument.id'))
     units = db.Column(db.Float)
 
-    transactions = db.relationship('Transaction', backref='holding', lazy='dynamic')
+    transactions = db.relationship(
+        'Transaction', backref='holding', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Holding, self).__init__(**kwargs)
@@ -118,7 +120,8 @@ class Insurance(db.Model):
     __tablename__ = "insurance"
 
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(Enum('Active', 'Lapsed', 'Cancelled', 'Recommended', name='policy_status'))
+    status = db.Column(Enum('Active', 'Lapsed', 'Cancelled',
+                       'Recommended', name='policy_status'))
     category = db.Column(db.String)
     insurance_type = db.Column(db.String)
     provider = db.Column(db.String)
@@ -128,7 +131,7 @@ class Insurance(db.Model):
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     lifeassured1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
-    lifeassured2_id = db.Column(db.Integer, db.ForeignKey('client.id'))    
+    lifeassured2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
 
     def __init__(self, **kwargs):
         super(Insurance, self).__init__(**kwargs)
@@ -157,12 +160,12 @@ insurance_schema = InsuranceSchema()
 insurances_schema = InsuranceSchema(many=True)
 
 
-
 class Investment(db.Model):
     __tablename__ = "investment"
 
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(Enum('Active', 'Transferred out', 'Matured', 'Recommended', name='policy_status'))
+    status = db.Column(Enum('Active', 'Transferred out',
+                       'Matured', 'Recommended', name='policy_status'))
     category = db.Column(db.String)
     investment_type = db.Column(db.String)
     provider = db.Column(db.String)
@@ -199,7 +202,8 @@ class Liability(db.Model):
     __tablename__ = "liability"
 
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(Enum('Active', 'Redeemed', 'Recommended', name='policy_status'))
+    status = db.Column(
+        Enum('Active', 'Redeemed', 'Recommended', name='policy_status'))
     category = db.Column(db.String)
     liability_type = db.Column(db.String)
     description = db.Column(db.String)
@@ -240,7 +244,8 @@ class OtherAsset(db.Model):
     __tablename__ = "otherasset"
 
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(Enum('Active', 'Sold', 'Recommended', name='policy_status'))
+    status = db.Column(
+        Enum('Active', 'Sold', 'Recommended', name='policy_status'))
     asset_type = db.Column(db.String)
     description = db.Column(db.String)
     value = db.Column(db.Numeric)
