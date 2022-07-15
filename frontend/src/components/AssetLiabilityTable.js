@@ -20,6 +20,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import axios from "axios";
+import EditInvestmentForm from "./EditInvestmentForm";
+import EditPropertyForm from "./EditPropertyForm";
+import EditOtherAssetForm from "./EditOtherAssetForm";
+import EditLiabilityForm from "./EditLiabilityForm";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -38,24 +42,36 @@ function AssetLiabilityTable({
   const [investment, setInvestment] = React.useState(false);
   const handleCloseDeleteInvestment = () => setOpenDeleteInvestment(false);
   const [openDeleteInvestment, setOpenDeleteInvestment] = React.useState(false);
+  const handleCloseEditInvestment = () => setOpenEditInvestment(false);
+  const [openEditInvestment, setOpenEditInvestment] = React.useState(false);
+  const [investmentEdit, setInvestmentEdit] = React.useState(false);
 
   const handleViewPropertyClose = () => setOpenViewProperty(false);
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
   const handleCloseDeleteProperty = () => setOpenDeleteProperty(false);
   const [openDeleteProperty, setOpenDeleteProperty] = React.useState(false);
+  const handleCloseEditProperty = () => setOpenEditProperty(false);
+  const [openEditProperty, setOpenEditProperty] = React.useState(false);
+  const [propertyEdit, setPropertyEdit] = React.useState(false);
 
   const handleViewOtherClose = () => setOpenViewOther(false);
   const [openViewOther, setOpenViewOther] = React.useState(false);
   const [other, setOther] = React.useState(false);
   const handleCloseDeleteOther = () => setOpenDeleteOther(false);
   const [openDeleteOther, setOpenDeleteOther] = React.useState(false);
+  const handleCloseEditOther = () => setOpenEditOther(false);
+  const [openEditOther, setOpenEditOther] = React.useState(false);
+  const [otherEdit, setOtherEdit] = React.useState(false);
 
   const handleViewLiabilityClose = () => setOpenViewLiability(false);
   const [openViewLiability, setOpenViewLiability] = React.useState(false);
   const [liability, setLiability] = React.useState(false);
   const handleCloseDeleteLiability = () => setOpenDeleteLiability(false);
   const [openDeleteLiability, setOpenDeleteLiability] = React.useState(false);
+  const handleCloseEditLiability = () => setOpenEditLiability(false);
+  const [openEditLiability, setOpenEditLiability] = React.useState(false);
+  const [liabilityEdit, setLiabilityEdit] = React.useState(false);
 
   const deleteInvestment = async () => {
     try {
@@ -117,7 +133,7 @@ function AssetLiabilityTable({
     }
   };
 
-  const handleClick = (category, id, method) => {
+  const handleClick = async (category, id, method) => {
     if (method === "view") {
       if (category === "Property") {
         setProperty(id);
@@ -147,7 +163,47 @@ function AssetLiabilityTable({
         setOpenDeleteLiability(true);
       }
     } else if (method === "edit") {
-      console.log("To be added soon...");
+      if (category === "Investment") {
+        try {
+          const res = await axios.get(
+            `http://127.0.0.1:5000/get-investment/` + id
+          );
+          setInvestmentEdit(res.data);
+          setOpenEditInvestment(true);
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (category === "Property") {
+        try {
+          const res = await axios.get(
+            `http://127.0.0.1:5000/get-property/` + id
+          );
+          setPropertyEdit(res.data);
+          setOpenEditProperty(true);
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (category === "Other Asset") {
+        try {
+          const res = await axios.get(
+            `http://127.0.0.1:5000/get-otherasset/` + id
+          );
+          setOtherEdit(res.data);
+          setOpenEditOther(true);
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (category === "Long term" || category === "Short term") {
+        try {
+          const res = await axios.get(
+            `http://127.0.0.1:5000/get-liability/` + id
+          );
+          setLiabilityEdit(res.data);
+          setOpenEditLiability(true);
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   };
 
@@ -575,6 +631,126 @@ function AssetLiabilityTable({
               </Button>
             </div>
           </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditProperty}
+        onClose={handleCloseEditProperty}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit property
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseEditProperty}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditPropertyForm property={propertyEdit} />
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditInvestment}
+        onClose={handleCloseEditInvestment}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit investment
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseEditInvestment}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditInvestmentForm investment={investmentEdit} />
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditOther}
+        onClose={handleCloseEditOther}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit other asset
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleCloseEditOther}>
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditOtherAssetForm other={otherEdit} />
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditLiability}
+        onClose={handleCloseEditLiability}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit liability
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseEditLiability}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditLiabilityForm liability={liabilityEdit} />
         </div>
       </Dialog>
     </div>
