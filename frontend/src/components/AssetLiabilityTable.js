@@ -1,4 +1,4 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
 import { Button } from "@mui/material";
 import AssetOverviewProperty from "../AssetOverviewProperty";
@@ -16,6 +16,10 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { ThemeProvider } from "@mui/styles";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,32 +36,118 @@ function AssetLiabilityTable({
   const handleViewInvestmentClose = () => setOpenViewInvestment(false);
   const [openViewInvestment, setOpenViewInvestment] = React.useState(false);
   const [investment, setInvestment] = React.useState(false);
+  const handleCloseDeleteInvestment = () => setOpenDeleteInvestment(false);
+  const [openDeleteInvestment, setOpenDeleteInvestment] = React.useState(false);
 
   const handleViewPropertyClose = () => setOpenViewProperty(false);
   const [openViewProperty, setOpenViewProperty] = React.useState(false);
   const [property, setProperty] = React.useState(false);
+  const handleCloseDeleteProperty = () => setOpenDeleteProperty(false);
+  const [openDeleteProperty, setOpenDeleteProperty] = React.useState(false);
 
   const handleViewOtherClose = () => setOpenViewOther(false);
   const [openViewOther, setOpenViewOther] = React.useState(false);
   const [other, setOther] = React.useState(false);
+  const handleCloseDeleteOther = () => setOpenDeleteOther(false);
+  const [openDeleteOther, setOpenDeleteOther] = React.useState(false);
 
   const handleViewLiabilityClose = () => setOpenViewLiability(false);
   const [openViewLiability, setOpenViewLiability] = React.useState(false);
   const [liability, setLiability] = React.useState(false);
+  const handleCloseDeleteLiability = () => setOpenDeleteLiability(false);
+  const [openDeleteLiability, setOpenDeleteLiability] = React.useState(false);
 
-  const handleClick = (category, id) => {
-    if (category === "Property") {
-      setProperty(id);
-      setOpenViewProperty(true);
-    } else if (category === "Investment") {
-      setInvestment(id);
-      setOpenViewInvestment(true);
-    } else if (category === "Other Asset") {
-      setOther(id);
-      setOpenViewOther(true);
-    } else if (category === "Long term" || category === "Short term") {
-      setLiability(id);
-      setOpenViewLiability(true);
+  const deleteInvestment = async () => {
+    try {
+      try {
+        await axios.delete(
+          `http://127.0.0.1:5000/delete-investment/` + investment
+        );
+        console.log("Deleted investment " + investment);
+        window.location.reload(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteProperty = async () => {
+    try {
+      try {
+        await axios.delete(`http://127.0.0.1:5000/delete-property/` + property);
+        console.log("Deleted property " + property);
+        window.location.reload(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteOther = async () => {
+    try {
+      try {
+        await axios.delete(`http://127.0.0.1:5000/delete-otherasset/` + other);
+        console.log("Deleted client " + other);
+        window.location.reload(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteLiability = async () => {
+    try {
+      try {
+        await axios.delete(
+          `http://127.0.0.1:5000/delete-liability/` + liability
+        );
+        console.log("Deleted liability " + liability);
+        window.location.reload(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClick = (category, id, method) => {
+    if (method === "view") {
+      if (category === "Property") {
+        setProperty(id);
+        setOpenViewProperty(true);
+      } else if (category === "Investment") {
+        setInvestment(id);
+        setOpenViewInvestment(true);
+      } else if (category === "Other Asset") {
+        setOther(id);
+        setOpenViewOther(true);
+      } else if (category === "Long term" || category === "Short term") {
+        setLiability(id);
+        setOpenViewLiability(true);
+      }
+    } else if (method === "delete") {
+      if (category === "Property") {
+        setProperty(id);
+        setOpenDeleteProperty(true);
+      } else if (category === "Investment") {
+        setInvestment(id);
+        setOpenDeleteInvestment(true);
+      } else if (category === "Other Asset") {
+        setOther(id);
+        setOpenDeleteOther(true);
+      } else if (category === "Long term" || category === "Short term") {
+        setLiability(id);
+        setOpenDeleteLiability(true);
+      }
+    } else if (method === "edit") {
+      console.log("To be added soon...");
     }
   };
 
@@ -103,20 +193,40 @@ function AssetLiabilityTable({
 
   const columns = [
     { field: "id", headerName: "ID", width: 100 },
+    { field: "itemId", headerName: "Asset/Liability ID", width: 100 },
     { field: "description", headerName: "Description", flex: 1, width: 300 },
     { field: "category", headerName: "Category", width: 130 },
     { field: "value", headerName: "Value", width: 130 },
     {
-      field: "view",
-      headerName: "View",
-      width: 150,
-      renderCell: (params) => (
-        <Button
-          onClick={() => handleClick(params.row.category, params.row.itemId)}
-        >
-          View
-        </Button>
-      ),
+      field: "actions",
+      type: "actions",
+      width: 80,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() =>
+            handleClick(params.row.category, params.row.itemId, "delete")
+          }
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label="Edit"
+          onClick={() =>
+            handleClick(params.row.category, params.row.itemId, "edit")
+          }
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<PersonSearchIcon />}
+          label="View"
+          onClick={() =>
+            handleClick(params.row.category, params.row.itemId, "view")
+          }
+          showInMenu
+        />,
+      ],
     },
   ];
 
@@ -226,6 +336,246 @@ function AssetLiabilityTable({
           </AppBar>
         </ThemeProvider>
         <LiabilityOverview id={liability} />
+      </Dialog>
+      <Dialog
+        open={openDeleteInvestment}
+        onClose={handleCloseDeleteInvestment}
+        TransitionComponent={Transition}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Delete investment
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseDeleteInvestment}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete investment ID {investment}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteInvestment();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openDeleteProperty}
+        onClose={handleCloseDeleteProperty}
+        TransitionComponent={Transition}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Delete property
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseDeleteProperty}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete property ID {property}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteProperty();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openDeleteOther}
+        onClose={handleCloseDeleteOther}
+        TransitionComponent={Transition}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Delete other asset
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseDeleteOther}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete other asset ID {other}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteOther();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openDeleteLiability}
+        onClose={handleCloseDeleteLiability}
+        TransitionComponent={Transition}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Delete liability
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseDeleteLiability}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div
+          style={{
+            height: "auto",
+            width: "500px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <div class="row">
+            <div>
+              <h4>Are you sure?</h4>
+              Please confirm you want to delete liability ID {liability}.
+            </div>
+          </div>
+          <div
+            class="row"
+            style={{
+              justifyContent: "right",
+              marginRight: "20px",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <div style={{ padding: "0px" }}>
+              <Button
+                style={{ float: "right" }}
+                onClick={() => {
+                  deleteLiability();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
       </Dialog>
     </div>
   );
