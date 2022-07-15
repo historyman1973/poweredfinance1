@@ -15,7 +15,7 @@ def add_otherasset():
     owner1 = None
     owner2 = None
 
-    status=request.json['status']
+    status = request.json['status']
     asset_type = request.json['asset_type']
     description = request.json['description']
     value = request.json['value']
@@ -96,7 +96,6 @@ def get_otherassets(client_id):
         return("Client " + client_id + " doesn't exist."), 404
 
 
-
 @otherassets_blueprint.route("/add-property", methods=["POST"])
 def add_property():
     # Initialise owners
@@ -104,7 +103,7 @@ def add_property():
     owner1 = None
     owner2 = None
 
-    status=request.json['status']
+    status = request.json['status']
     property_type = request.json['property_type']
     address = request.json['address']
     cost = request.json['cost']
