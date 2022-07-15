@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)
+    username = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
     forename = db.Column(db.String)
     surname = db.Column(db.String)
@@ -83,6 +83,8 @@ def login():
     if user:
         user.verify_password(password)
         login_user(user)
+    else:
+        return "Username or password invalid", 401
 
     return "You are logged in, " + current_user.username.title(), 200
 
