@@ -1,8 +1,14 @@
+from calendar import month
+
+from itsdangerous import json
+from matplotlib.font_manager import json_dump
 from models import Client, Income, income_schema, incomes_schema, Expense, expense_schema, expenses_schema
 from database import db
 from flask.json import jsonify
 from flask import Blueprint, request
 import datetime
+from datetime import date
+from dateutil.relativedelta import relativedelta
 import random
 
 cashflow_blueprint = Blueprint('cashflow_blueprint', __name__)
@@ -107,7 +113,6 @@ def get_income(income_id):
 
 
 @cashflow_blueprint.route("/get-incomes/<client_id>", methods=["GET"])
-# @auth.login_required
 def get_incomes(client_id):
     client = Client.query.get(client_id)
     if client:
@@ -222,7 +227,6 @@ def get_expense(expense_id):
 
 
 @cashflow_blueprint.route("/get-incomes/<client_id>", methods=["GET"])
-# @auth.login_required
 def get_expenses(client_id):
     client = Client.query.get(client_id)
     if client:
@@ -236,3 +240,52 @@ def get_expenses(client_id):
         return expenses_schema.jsonify(expenses)
     else:
         return("Client " + client_id + " doesn't exist."), 404
+
+
+@cashflow_blueprint.route("/get-income-over-time/<client_id>", methods=["GET"])
+def get_income_over_time(client_id):
+
+    client = Client.query.get(client_id)
+    
+    client_data = {}
+
+    if client.isPrimary == True:
+        incomes = db.session.query(Income).filter_by(owner1_id=client_id).order_by(Income.start_date).all()
+    else:
+        incomes = db.session.query(Income).filter_by(owner2_id=client_id).order_by(Income.start_date).all()
+
+    for income in incomes:
+        temp_end_date = income.start_date
+
+
+        if income.end_date:        
+            while temp_end_date.strftime("%b %Y") != income.end_date.strftime("%b %Y"):
+                if temp_end_date.strftime("%b %Y") not in client_data:
+                    if client.isPrimary == True and income.owner2_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                    elif client.isPrimary == True and income.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)                        
+                else:
+                    if client.isPrimary == True and income.owner2_id == None:                    
+                        client_data[temp_end_date.strftime("%b %Y")] += income.amount / (12 / income.frequency)
+                    elif client.isPrimary == True and income.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)                    
+                    elif client.isPrimary == False and income.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)   
+                temp_end_date+=relativedelta(months=+1)
+
+        else:
+            while temp_end_date.strftime("%b %Y") != date.today().strftime("%b %Y"):
+                if temp_end_date.strftime("%b %Y") not in client_data:
+                    client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                else:
+                    client_data[temp_end_date.strftime("%b %Y")] += income.amount / (12 / income.frequency)
+                temp_end_date+=relativedelta(months=+1)                 
+
+    return jsonify(str(client_data))
