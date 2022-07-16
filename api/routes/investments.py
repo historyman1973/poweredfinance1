@@ -1,5 +1,5 @@
 from models import Client, Investment, investment_schema, investments_schema, \
-    Instrument, Holding, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
+    Instrument, Holding, holding_schema, holdings_schema, Transaction, transaction_schema, transactions_schema, HoldingHistory, \
     instrument_schema, instruments_schema
 from database import db
 from flask import Blueprint, request
@@ -145,6 +145,17 @@ def delete_investment(investment_id):
     db.session.commit()
 
     return("Investment deleted"), 204
+
+
+
+@investments_blueprint.route("/get-holding/<holding_id>", methods=["GET"])
+def get_holding(holding_id):
+    holding = Holding.query.get(holding_id)
+    if holding:
+        result = holding_schema.dump(holding)
+        return jsonify(result)
+    else:
+        return("Holding id " + holding_id + " doesn't exist."), 404
 
 
 @investments_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
