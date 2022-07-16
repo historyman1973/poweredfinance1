@@ -283,9 +283,86 @@ def get_income_over_time(client_id):
         else:
             while temp_end_date.strftime("%b %Y") != date.today().strftime("%b %Y"):
                 if temp_end_date.strftime("%b %Y") not in client_data:
-                    client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                    if client.isPrimary == True and income.owner2_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                    elif client.isPrimary == True and income.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)                        
                 else:
-                    client_data[temp_end_date.strftime("%b %Y")] += income.amount / (12 / income.frequency)
-                temp_end_date+=relativedelta(months=+1)                 
+                    if client.isPrimary == True and income.owner2_id == None:                    
+                        client_data[temp_end_date.strftime("%b %Y")] += income.amount / (12 / income.frequency)
+                    elif client.isPrimary == True and income.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)
+                    elif client.isPrimary == False and income.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = income.amount / (12 / income.frequency)                    
+                    elif client.isPrimary == False and income.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (income.amount * 0.5) / (12 / income.frequency)                 
+                temp_end_date+=relativedelta(months=+1)
+                
+    return jsonify(str(client_data))
+
+
+@cashflow_blueprint.route("/get-expense-over-time/<client_id>", methods=["GET"])
+def get_expense_over_time(client_id):
+
+    client = Client.query.get(client_id)
+    
+    client_data = {}
+
+    if client.isPrimary == True:
+        expenses = db.session.query(Expense).filter_by(owner1_id=client_id).order_by(Expense.start_date).all()
+    else:
+        expenses = db.session.query(Expense).filter_by(owner2_id=client_id).order_by(Expense.start_date).all()
+
+    for expense in expenses:
+        temp_end_date = expense.start_date
+
+
+        if expense.end_date:        
+            while temp_end_date.strftime("%b %Y") != expense.end_date.strftime("%b %Y"):
+                if temp_end_date.strftime("%b %Y") not in client_data:
+                    if client.isPrimary == True and expense.owner2_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == True and expense.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)                        
+                else:
+                    if client.isPrimary == True and expense.owner2_id == None:                    
+                        client_data[temp_end_date.strftime("%b %Y")] += expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == True and expense.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)                    
+                    elif client.isPrimary == False and expense.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)   
+                temp_end_date+=relativedelta(months=+1)
+
+        else:
+            while temp_end_date.strftime("%b %Y") != date.today().strftime("%b %Y"):
+                if temp_end_date.strftime("%b %Y") not in client_data:
+                    if client.isPrimary == True and expense.owner2_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == True and expense.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)                        
+                else:
+                    if client.isPrimary == True and expense.owner2_id == None:                    
+                        client_data[temp_end_date.strftime("%b %Y")] += expense.amount / (12 / expense.frequency)
+                    elif client.isPrimary == True and expense.owner2_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)
+                    elif client.isPrimary == False and expense.owner1_id == None:
+                        client_data[temp_end_date.strftime("%b %Y")] = expense.amount / (12 / expense.frequency)                    
+                    elif client.isPrimary == False and expense.owner1_id != None:
+                        client_data[temp_end_date.strftime("%b %Y")] = (expense.amount * 0.5) / (12 / expense.frequency)                 
+                temp_end_date+=relativedelta(months=+1)             
 
     return jsonify(str(client_data))

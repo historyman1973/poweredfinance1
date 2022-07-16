@@ -553,18 +553,11 @@ def add_test_client():
     ##########################################################################################
     # Create a series of transactions for each investment
 
-    number_of_existing_instruments = len(Instrument.query.all())
-
     for investment in [new_client_investment, new_joint_investment, new_partner_investment]:
-
-        random_instrument_id_1 = random.randint(
-            1, number_of_existing_instruments)
-        random_instrument_id_2 = random.randint(
-            1, number_of_existing_instruments)
 
         requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
-            "instrument_id": random_instrument_id_1,
+            "instrument_id": "DTIL",
             "tdate": fake.iso8601(),
             "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),
@@ -575,7 +568,7 @@ def add_test_client():
 
         requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
-            "instrument_id": random_instrument_id_2,
+            "instrument_id": "DTSS",
             "tdate": fake.iso8601(),
             "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),
