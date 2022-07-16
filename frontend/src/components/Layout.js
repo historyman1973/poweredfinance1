@@ -7,10 +7,12 @@ import Liabilities from "../liabilities";
 import Settings from "../settings";
 import Reports from "../reports";
 import SecurityDrilldown from "../securityDrilldown";
+import Landing from "../landing";
 
 const Layout = () => {
   return (
     <Routes>
+      <Route path="/landing" element={<Landing />}></Route>
       <Route path="/" element={<Clients />}></Route>
       <Route path="/dashboard/*" element={<Dashboard />}></Route>
       <Route path="/assets/:id" element={<Assets />}></Route>
