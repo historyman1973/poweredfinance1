@@ -47,6 +47,32 @@ def add_client():
 
 @clients_blueprint.route("/delete-client/<client_id>", methods=['DELETE'])
 def delete_client(client_id):
+
+    # Delete all transactions belonging to the client only
+    if Client.query.get(client_id).isPrimary == 1:
+        client_only_transactions = Transaction.query.filter(
+            Transaction.owner1_id == client_id, Transaction.owner2_id == None)
+    else:
+        client_only_transactions = Transaction.query.filter(
+            Transaction.owner2_id == client_id, Transaction.owner1_id == None)
+    for client_only_transaction in client_only_transactions:
+        delete_transaction(client_only_transaction.id)
+
+    # Update all joint transactions to show they are only owned by the partner
+    if Client.query.get(client_id).isPrimary == 1:
+        joint_transactions = Transaction.query.filter(
+            Transaction.owner1_id == client_id, Transaction.owner2_id != None)
+        for joint_transaction in joint_transactions:
+            Transaction.query.get(joint_transaction.id).owner1_id = None
+            db.session.commit()
+    else:
+        joint_transactions = Transaction.query.filter(
+            Transaction.owner2_id == client_id, Transaction.owner1_id != None)
+        for joint_transaction in joint_transactions:
+            Transaction.query.get(joint_transaction.id).owner2_id = None
+            db.session.commit()
+
+ 
     # Delete all investments where the client is the only owner
     if Client.query.get(client_id).isPrimary == 1:
         client_only_investments = Investment.query.filter(
@@ -72,30 +98,6 @@ def delete_client(client_id):
             Investment.owner2_id == client_id, Investment.owner1_id != None)
         for joint_investment in joint_investments:
             Investment.query.get(joint_investment.id).owner2_id = None
-            db.session.commit()
-
-    # Delete all transactions belonging to the client only
-    if Client.query.get(client_id).isPrimary == 1:
-        client_only_transactions = Transaction.query.filter(
-            Transaction.owner1_id == client_id, Transaction.owner2_id == None)
-    else:
-        client_only_transactions = Transaction.query.filter(
-            Transaction.owner2_id == client_id, Transaction.owner1_id == None)
-    for client_only_transaction in client_only_transactions:
-        delete_transaction(client_only_transaction.id)
-
-    # Update all joint transactions to show they are only owned by the partner
-    if Client.query.get(client_id).isPrimary == 1:
-        joint_transactions = Transaction.query.filter(
-            Transaction.owner1_id == client_id, Transaction.owner2_id != None)
-        for joint_transaction in joint_transactions:
-            Transaction.query.get(joint_transaction.id).owner1_id = None
-            db.session.commit()
-    else:
-        joint_transactions = Transaction.query.filter(
-            Transaction.owner2_id == client_id, Transaction.owner1_id != None)
-        for joint_transaction in joint_transactions:
-            Transaction.query.get(joint_transaction.id).owner2_id = None
             db.session.commit()
 
     # Delete all liabilities where the client is the only owner
@@ -557,7 +559,7 @@ def add_test_client():
 
         requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
-            "instrument_id": "DTIL",
+            "instrument_id": 2360,
             "tdate": fake.iso8601(),
             "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),
@@ -568,7 +570,7 @@ def add_test_client():
 
         requests.post('http://localhost:5000/add-transaction', json={
             "investment_id": investment.id,
-            "instrument_id": "DTSS",
+            "instrument_id": 2368,
             "tdate": fake.iso8601(),
             "ttype": "buy",
             "units": random.uniform(1.0, 2000.0),

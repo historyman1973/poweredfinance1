@@ -147,7 +147,6 @@ def delete_investment(investment_id):
     return("Investment deleted"), 204
 
 
-
 @investments_blueprint.route("/get-holding/<holding_id>", methods=["GET"])
 def get_holding(holding_id):
     holding = Holding.query.get(holding_id)
@@ -269,7 +268,7 @@ def add_transaction():
 
         # Add the new transaction
         new_transaction = Transaction(
-            ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id)
+            ttype=ttype, tdate=tdate, units=units, price=price, owner1_id=owner1_id, owner2_id=owner2_id, investment_id=investment_id)
 
         # Link the transaction to its holding
         new_transaction.holding_id = holding.id
@@ -331,9 +330,43 @@ def delete_transaction(transaction_id):
         return("Transaction doesn't exist"), 404
 
 
-@investments_blueprint.route("/edit-transaction/<transaction_id>", methods=["PATCH"])
-def edit_transaction(transaction_id):
-    transaction = Transaction.query.filter_by(id=transaction_id).update(request.get_json())
+@investments_blueprint.route("/edit-transaction", methods=["PATCH"])
+def edit_transaction():
+
+    transaction_id = request.json['transaction_id']
+    ttype = request.json['ttype']
+    tdate = request.json['tdate']
+    units = request.json['units']
+    price = request.json['price']
+
+    transaction = Transaction.query.filter_by(id=transaction_id).first()
+
+    # JSON request is 150 units so units difference is +24
+    # JSON request is 100 units so units difference is -26
+
+    units_difference = float(units - transaction.units)
+    print(units_difference)
+    if transaction.ttype != ttype:
+        units_difference *= -1
+    
+    transaction.ttype = ttype
+    transaction.tdate = tdate
+    transaction.price = price
+    if ttype == "sell" and units >= 0:
+        transaction.units = units * -1
+    elif ttype == "buy" and units < 0:
+        transaction.units = units * -1
+    else:
+        transaction.units = units
+
+    db.session.commit()
+
+    HoldingHistory.query.filter(HoldingHistory.transaction_id==transaction.id).first().units += units_difference
+
+    db.session.commit()
+
+    Holding.query.get(transaction.holding_id).units += units_difference
+
     db.session.commit()
 
     return transaction_schema.jsonify(transaction), 204
