@@ -1,5 +1,5 @@
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { currencyFormat } from "../components/GlobalFunctions";
 import Moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Slide from "@mui/material/Slide";
 import { ThemeProvider } from "@mui/styles";
 import { Button } from "@mui/material";
+import EditTransactionForm from "./EditTransactionForm";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -22,6 +23,9 @@ function TransactionTable({ transactions }) {
   const handleCloseDeleteTransaction = () => setOpenDeleteTransaction(false);
   const [openDeleteTransaction, setOpenDeleteTransaction] =
     React.useState(false);
+  const handleCloseEditTransaction = () => setOpenEditTransaction(false);
+  const [openEditTransaction, setOpenEditTransaction] = React.useState(false);
+  const [transactionEdit, setTransactionEdit] = React.useState(false);
 
   const deleteTransaction = async () => {
     try {
@@ -73,9 +77,17 @@ function TransactionTable({ transactions }) {
     },
   ];
 
-  const handleClick = (id, method) => {
+  const handleClick = async (id, method) => {
     if (method === "edit") {
-      console.log("Coming soon...");
+      try {
+        const resTransaction = await axios.get(
+          `http://127.0.0.1:5000/get-transaction/` + id
+        );
+        setTransactionEdit(resTransaction.data);
+        setOpenEditTransaction(true);
+      } catch (error) {
+        console.log(error);
+      }
     } else if (method === "delete") {
       setTransaction(id);
       setOpenDeleteTransaction(true);
@@ -145,7 +157,7 @@ function TransactionTable({ transactions }) {
           <div class="row">
             <div>
               <h4>Are you sure?</h4>
-              Please confirm you want to delete transaction ID {transaction.id}.
+              Please confirm you want to delete transaction ID {transaction}.
             </div>
           </div>
           <div
@@ -168,6 +180,37 @@ function TransactionTable({ transactions }) {
               </Button>
             </div>
           </div>
+        </div>
+      </Dialog>
+      <Dialog
+        open={openEditTransaction}
+        onClose={handleCloseEditTransaction}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: { borderRadius: 10 },
+        }}
+      >
+        <ThemeProvider>
+          <AppBar
+            sx={{ position: "relative" }}
+            style={{ background: "#ff00ff" }}
+          >
+            <Toolbar variant="dense">
+              <Typography sx={{ ml: 3, flex: 1 }} variant="h6" component="div">
+                Edit transaction
+              </Typography>
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={handleCloseEditTransaction}
+              >
+                Close
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </ThemeProvider>
+        <div style={{ margin: "20px" }}>
+          <EditTransactionForm transaction={transactionEdit} />
         </div>
       </Dialog>
     </div>
