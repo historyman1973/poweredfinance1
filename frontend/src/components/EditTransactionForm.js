@@ -48,13 +48,10 @@ export default function EditTransactionForm({ transaction }) {
   ];
 
   const initialFValues = {
-    investment_id: transaction.investment_id,
     ttype: transaction.ttype,
     tdate: transaction.tdate,
     price: transaction.price,
     units: transaction.units,
-    owner1_id: transaction.owner1_id,
-    owner2_id: transaction.owner2_id,
   };
 
   const validate = () => {

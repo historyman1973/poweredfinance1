@@ -157,7 +157,7 @@ function TransactionTable({ transactions }) {
           <div class="row">
             <div>
               <h4>Are you sure?</h4>
-              Please confirm you want to delete transaction ID {transaction.id}.
+              Please confirm you want to delete transaction ID {transaction}.
             </div>
           </div>
           <div
