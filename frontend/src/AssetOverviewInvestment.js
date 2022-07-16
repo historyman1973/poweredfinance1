@@ -124,7 +124,10 @@ function AssetOverviewInvestment(id) {
               marginTop: "20px",
             }}
           >
-            <AddTransactionForm allInstruments={allInstruments} />
+            <AddTransactionForm
+              allInstruments={allInstruments}
+              investmentID={id.id}
+            />
           </div>
         </Dialog>
         <div

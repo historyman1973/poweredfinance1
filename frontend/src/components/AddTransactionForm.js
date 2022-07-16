@@ -41,14 +41,14 @@ function BasicDateTimePicker() {
   );
 }
 
-export default function AddTransactionForm({ allInstruments }) {
+export default function AddTransactionForm({ allInstruments, investmentID }) {
   const ttypeOptions = [
     { id: "buy", title: "Buy" },
     { id: "sell", title: "Sell" },
   ];
 
   const initialFValues = {
-    investment_id: 3,
+    investment_id: investmentID,
     instrument_id: "",
     ttype: "",
     tdate: new Date("2022-01-01T10:00:00"),
