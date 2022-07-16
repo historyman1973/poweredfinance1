@@ -393,6 +393,7 @@ class Transaction(db.Model):
     price = db.Column(db.DECIMAL(asdecimal=False))
     owner1_id = db.Column(db.Integer, db.ForeignKey('client.id'))
     owner2_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    investment_id = db.Column(db.Integer, db.ForeignKey('investment.id'))
 
     holding_id = db.Column(db.Integer, db.ForeignKey('holding.id'))
 
@@ -404,7 +405,7 @@ class TransactionSchema(ma.Schema):
     class Meta:
         model = Transaction
         fields = ('id', 'ttype', 'tdate', 'units', 'price',
-                  'owner1_id', 'owner2_id', 'holding_id')
+                  'owner1_id', 'owner2_id', 'holding_id', 'investment_id')
 
 
 transaction_schema = TransactionSchema()
