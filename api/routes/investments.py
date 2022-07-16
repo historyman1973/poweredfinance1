@@ -157,6 +157,15 @@ def get_holding(holding_id):
         return("Holding id " + holding_id + " doesn't exist."), 404
 
 
+@investments_blueprint.route("/edit-investment/<investment_id>", methods=["PATCH"])
+def edit_investment(investment_id):
+    investment = Investment.query.filter_by(id=investment_id).update(request.get_json())
+    db.session.commit()
+
+    return investment_schema.jsonify(investment), 204
+
+
+
 @investments_blueprint.route("/get-investment/<investment_id>", methods=["GET"])
 def get_investment(investment_id):
     investment = Investment.query.get(investment_id)
