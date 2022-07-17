@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const editOtherAsset = async (values, otherID) => {
   try {
-    const res = await axios.patch(
+    await axios.patch(
       `http://127.0.0.1:5000/edit-otherasset/` + otherID,
       values
     );

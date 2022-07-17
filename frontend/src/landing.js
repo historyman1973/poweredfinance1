@@ -1,27 +1,30 @@
 import React from "react";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Slide,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import AdvisorLoginForm from "./components/AdvisorLoginForm";
 import IndividualLoginForm from "./components/IndividualLoginForm";
+import AdvisorSignupForm from "./components/AdvisorSignupForm";
+import IndividualSignupForm from "./components/IndividualSignupForm";
 
-function returnForm(type) {
-  if (type == "advisor") {
+function returnForm(advisorIndividual, signupLogin) {
+  if (advisorIndividual == "advisor" && signupLogin == "login") {
     return <AdvisorLoginForm />;
-  } else if (type == "individual") {
+  } else if (advisorIndividual == "individual" && signupLogin == "login") {
     return <IndividualLoginForm />;
+  } else if (advisorIndividual == "advisor" && signupLogin == "signup") {
+    return <AdvisorSignupForm />;
+  } else if (advisorIndividual == "individual" && signupLogin == "signup") {
+    return <IndividualSignupForm />;
   }
 }
 
 function Landing() {
-  const [type, setType] = React.useState("");
-  const handleChange = (event) => {
-    setType(event.target.value);
+  const [advisorIndividual, setAdvisorIndividual] = React.useState("");
+  const [signupLogin, setSignupLogin] = React.useState("");
+  const handleChangeAdvisorIndividual = (event) => {
+    setAdvisorIndividual(event.target.value);
+  };
+  const handleChangeSignupLogin = (event) => {
+    setSignupLogin(event.target.value);
   };
   return (
     <div>
@@ -44,14 +47,31 @@ function Landing() {
         >
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">I'm an</InputLabel>
-            <Select value={type} label="I'm an" onChange={handleChange}>
+            <Select
+              value={advisorIndividual}
+              label="I'm an"
+              onChange={handleChangeAdvisorIndividual}
+            >
               <MenuItem value={"advisor"}>Advisor</MenuItem>
               <MenuItem value={"individual"}>Individual</MenuItem>
             </Select>
           </FormControl>
+          <FormControl fullWidth style={{ marginTop: "10px" }}>
+            <InputLabel id="demo-simple-select-label">and I</InputLabel>
+            <Select
+              value={signupLogin}
+              label="and I"
+              onChange={handleChangeSignupLogin}
+            >
+              <MenuItem value={"login"}>have an account</MenuItem>
+              <MenuItem value={"signup"}>don't have an account</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
       </div>
-      <div style={{ marginTop: "30px" }}>{returnForm(type)}</div>
+      <div style={{ marginTop: "30px" }}>
+        {returnForm(advisorIndividual, signupLogin)}
+      </div>
     </div>
   );
 }

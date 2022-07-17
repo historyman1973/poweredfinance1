@@ -4,22 +4,25 @@ import Controls from "./controls/Controls";
 import { useForm, Form } from "./useForm";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialFValues = {
   username: "",
   password: "",
 };
 
-const login = async (values) => {
-  try {
-    const res = await axios.post(`http://127.0.0.1:5000/login`, values);
-  } catch (error) {
-    console.log(error);
-    toast.error(error.message);
-  }
-};
-
 export default function AdvisorLoginForm() {
+  const navigate = useNavigate();
+  const login = async (values) => {
+    try {
+      await axios.post(`http://127.0.0.1:5000/login`, values);
+      navigate("/clientlist");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   const validate = () => {
     let temp = {};
     temp.forename = values.username ? "" : "Username must be provided.";
@@ -36,6 +39,7 @@ export default function AdvisorLoginForm() {
   const handleSubmit = (e) => {
     if (!validate()) e.preventDefault();
     else {
+      e.preventDefault();
       login(values);
     }
   };

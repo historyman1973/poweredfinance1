@@ -11,11 +11,11 @@ const initialFValues = {
   password: "",
 };
 
-export default function IndividualLoginForm() {
+export default function IndividualSignupForm() {
   const navigate = useNavigate();
-  const login = async (values) => {
+  const signup = async (values) => {
     try {
-      await axios.post(`http://127.0.0.1:5000/login`, values);
+      await axios.post(`http://127.0.0.1:5000/add-user`, values);
       navigate("/dashboard/");
     } catch (error) {
       console.log(error);
@@ -39,7 +39,7 @@ export default function IndividualLoginForm() {
     if (!validate()) e.preventDefault();
     else {
       e.preventDefault();
-      login(values);
+      signup(values);
     }
   };
 
@@ -73,7 +73,7 @@ export default function IndividualLoginForm() {
             <div>
               <Controls.Button
                 style={{ float: "right", marginTop: "20px" }}
-                text="Individual login"
+                text="Individual signup"
                 type="submit"
                 variant="text"
               />

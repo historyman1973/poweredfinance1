@@ -1,4 +1,4 @@
-import { Grid, Slide } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import Controls from "./controls/Controls";
 import { useForm, Form } from "./useForm";
@@ -11,17 +11,18 @@ const initialFValues = {
   password: "",
 };
 
-export default function IndividualLoginForm() {
+export default function AdvisorSignupForm() {
   const navigate = useNavigate();
-  const login = async (values) => {
+  const signup = async (values) => {
     try {
-      await axios.post(`http://127.0.0.1:5000/login`, values);
-      navigate("/dashboard/");
+      await axios.post(`http://127.0.0.1:5000/add-user`, values);
+      navigate("/clientlist");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
+
   const validate = () => {
     let temp = {};
     temp.forename = values.username ? "" : "Username must be provided.";
@@ -39,7 +40,7 @@ export default function IndividualLoginForm() {
     if (!validate()) e.preventDefault();
     else {
       e.preventDefault();
-      login(values);
+      signup(values);
     }
   };
 
@@ -73,7 +74,7 @@ export default function IndividualLoginForm() {
             <div>
               <Controls.Button
                 style={{ float: "right", marginTop: "20px" }}
-                text="Individual login"
+                text="Advisor signup"
                 type="submit"
                 variant="text"
               />
