@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 const initialFValues = {
   username: "",
   password: "",
+  forename: "",
+  surname: "",
 };
 
 export default function AdvisorSignupForm() {
@@ -70,6 +72,20 @@ export default function AdvisorSignupForm() {
               value={values.password}
               onChange={handleInputChange}
               error={errors.password}
+            />
+            <Controls.Input
+              label="Forename"
+              name="forename"
+              value={values.forename}
+              onChange={handleInputChange}
+              error={errors.forename}
+            />
+            <Controls.Input
+              label="Surname"
+              name="surname"
+              value={values.surname}
+              onChange={handleInputChange}
+              error={errors.surname}
             />
             <div>
               <Controls.Button
