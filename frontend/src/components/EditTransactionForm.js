@@ -15,15 +15,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: 48 * 4.5 + 8,
-      width: 250,
-    },
-  },
-};
-
 function BasicDateTimePicker(existingDate) {
   const [value, setValue] = React.useState(new Date(existingDate.existingDate));
 
@@ -48,6 +39,7 @@ export default function EditTransactionForm({ transaction }) {
   ];
 
   const initialFValues = {
+    transaction_id: transaction.id,
     ttype: transaction.ttype,
     tdate: transaction.tdate,
     price: transaction.price,
@@ -80,10 +72,7 @@ export default function EditTransactionForm({ transaction }) {
 
   const editTransaction = async (values) => {
     try {
-      await axios.patch(
-        `http://127.0.0.1:5000/edit-transaction/` + transaction.id,
-        values
-      );
+      await axios.patch(`http://127.0.0.1:5000/edit-transaction`, values);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
